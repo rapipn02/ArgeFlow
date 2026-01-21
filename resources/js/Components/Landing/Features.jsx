@@ -77,7 +77,7 @@ function FeatureCard({ feature, index }) {
             className="group relative p-8 rounded-2xl glass hover:bg-card/50 transition-all duration-300 border-2 dark:border-white/10 border-gray-200 hover:border-primary/50"
         >
             {/* Gradient Background on Hover */}
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-blue-600/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             
             {/* Content */}
             <div className="relative z-10">

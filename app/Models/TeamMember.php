@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class TeamMember extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'team_id',
+        'name',
+        'role',
+        'avatar',
+        'bio',
+    ];
+
+    /**
+     * Get the team that owns the member
+     */
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
+    }
+}

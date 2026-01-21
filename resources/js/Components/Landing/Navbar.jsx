@@ -109,7 +109,7 @@ export default function Navbar() {
                                 </Link>
                             </div>
                             <div className="flex flex-col gap-2 pt-4 border-t border-border/40">
-                                <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white" asChild>
+                                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white" asChild>
                                     <Link href="/login">Login</Link>
                                 </Button>
                             </div>

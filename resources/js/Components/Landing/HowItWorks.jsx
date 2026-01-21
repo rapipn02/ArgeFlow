@@ -28,7 +28,7 @@ const steps = [
         icon: CheckCircle,
         title: 'Project Selesai',
         description: 'Review hasil kerja, bayar sisa 60%, dan berikan rating untuk programmer',
-        color: 'from-green-500 to-emerald-500',
+        color: 'from-blue-500 to-blue-600',
     },
 ];
 
