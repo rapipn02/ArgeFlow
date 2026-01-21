@@ -222,7 +222,7 @@ function TeamCard({ team, index, isSelected, onSelect, serviceId }) {
 
                     {/* CTA Button */}
                     <Link href={`/teams/${team.id}${serviceId ? `?service_id=${serviceId}` : ''}`}>
-                        <Button className="w-full group" size="lg">
+                        <Button className="w-full group mt-5" size="lg">
                             Pilih Tim Ini
                             <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </Button>

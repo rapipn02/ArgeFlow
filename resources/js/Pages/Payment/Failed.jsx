@@ -2,12 +2,26 @@ import { Head, Link } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { motion } from 'framer-motion';
 import { XCircle, ArrowRight, RefreshCw, Home, HelpCircle } from 'lucide-react';
-import Navbar from '@/Components/Landing/Navbar';
-export default function Failed({ order }) {
+import { Star, Users, CheckCircle2, ArrowRight, User, LogOut, Briefcase, Award } from 'lucide-react';
+import { Button } from '@/Components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/Components/ui/card';
+import { ThemeToggle } from '@/Components/ThemeToggle';
+import { ThemeProvider } from '@/Components/ThemeProvider';
+import { 
+    CreditCard, 
+    Wallet, 
+    Building2, 
+    Smartphone, 
+    QrCode,
+    ArrowLeft,
+    Shield,
+    Clock
+} from 'lucide-react';
+export default function Failed({ order,auth }) {
     return (
         <AuthenticatedLayout>
             <Head title="Pembayaran Gagal" />
-            <Navbar />
+            <Navbar auth={auth} />
 
             <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center py-12">
                 <div className="container mx-auto px-4 max-w-2xl">
