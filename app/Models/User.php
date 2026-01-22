@@ -48,4 +48,20 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get the team memberships for the user
+     */
+    public function teamMemberships()
+    {
+        return $this->hasMany(TeamMember::class, 'user_id');
+    }
+
+    /**
+     * Get the programmer profile for the user
+     */
+    public function programmerProfile()
+    {
+        return $this->hasOne(ProgrammerProfile::class);
+    }
 }

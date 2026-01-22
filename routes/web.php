@@ -61,6 +61,31 @@ Route::middleware('auth')->group(function () {
     // Invoices
     Route::get('/invoice/{order}', [\App\Http\Controllers\InvoiceController::class, 'show'])->name('invoice.show');
     Route::get('/invoice/{order}/download', [\App\Http\Controllers\InvoiceController::class, 'download'])->name('invoice.download');
+
+    // Admin Routes (Superadmin only)
+    Route::middleware('superadmin')->prefix('admin')->name('admin.')->group(function () {
+        // Dashboard
+        Route::get('/dashboard', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('dashboard');
+
+        // Transactions
+        Route::resource('transactions', \App\Http\Controllers\Admin\AdminTransactionController::class);
+
+        // Users
+        Route::resource('users', \App\Http\Controllers\Admin\AdminUserController::class);
+
+        // Programmers
+        Route::resource('programmers', \App\Http\Controllers\Admin\AdminProgrammerController::class);
+
+        // Teams
+        Route::resource('teams', \App\Http\Controllers\Admin\AdminTeamController::class);
+        Route::post('/teams/{team}/assign', [\App\Http\Controllers\Admin\AdminTeamController::class, 'assignMember'])->name('teams.assign');
+        Route::delete('/teams/{team}/members/{user}', [\App\Http\Controllers\Admin\AdminTeamController::class, 'removeMember'])->name('teams.remove-member');
+        Route::post('/orders/{order}/auto-assign', [\App\Http\Controllers\Admin\AdminTeamController::class, 'autoAssign'])->name('orders.auto-assign');
+
+        // Services
+        Route::resource('services', \App\Http\Controllers\Admin\AdminServiceController::class);
+        Route::post('/services/{service}/toggle', [\App\Http\Controllers\Admin\AdminServiceController::class, 'toggleActive'])->name('services.toggle');
+    });
 });
 
 // Midtrans Webhook (no auth required)

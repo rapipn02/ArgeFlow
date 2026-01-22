@@ -16,12 +16,33 @@ class Service extends Model
         'price',
         'icon',
         'is_active',
+        'features',
+        'estimated_days',
+        'category',
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
         'is_active' => 'boolean',
+        'features' => 'array',
     ];
+
+    /**
+     * Scope untuk active services
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    /**
+     * Accessor untuk formatted price
+     */
+    public function getFormattedPriceAttribute()
+    {
+        return 'Rp ' . number_format((float) $this->price, 0, ',', '.');
+    }
+
 
     /**
      * Get orders for this service

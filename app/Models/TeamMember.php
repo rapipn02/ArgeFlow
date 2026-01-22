@@ -11,6 +11,7 @@ class TeamMember extends Model
 
     protected $fillable = [
         'team_id',
+        'user_id',
         'name',
         'role',
         'avatar',
@@ -23,5 +24,13 @@ class TeamMember extends Model
     public function team()
     {
         return $this->belongsTo(Team::class);
+    }
+
+    /**
+     * Get the user associated with this team member
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

@@ -1,0 +1,115 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Inertia\Inertia;
+
+class AdminUserController extends Controller
+{
+    /**
+     * Display a listing of users
+     */
+    public function index(Request $request)
+    {
+        $query = User::query();
+
+        // Filter by role
+        if ($request->has('role') && $request->role !== 'all') {
+            $query->where('role', $request->role);
+        }
+
+        // Search
+        if ($request->has('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
+                    ->orWhere('email', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $users = $query->orderBy('created_at', 'desc')
+            ->paginate(15)
+            ->through(function ($user) {
+                return [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'role' => $user->role,
+                    'phone' => $user->phone,
+                    'avatar' => $user->avatar,
+                    'created_at' => $user->created_at->format('d M Y'),
+                ];
+            });
+
+        return Inertia::render('Admin/Users/Index', [
+            'users' => $users,
+            'filters' => $request->only(['role', 'search']),
+        ]);
+    }
+
+    /**
+     * Store a newly created user
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+            'role' => 'required|in:customer,programmer,admin',
+            'phone' => 'nullable|string|max:20',
+        ]);
+
+        $validated['password'] = Hash::make($validated['password']);
+
+        User::create($validated);
+
+        return redirect()->back()->with('success', 'User berhasil ditambahkan');
+    }
+
+    /**
+     * Update the specified user
+     */
+    public function update(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+            'role' => 'required|in:customer,programmer,admin',
+            'phone' => 'nullable|string|max:20',
+            'password' => 'nullable|string|min:8',
+        ]);
+
+        if (!empty($validated['password'])) {
+            $validated['password'] = Hash::make($validated['password']);
+        } else {
+            unset($validated['password']);
+        }
+
+        $user->update($validated);
+
+        return redirect()->back()->with('success', 'User berhasil diupdate');
+    }
+
+    /**
+     * Remove the specified user
+     */
+    public function destroy($id)
+    {
+        $user = User::findOrFail($id);
+
+        // Prevent deleting own account
+        if ($user->id === auth()->id()) {
+            return redirect()->back()->with('error', 'Tidak dapat menghapus akun sendiri');
+        }
+
+        $user->delete();
+
+        return redirect()->back()->with('success', 'User berhasil dihapus');
+    }
+}
