@@ -82,7 +82,7 @@ export default function TeamsIndex({ teams, programmers }) {
                 </div>
 
                 {/* Teams Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
                     {teams.map((team) => (
                         <div
                             key={team.id}
@@ -94,7 +94,7 @@ export default function TeamsIndex({ teams, programmers }) {
                                         <h3 className="text-lg font-semibold text-gray-900">
                                             {team.name}
                                         </h3>
-                                        <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                        <span className="px-8 py-1 mx-3 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
                                             {team.specialization === 'web' && 'Web Dev'}
                                             {team.specialization === 'mobile' && 'Mobile Dev'}
                                             {team.specialization === 'fullstack' && 'Fullstack'}
@@ -105,7 +105,7 @@ export default function TeamsIndex({ teams, programmers }) {
                                     </p>
                                 </div>
                                 <span
-                                    className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                                    className={`px-8 py-1 text-xs font-semibold rounded-full ${
                                         team.status === 'available'
                                             ? 'bg-green-100 text-green-800'
                                             : 'bg-yellow-100 text-yellow-800'

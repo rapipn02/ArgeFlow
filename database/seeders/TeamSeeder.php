@@ -86,7 +86,7 @@ class TeamSeeder extends Seeder
         TeamMember::create([
             'team_id' => $gammaTeam->id,
             'user_id' => $programmers[4]->id,
-            'role' => 'Mobile Developer',
+            'role' => 'Mob Developer',
         ]);
 
         if (isset($programmers[5])) {
