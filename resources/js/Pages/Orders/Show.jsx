@@ -14,7 +14,8 @@ import {
     FileText,
     Calendar,
     DollarSign,
-    RefreshCw
+    RefreshCw,
+    TrendingUp
 } from 'lucide-react';
 
 export default function Show({ order }) {
@@ -294,6 +295,17 @@ export default function Show({ order }) {
                                 )}
 
                                 {/* Actions */}
+                                {/* Progress Button - Available for dp_paid and fully_paid */}
+                                {(order.payment_status === 'dp_paid' || order.payment_status === 'fully_paid') && (
+                                    <Link
+                                        href={route('orders.progress', { order: order.id })}
+                                        className="w-full flex items-center justify-center gap-2 py-4 mb-3 rounded-xl font-semibold text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg hover:shadow-xl transition-all"
+                                    >
+                                        <TrendingUp className="w-5 h-5" />
+                                        <span>Lihat Progress</span>
+                                    </Link>
+                                )}
+
                                 {order.payment_status === 'pending' && (
                                     <Link
                                         href={route('payment.show', { order: order.id })}

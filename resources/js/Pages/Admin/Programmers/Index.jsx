@@ -45,32 +45,26 @@ export default function ProgrammersIndex({ programmers, filters }) {
 
             <div className="space-y-6">
                 {/* Header */}
-                <div className="flex items-center justify-between">
+               <div className="border-b border-gray-150 -mx-8">
+                    <div className='flex items-center justify-between pb-2 px-6'>
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900">
+                        <h1 className="text-2xl font-bold text-gray-900 mx-5">
                             Manajemen Programmer
                         </h1>
-                        <p className="text-sm text-gray-500 mt-1">
+                        <p className="text-sm text-gray-500 mt-1 mx-5">
                             Kelola data programmer
                         </p>
                     </div>
                     <button
                         onClick={() => setShowModal(true)}
-                        className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors gap-2"
+                        className="inline-flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white font-small rounded-lg transition-colors gap-2 mx-4"
                     >
-                        <Plus className="w-5 h-5" />
+                        <Plus className="w-4 h-4" />
                         Tambah Programmer
                     </button>
+                    </div>
                 </div>
 
-                {/* Search */}
-                <div className="bg-white rounded-xl border border-gray-200 p-4">
-                    <input
-                        type="text"
-                        placeholder="Cari programmer..."
-                        className="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                    />
-                </div>
 
                 {/* Programmers Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -81,7 +75,7 @@ export default function ProgrammersIndex({ programmers, filters }) {
                         >
                             {/* Avatar */}
                             <div className="flex items-center gap-4 mb-4">
-                                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0">
+                                <div className="w-16 h-16 rounded-full bg-blue-500  flex items-center justify-center flex-shrink-0">
                                     <span className="text-white font-bold text-xl">
                                         {programmer.name.charAt(0).toUpperCase()}
                                     </span>
@@ -147,7 +141,7 @@ export default function ProgrammersIndex({ programmers, filters }) {
                             <div className="flex gap-2">
                                 <button
                                     onClick={() => handleDelete(programmer.id)}
-                                    className="flex-1 px-3 py-2 bg-red-50 text-red-600 hover:bg-red-100 font-medium rounded-lg text-sm transition-colors flex items-center justify-center gap-1"
+                                    className="flex-1 px-3 py-2 text-red-600 hover:bg-red-100 font-medium rounded-lg text-sm transition-colors flex items-center justify-center gap-1"
                                 >
                                     <Trash2 className="w-4 h-4" />
                                     Hapus

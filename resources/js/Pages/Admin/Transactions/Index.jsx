@@ -7,7 +7,7 @@ export default function TransactionsIndex({ transactions, filters }) {
     const [showModal, setShowModal] = useState(false);
     const [formData, setFormData] = useState({
         type: 'income',
-        category: 'project_payment',
+        category: 'project payment',
         amount: '',
         description: '',
         transaction_date: new Date().toISOString().split('T')[0],
@@ -20,7 +20,7 @@ export default function TransactionsIndex({ transactions, filters }) {
                 setShowModal(false);
                 setFormData({
                     type: 'income',
-                    category: 'project_payment',
+                    category: 'project payment',
                     amount: '',
                     description: '',
                     transaction_date: new Date().toISOString().split('T')[0],
@@ -39,20 +39,22 @@ export default function TransactionsIndex({ transactions, filters }) {
         <AdminLayout>
             <Head title="Manajemen Transaksi" />
 
-            <div className="space-y-6">
+            <div className="space-y-6 ">
                 {/* Header */}
-                <div className="flex items-center justify-between">
-                    <div>
-                        <h1 className="text-2xl font-bold text-gray-900">
+                <div className="flex items-center justify-between border-b border-gray-150 -mx-8 ">
+                    <div className='flex items-center justify-between pb-2 px-6'>
+                        <div>
+                        <h1 className="text-2xl font-bold text-gray-900 mx-7">
                             Manajemen Transaksi
                         </h1>
-                        <p className="text-sm text-gray-500 mt-1">
+                        <p className="text-sm text-gray-500 mt-1 mx-7">
                             Kelola semua transaksi keuangan
                         </p>
+                        </div>
                     </div>
                     <button
                         onClick={() => setShowModal(true)}
-                        className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors gap-2"
+                        className="inline-flex items-center px-2 py-2 bg-blue-600 hover:bg-blue-700 text-white font-small rounded-lg transition-colors gap-2 mx-3"
                     >
                         <Plus className="w-5 h-5" />
                         Tambah Transaksi
@@ -60,10 +62,10 @@ export default function TransactionsIndex({ transactions, filters }) {
                 </div>
 
                 {/* Filters */}
-                <div className="bg-white rounded-xl border border-gray-200 p-4">
+                <div className=" border-gray-200 p-4">
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700">
                                 Tipe
                             </label>
                             <select className="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
@@ -78,7 +80,7 @@ export default function TransactionsIndex({ transactions, filters }) {
                             </label>
                             <select className="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
                                 <option value="all">Semua</option>
-                                <option value="project_payment">
+                                <option value="project payment">
                                     Pembayaran Proyek
                                 </option>
                                 <option value="salary">Gaji</option>
@@ -109,8 +111,8 @@ export default function TransactionsIndex({ transactions, filters }) {
                 {/* Transactions Table */}
                 <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
                     <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-50">
+                        <table className="min-w-full divide-y mt-6">
+                            <thead className="">
                                 <tr>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Tanggal
@@ -124,7 +126,7 @@ export default function TransactionsIndex({ transactions, filters }) {
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Tipe
                                     </th>
-                                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Nominal
                                     </th>
                                     <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -150,7 +152,7 @@ export default function TransactionsIndex({ transactions, filters }) {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                            <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full text-gray-800">
                                                 {transaction.category}
                                             </span>
                                         </td>
@@ -159,8 +161,8 @@ export default function TransactionsIndex({ transactions, filters }) {
                                                 className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                                                     transaction.type ===
                                                     'income'
-                                                        ? 'bg-green-100 text-green-800'
-                                                        : 'bg-red-100 text-red-800'
+                                                        ? 'text-green-800'
+                                                        : ' text-red-800'
                                                 }`}
                                             >
                                                 {transaction.type === 'income'
@@ -198,8 +200,8 @@ export default function TransactionsIndex({ transactions, filters }) {
 
                     {/* Pagination */}
                     {transactions.links && (
-                        <div className="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
-                            <div className="flex items-center justify-between">
+                        <div className="bg-white px-4 py-3 border-t border-gray-200 sm:px-6 mt-4 mb-4">
+                            <div className="flex items-center justify-between mt-3">
                                 <div className="text-sm text-gray-700">
                                     Menampilkan{' '}
                                     <span className="font-medium">

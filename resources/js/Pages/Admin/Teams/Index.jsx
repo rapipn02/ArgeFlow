@@ -10,6 +10,7 @@ export default function TeamsIndex({ teams, programmers }) {
     const [formData, setFormData] = useState({
         name: '',
         description: '',
+        specialization: 'web',
     });
     const [assignData, setAssignData] = useState({
         user_id: '',
@@ -21,7 +22,7 @@ export default function TeamsIndex({ teams, programmers }) {
         router.post(route('admin.teams.store'), formData, {
             onSuccess: () => {
                 setShowModal(false);
-                setFormData({ name: '', description: '' });
+                setFormData({ name: '', description: '', specialization: 'web' });
             },
         });
     };
@@ -60,7 +61,8 @@ export default function TeamsIndex({ teams, programmers }) {
 
             <div className="space-y-6">
                 {/* Header */}
-                <div className="flex items-center justify-between">
+               <div className="border-b border-gray-150 -mx-8">
+                    <div className='flex items-center justify-between pb-2 px-6'>
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900">
                             Manajemen Tim Programmer
@@ -76,6 +78,7 @@ export default function TeamsIndex({ teams, programmers }) {
                         <Plus className="w-5 h-5" />
                         Tambah Tim
                     </button>
+                    </div>
                 </div>
 
                 {/* Teams Grid */}
@@ -87,9 +90,16 @@ export default function TeamsIndex({ teams, programmers }) {
                         >
                             <div className="flex items-start justify-between mb-4">
                                 <div className="flex-1">
-                                    <h3 className="text-lg font-semibold text-gray-900">
-                                        {team.name}
-                                    </h3>
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <h3 className="text-lg font-semibold text-gray-900">
+                                            {team.name}
+                                        </h3>
+                                        <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                            {team.specialization === 'web' && 'Web Dev'}
+                                            {team.specialization === 'mobile' && 'Mobile Dev'}
+                                            {team.specialization === 'fullstack' && 'Fullstack'}
+                                        </span>
+                                    </div>
                                     <p className="text-sm text-gray-500 mt-1">
                                         {team.description || 'Tidak ada deskripsi'}
                                     </p>
@@ -227,6 +237,26 @@ export default function TeamsIndex({ teams, programmers }) {
                                         className="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
                                         required
                                     />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        Spesialisasi
+                                    </label>
+                                    <select
+                                        value={formData.specialization}
+                                        onChange={(e) =>
+                                            setFormData({
+                                                ...formData,
+                                                specialization: e.target.value,
+                                            })
+                                        }
+                                        className="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                        required
+                                    >
+                                        <option value="web">Web Development</option>
+                                        <option value="mobile">Mobile Development</option>
+                                        <option value="fullstack">Fullstack Development</option>
+                                    </select>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">

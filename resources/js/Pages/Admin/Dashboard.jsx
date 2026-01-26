@@ -1,6 +1,9 @@
 import { Head } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import StatCard from '@/Components/Admin/StatCard';
+import ProjectDoughnutChart from '@/Components/Admin/ProjectDoughnutChart';
+import { useState } from 'react';
+import { router } from '@inertiajs/react';
 import {
     TrendingUp,
     TrendingDown,
@@ -19,7 +22,9 @@ import {
     UsersRound, 
     Banknote,
     MoveUpRight,
-    ArrowUpRight
+    ArrowUpRight,
+    AlertCircle,
+    CheckCircle
 } from 'lucide-react';
 
 export default function Dashboard({
@@ -27,7 +32,35 @@ export default function Dashboard({
     recentTransactions,
     financialReports,
     currentDate,
+    pendingTeamAssignment = [],
+    availableTeams = [],
+    allOrders = [],
 }) {
+    const [assigningOrder, setAssigningOrder] = useState(null);
+    const [selectedTeam, setSelectedTeam] = useState({});
+
+    const handleAssignTeam = (orderId) => {
+        if (!selectedTeam[orderId]) {
+            alert('Pilih tim terlebih dahulu');
+            return;
+        }
+
+        setAssigningOrder(orderId);
+        router.post(
+            route('admin.orders.manual-assign', orderId),
+            { team_id: selectedTeam[orderId] },
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    setAssigningOrder(null);
+                    setSelectedTeam({ ...selectedTeam, [orderId]: null });
+                },
+                onError: () => {
+                    setAssigningOrder(null);
+                },
+            }
+        );
+    };
     return (
         <AdminLayout>
             <Head title="Dashboard Keuangan" />
@@ -37,10 +70,10 @@ export default function Dashboard({
                 <div className="border-b border-gray-150 -mx-8">
                     <div className='flex items-center justify-between pb-2 px-6'>
                     <div>
-                        <h1 className="text-1xl font-semibold text-gray-900">
+                        <h1 className="text-2xl font-bold text-gray-900 mx-5">
                             Dashboard Keuangan
                         </h1>   
-                        <p className="text-sm text-gray-500 mt-1">
+                        <p className="text-sm text-gray-500 mt-1 mx-5">
                             Ringkasan dan analisis keuangan ArgeFlow
                         </p>
                     </div>
@@ -68,7 +101,7 @@ export default function Dashboard({
                 </div>
 
                 {/* Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 gap-y-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 gap-y-5">
                     <StatCard
                         title="Total Pemasukan"
                         value={stats.total_income.formatted}
@@ -137,6 +170,121 @@ export default function Dashboard({
                     />
                 </div>
 
+                {/* Pending Team Assignment Section */}
+                {pendingTeamAssignment.length > 0 && (
+                    <div className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl border-2 border-orange-200 overflow-hidden">
+                        <div className="px-6 py-4 bg-white/50 border-b border-orange-200">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 bg-orange-100 rounded-lg">
+                                    <AlertCircle className="w-6 h-6 text-orange-600" />
+                                </div>
+                                <div>
+                                    <h2 className="text-lg font-semibold text-gray-900">
+                                        Proyek Menunggu Penugasan Tim
+                                    </h2>
+                                    <p className="text-sm text-gray-600">
+                                        {pendingTeamAssignment.length} proyek sudah dibayar DP dan menunggu Anda assign tim programmer
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div className="p-6">
+                            <div className="space-y-4">
+                                {pendingTeamAssignment.map((order) => (
+                                    <div 
+                                        key={order.id} 
+                                        className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow"
+                                    >
+                                        <div className="flex items-start justify-between gap-4">
+                                            <div className="flex-1">
+                                                <div className="flex items-center gap-3 mb-2">
+                                                    <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full">
+                                                        {order.order_number}
+                                                    </span>
+                                                    <span className="text-sm text-gray-500">
+                                                        {order.dp_paid_at}
+                                                    </span>
+                                                </div>
+                                                
+                                                <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                                                    {order.service_name}
+                                                </h3>
+                                                
+                                                <div className="grid grid-cols-2 gap-4 mb-3">
+                                                    <div>
+                                                        <p className="text-xs text-gray-500">Client</p>
+                                                        <p className="text-sm font-medium text-gray-900">
+                                                            {order.client_name}
+                                                        </p>
+                                                        <p className="text-xs text-gray-500">
+                                                            {order.client_email}
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-xs text-gray-500">Total Proyek</p>
+                                                        <p className="text-sm font-semibold text-gray-900">
+                                                            Rp {Number(order.total_amount).toLocaleString('id-ID')}
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                {order.requirements && (
+                                                    <div className="bg-gray-50 rounded-lg p-3 mb-3">
+                                                        <p className="text-xs text-gray-500 mb-1">Kebutuhan Proyek:</p>
+                                                        <p className="text-sm text-gray-700">
+                                                            {order.requirements}
+                                                        </p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            
+                                            <div className="w-72">
+                                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                    Pilih Tim
+                                                </label>
+                                                <select
+                                                    value={selectedTeam[order.id] || ''}
+                                                    onChange={(e) => setSelectedTeam({
+                                                        ...selectedTeam,
+                                                        [order.id]: e.target.value
+                                                    })}
+                                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-3"
+                                                >
+                                                    <option value="">-- Pilih Tim --</option>
+                                                    {availableTeams.map((team) => (
+                                                        <option key={team.id} value={team.id}>
+                                                            {team.name} ({team.specialization}) - {team.workload} proyek aktif
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                                
+                                                <button
+                                                    onClick={() => handleAssignTeam(order.id)}
+                                                    disabled={!selectedTeam[order.id] || assigningOrder === order.id}
+                                                    className="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+                                                >
+                                                    {assigningOrder === order.id ? (
+                                                        <>
+                                                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                                            Assigning...
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <CheckCircle className="w-4 h-4" />
+                                                            Assign & Mulai Proyek
+                                                        </>
+                                                    )}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {/* Transactions and Reports */}
                 <div className="grid grid-cols-1 lg:grid-cols-7 gap-6">
                     {/* Recent Transactions */}
@@ -180,7 +328,7 @@ export default function Dashboard({
                                                         className="hover:bg-gray-50"
                                                     >
                                                         <td className="px-6 py-4 whitespace-nowrap">
-                                                            <div className="text-sm font-medium text-gray-900">
+                                                            <div className="max-w-[220px] truncate text-sm text-sm font-medium text-gray-900">
                                                                 {
                                                                     transaction.detail
                                                                 }
@@ -192,7 +340,7 @@ export default function Dashboard({
                                                             </div>
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap">
-                                                            <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                                            <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full text-gray-800">
                                                                 {
                                                                     transaction.category
                                                                 }
@@ -237,14 +385,19 @@ export default function Dashboard({
 
                     {/* Financial Report - Pie Chart */}
                     <div className="lg:col-span-2">
-                        <div className="bg-white rounded-xl border border-gray-200 p-6">
+                        <div className="bg-white rounded-xl border border-gray-200 p-4  ">
                             <h2 className="text-lg font-semibold text-gray-900 mb-4">
                                 Laporan Keuangan
                             </h2>
                             
+                            {/* Project Doughnut Chart */}
+                            <div className="mb-6">
+                                <ProjectDoughnutChart ordersData={allOrders} />
+                            </div>
+
                             {/* Pie Chart Container */}
                             <div className="flex items-center justify-center mb-4">
-                                <div className="relative w-48 h-48">
+                                <div className="relative w-30 h-30">
                                     {/* SVG Pie Chart */}
                                     <svg viewBox="0 0 100 100" className="transform -rotate-90">
                                         {(() => {
@@ -300,20 +453,13 @@ export default function Dashboard({
                                     {/* Center circle for donut effect */}
                                     <div className="absolute inset-0 flex items-center justify-center">
                                         <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center">
-                                            <div className="text-center">
-                                                <p className="text-xs text-gray-500">Total</p>
-                                                <p className="text-sm font-bold text-gray-900">
-                                                    {financialReports.length}
-                                                </p>
-                                                <p className="text-xs text-gray-500">Bulan</p>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             
                             {/* Legend */}
-                            <div className="space-y-2 max-h-48 overflow-y-auto">
+                            <div className="space-y-2 max-h-32 overflow-y-auto">
                                 {financialReports.length > 0 ? (
                                     financialReports.map((report, index) => {
                                         const colors = [
@@ -326,7 +472,7 @@ export default function Dashboard({
                                         return (
                                             <div
                                                 key={index}
-                                                className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0"
+                                                className="flex items-center justify-between py-1 border-b border-gray-100 last:border-0 mb-10"
                                             >
                                                 <div className="flex items-center gap-2">
                                                     <div 

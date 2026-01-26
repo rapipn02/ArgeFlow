@@ -64,4 +64,28 @@ class User extends Authenticatable
     {
         return $this->hasOne(ProgrammerProfile::class);
     }
+
+    /**
+     * Check if user is a programmer
+     */
+    public function isProgrammer(): bool
+    {
+        return $this->role === 'programmer';
+    }
+
+    /**
+     * Check if user is a client
+     */
+    public function isClient(): bool
+    {
+        return $this->role === 'client';
+    }
+
+    /**
+     * Check if user is an admin
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
 }

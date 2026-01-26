@@ -116,11 +116,59 @@ class AdminDashboardController extends Controller
             'active_orders' => Order::whereIn('status', ['pending', 'in_progress'])->count(),
         ];
 
+        // Orders yang perlu assign team (sudah bayar DP tapi belum ada team)
+        $pendingTeamAssignment = Order::with(['service', 'user'])
+            ->where('team_preference', 'auto_assign')
+            ->where('payment_status', 'dp_paid')
+            ->whereNull('team_id')
+            ->orderBy('dp_paid_at', 'asc')
+            ->get()
+            ->map(function ($order) {
+                return [
+                    'id' => $order->id,
+                    'order_number' => $order->order_number,
+                    'service_name' => $order->service->name ?? 'N/A',
+                    'client_name' => $order->user->name ?? 'N/A',
+                    'client_email' => $order->user->email ?? 'N/A',
+                    'total_amount' => $order->total_amount,
+                    'dp_paid_at' => $order->dp_paid_at ? $order->dp_paid_at->format('d M Y H:i') : null,
+                    'requirements' => $order->requirements,
+                ];
+            });
+
+        // Get available teams untuk assign
+        $availableTeams = Team::all()->map(function ($team) {
+            $activeOrders = Order::where('team_id', $team->id)
+                ->whereIn('status', ['in_progress', 'final_payment'])
+                ->count();
+
+            return [
+                'id' => $team->id,
+                'name' => $team->name,
+                'specialization' => $team->specialization,
+                'workload' => $activeOrders,
+                'average_rating' => $team->average_rating,
+            ];
+        });
+
+        // All orders untuk chart
+        $allOrders = Order::select('id', 'status', 'created_at')
+            ->get()
+            ->map(function ($order) {
+                return [
+                    'status' => $order->status,
+                    'created_at' => $order->created_at->toISOString(),
+                ];
+            });
+
         return Inertia::render('Admin/Dashboard', [
             'stats' => $stats,
             'recentTransactions' => $recentTransactions,
             'financialReports' => $financialReports,
             'additionalStats' => $additionalStats,
+            'pendingTeamAssignment' => $pendingTeamAssignment,
+            'availableTeams' => $availableTeams,
+            'allOrders' => $allOrders,
             'currentDate' => Carbon::now()->locale('id')->isoFormat('dddd, D MMMM YYYY'),
         ]);
     }
@@ -131,7 +179,7 @@ class AdminDashboardController extends Controller
     private function getCategoryLabel($category)
     {
         $labels = [
-            'project_payment' => 'Pembayaran Proyek',
+            'project payment' => 'Pembayaran Proyek',
             'salary' => 'Gaji',
             'operational' => 'Operasional',
             'equipment' => 'Peralatan',

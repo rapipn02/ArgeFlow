@@ -1,8 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { motion } from 'framer-motion';
-import { XCircle, ArrowRight, RefreshCw, Home, HelpCircle } from 'lucide-react';
-import { Star, Users, CheckCircle2, ArrowRight, User, LogOut, Briefcase, Award } from 'lucide-react';
+import { XCircle, ArrowRight, RefreshCw, Home, HelpCircle, Star, Users, CheckCircle2, User, LogOut, Briefcase, Award } from 'lucide-react';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/Components/ui/card';
 import { ThemeToggle } from '@/Components/ThemeToggle';

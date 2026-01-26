@@ -106,18 +106,19 @@ class AdminProgrammerController extends Controller
             'portfolio_url' => 'nullable|url',
         ]);
 
-        if (!empty($validated['password'])) {
-            $validated['password'] = Hash::make($validated['password']);
-        } else {
-            unset($validated['password']);
-        }
-
-        $programmer->update([
+        // Prepare update data
+        $updateData = [
             'name' => $validated['name'],
             'email' => $validated['email'],
             'phone' => $validated['phone'],
-            'password' => $validated['password'] ?? $programmer->password,
-        ]);
+        ];
+
+        // Only update password if provided
+        if (!empty($validated['password'])) {
+            $updateData['password'] = Hash::make($validated['password']);
+        }
+
+        $programmer->update($updateData);
 
         // Update or create programmer profile
         $programmer->programmerProfile()->updateOrCreate(

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Team;
 use App\Models\TeamMember;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class TeamSeeder extends Seeder
@@ -13,6 +14,14 @@ class TeamSeeder extends Seeder
      */
     public function run(): void
     {
+        // Get programmers (pastikan sudah run ProgrammerSeeder dulu)
+        $programmers = User::where('role', 'programmer')->get();
+
+        if ($programmers->count() < 6) {
+            $this->command->warn('Warning: Tidak cukup programmer. Jalankan ProgrammerSeeder terlebih dahulu.');
+            return;
+        }
+
         // Team 1: Alpha Team (Web Specialist)
         $alphaTeam = Team::create([
             'name' => 'Alpha Team',
@@ -25,28 +34,17 @@ class TeamSeeder extends Seeder
             'completed_projects' => 42,
         ]);
 
+        // Assign programmers ke Alpha Team
         TeamMember::create([
             'team_id' => $alphaTeam->id,
-            'name' => 'Sarah Johnson',
-            'role' => 'UI/UX Designer',
-            'avatar' => '/images/members/sarah.png',
-            'bio' => 'UI/UX Designer dengan 6 tahun pengalaman. Spesialis dalam user-centered design.',
+            'user_id' => $programmers[0]->id,
+            'role' => 'Team Leader',
         ]);
 
         TeamMember::create([
             'team_id' => $alphaTeam->id,
-            'name' => 'Michael Chen',
+            'user_id' => $programmers[1]->id,
             'role' => 'Frontend Developer',
-            'avatar' => '/images/members/michael.png',
-            'bio' => 'Frontend Developer expert dalam React, Vue, dan modern CSS frameworks.',
-        ]);
-
-        TeamMember::create([
-            'team_id' => $alphaTeam->id,
-            'name' => 'David Rodriguez',
-            'role' => 'Backend Developer',
-            'avatar' => '/images/members/david.png',
-            'bio' => 'Backend Developer dengan keahlian Laravel, Node.js, dan database optimization.',
         ]);
 
         // Team 2: Beta Squad (Fullstack)
@@ -63,26 +61,14 @@ class TeamSeeder extends Seeder
 
         TeamMember::create([
             'team_id' => $betaTeam->id,
-            'name' => 'Emma Wilson',
-            'role' => 'UI/UX Designer',
-            'avatar' => '/images/members/emma.png',
-            'bio' => 'Creative UI/UX Designer dengan portfolio internasional.',
-        ]);
-
-        TeamMember::create([
-            'team_id' => $betaTeam->id,
-            'name' => 'James Anderson',
+            'user_id' => $programmers[2]->id,
             'role' => 'Fullstack Developer',
-            'avatar' => '/images/members/james.png',
-            'bio' => 'Fullstack Developer dengan expertise di React, Laravel, dan cloud deployment.',
         ]);
 
         TeamMember::create([
             'team_id' => $betaTeam->id,
-            'name' => 'Lisa Martinez',
+            'user_id' => $programmers[3]->id,
             'role' => 'Backend Developer',
-            'avatar' => '/images/members/lisa.png',
-            'bio' => 'Backend specialist dengan fokus pada API development dan microservices.',
         ]);
 
         // Team 3: Gamma Force (Mobile Specialist)
@@ -99,98 +85,18 @@ class TeamSeeder extends Seeder
 
         TeamMember::create([
             'team_id' => $gammaTeam->id,
-            'name' => 'Ryan Taylor',
-            'role' => 'UI/UX Designer',
-            'avatar' => '/images/members/ryan.png',
-            'bio' => 'Mobile UI/UX specialist dengan pengalaman di berbagai platform.',
+            'user_id' => $programmers[4]->id,
+            'role' => 'Mobile Developer',
         ]);
 
-        TeamMember::create([
-            'team_id' => $gammaTeam->id,
-            'name' => 'Kevin Brown',
-            'role' => 'Frontend Developer',
-            'avatar' => '/images/members/kevin.png',
-            'bio' => 'Mobile frontend developer expert dalam React Native dan Flutter.',
-        ]);
+        if (isset($programmers[5])) {
+            TeamMember::create([
+                'team_id' => $gammaTeam->id,
+                'user_id' => $programmers[5]->id,
+                'role' => 'UI/UX Designer',
+            ]);
+        }
 
-        TeamMember::create([
-            'team_id' => $gammaTeam->id,
-            'name' => 'Amanda White',
-            'role' => 'Backend Developer',
-            'avatar' => '/images/members/amanda.png',
-            'bio' => 'Backend developer dengan fokus pada mobile API dan real-time features.',
-        ]);
-
-        // Team 4: Delta Crew (E-Commerce Specialist)
-        $deltaTeam = Team::create([
-            'name' => 'Delta Crew',
-            'description' => 'Tim spesialis e-commerce dengan track record membangun toko online yang sukses. Expert dalam payment gateway integration.',
-            'specialization' => 'web',
-            'avatar' => '/images/teams/delta-crew.png',
-            'is_available' => true,
-            'average_rating' => 4.6,
-            'total_projects' => 28,
-            'completed_projects' => 26,
-        ]);
-
-        TeamMember::create([
-            'team_id' => $deltaTeam->id,
-            'name' => 'Sophia Garcia',
-            'role' => 'UI/UX Designer',
-            'avatar' => '/images/members/sophia.png',
-            'bio' => 'E-commerce UX specialist dengan fokus pada conversion optimization.',
-        ]);
-
-        TeamMember::create([
-            'team_id' => $deltaTeam->id,
-            'name' => 'Daniel Lee',
-            'role' => 'Frontend Developer',
-            'avatar' => '/images/members/daniel.png',
-            'bio' => 'Frontend developer dengan expertise dalam e-commerce platforms.',
-        ]);
-
-        TeamMember::create([
-            'team_id' => $deltaTeam->id,
-            'name' => 'Jessica Kim',
-            'role' => 'Backend Developer',
-            'avatar' => '/images/members/jessica.png',
-            'bio' => 'Backend developer spesialis payment integration dan inventory management.',
-        ]);
-
-        // Team 5: Echo Unit (Startup Specialist)
-        $echoTeam = Team::create([
-            'name' => 'Echo Unit',
-            'description' => 'Tim yang fokus pada startup dan MVP development. Cepat, agile, dan result-oriented.',
-            'specialization' => 'fullstack',
-            'avatar' => '/images/teams/echo-unit.png',
-            'is_available' => false, // Currently busy
-            'average_rating' => 5.0,
-            'total_projects' => 25,
-            'completed_projects' => 25,
-        ]);
-
-        TeamMember::create([
-            'team_id' => $echoTeam->id,
-            'name' => 'Alex Thompson',
-            'role' => 'UI/UX Designer',
-            'avatar' => '/images/members/alex.png',
-            'bio' => 'Startup UX designer dengan pengalaman membangun produk dari 0 to 1.',
-        ]);
-
-        TeamMember::create([
-            'team_id' => $echoTeam->id,
-            'name' => 'Chris Miller',
-            'role' => 'Fullstack Developer',
-            'avatar' => '/images/members/chris.png',
-            'bio' => 'Fullstack developer dengan rapid prototyping skills.',
-        ]);
-
-        TeamMember::create([
-            'team_id' => $echoTeam->id,
-            'name' => 'Maria Santos',
-            'role' => 'Project Manager',
-            'avatar' => '/images/members/maria.png',
-            'bio' => 'Agile project manager dengan track record sukses di berbagai startup.',
-        ]);
+        $this->command->info('Teams created successfully with programmer members!');
     }
 }

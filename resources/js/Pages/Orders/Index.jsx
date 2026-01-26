@@ -17,6 +17,18 @@ import { useState } from 'react';
 export default function Index({ orders }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
+    
+    // Debug output
+    console.log('Raw orders prop:', orders);
+    console.log('Is array?', Array.isArray(orders));
+    console.log('Has data?', orders?.data);
+    console.log('Type:', typeof orders);
+    
+    // Safely get orders data - handle both paginated and non-paginated formats
+    const ordersData = Array.isArray(orders) ? orders : (orders?.data || []);
+    
+    console.log('Final ordersData:', ordersData);
+    console.log('ordersData length:', ordersData.length);
 
     const getStatusColor = (status) => {
         const colors = {
@@ -47,6 +59,23 @@ export default function Index({ orders }) {
         };
         return texts[status] || status;
     };
+    
+    // Safety check
+    if (!orders) {
+        return (
+            <AuthenticatedLayout>
+                <Head title="Daftar Order" />
+                <Navbar />
+                <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
+                    <div className="container mx-auto px-4 max-w-7xl">
+                        <div className="bg-white p-8 rounded-lg text-center">
+                            <p className="text-red-600">Error: Data orders tidak ditemukan</p>
+                        </div>
+                    </div>
+                </div>
+            </AuthenticatedLayout>
+        );
+    }
 
     return (
         <AuthenticatedLayout>
@@ -108,9 +137,19 @@ export default function Index({ orders }) {
                     </motion.div>
 
                     {/* Orders List */}
-                    {orders.data && orders.data.length > 0 ? (
+                    {ordersData && ordersData.length > 0 ? (
                         <div className="space-y-4">
-                            {orders.data.map((order, index) => {
+                            {ordersData.filter(order => {
+                                // Search filter
+                                const matchesSearch = searchTerm === '' || 
+                                    order.order_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                    order.service?.name?.toLowerCase().includes(searchTerm.toLowerCase());
+                                
+                                // Status filter
+                                const matchesStatus = statusFilter === 'all' || order.payment_status === statusFilter;
+                                
+                                return matchesSearch && matchesStatus;
+                            }).map((order, index) => {
                                 const StatusIcon = getStatusIcon(order.payment_status);
                                 
                                 return (

@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->enum('type', ['income', 'expense'])->comment('Tipe transaksi: pemasukan atau pengeluaran');
-            $table->string('category')->comment('Kategori: project_payment, salary, operational, etc');
+            $table->string('category')->comment('Kategori: project payment, salary, operational, etc');
             $table->decimal('amount', 15, 2)->comment('Jumlah uang');
             $table->text('description')->nullable()->comment('Deskripsi transaksi');
             $table->string('reference_type')->nullable()->comment('Model terkait (Order, Payment, etc)');

@@ -55,7 +55,8 @@ export default function ServicesIndex({ services }) {
 
             <div className="space-y-6">
                 {/* Header */}
-                <div className="flex items-center justify-between">
+                <div className="border-b border-gray-150 -mx-8">
+                    <div className='flex items-center justify-between pb-2 px-6'>
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900">
                             Manajemen Layanan
@@ -71,6 +72,7 @@ export default function ServicesIndex({ services }) {
                         <Plus className="w-5 h-5" />
                         Tambah Layanan
                     </button>
+                    </div>
                 </div>
 
                 {/* Services Grid */}
@@ -95,8 +97,8 @@ export default function ServicesIndex({ services }) {
                                     onClick={() => handleToggle(service.id)}
                                     className={`p-2 rounded-lg transition-colors ${
                                         service.is_active
-                                            ? 'bg-green-100 text-green-600 hover:bg-green-200'
-                                            : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
+                                            ? ' text-green-600'
+                                            : ' text-gray-400 '
                                     }`}
                                 >
                                     {service.is_active ? (
@@ -112,13 +114,13 @@ export default function ServicesIndex({ services }) {
                             </p>
 
                             {/* Price */}
-                            <div className="mb-4 p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
+                            <div className="mb-4 p-3 rounded-lg">
                                 <div className="flex items-center justify-between">
                                     <span className="text-sm text-gray-600">
                                         Harga
                                     </span>
                                     <div className="flex items-center gap-1">
-                                        <DollarSign className="w-4 h-4 text-blue-600" />
+                                        <div className="w-4 h-4 text-green-600" />
                                         <span className="text-lg font-bold text-gray-900">
                                             {service.formatted_price}
                                         </span>
@@ -162,24 +164,12 @@ export default function ServicesIndex({ services }) {
                                 </div>
                             )}
 
-                            {/* Status */}
-                            <div className="mb-4">
-                                <span
-                                    className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                                        service.is_active
-                                            ? 'bg-green-100 text-green-800'
-                                            : 'bg-gray-100 text-gray-600'
-                                    }`}
-                                >
-                                    {service.is_active ? 'Aktif' : 'Nonaktif'}
-                                </span>
-                            </div>
 
                             {/* Actions */}
                             <div className="flex gap-2 pt-4 border-t border-gray-200">
                                 <button
                                     onClick={() => handleDelete(service.id)}
-                                    className="flex-1 px-3 py-2 bg-red-50 text-red-600 hover:bg-red-100 font-medium rounded-lg text-sm transition-colors"
+                                    className="flex-1 px-3 py-2  text-red-600 hover:bg-red-100 font-medium rounded-lg text-sm transition-colors"
                                 >
                                     Hapus
                                 </button>

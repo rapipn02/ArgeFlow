@@ -136,6 +136,28 @@ class PaymentController extends Controller
         if ($orderId) {
             $order = Order::find($orderId);
             if ($order && $order->user_id === auth()->id()) {
+                // TEMPORARY FIX: For testing, manually check and update status
+                if ($order->midtrans_order_id) {
+                    try {
+                        $status = $this->midtransService->checkTransactionStatus($order->midtrans_order_id);
+                        
+                        if (in_array($status->transaction_status, ['capture', 'settlement'])) {
+                            // Extract payment type from order_id
+                            $orderIdParts = explode('-', $order->midtrans_order_id);
+                            $paymentType = isset($orderIdParts[2]) ? $orderIdParts[2] : 'dp';
+                            
+                            if ($paymentType === 'dp' && $order->payment_status === 'pending') {
+                                $order->markDpAsPaid();
+                            } elseif ($paymentType === 'final' && $order->payment_status === 'dp_paid') {
+                                $order->markAsFullyPaid();
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Log error but continue
+                        \Log::error('Payment status check failed: ' . $e->getMessage());
+                    }
+                }
+
                 $order->load(['service', 'team']);
 
                 return Inertia::render('Payment/Success', [

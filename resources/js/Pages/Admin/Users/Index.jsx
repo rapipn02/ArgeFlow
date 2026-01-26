@@ -48,56 +48,33 @@ export default function UsersIndex({ users, filters }) {
         <AdminLayout>
             <Head title="Manajemen User" />
 
-            <div className="space-y-6">
+            <div className="space-y-8">
                 {/* Header */}
-                <div className="flex items-center justify-between">
+               <div className="border-b border-gray-150 -mx-8">
+                    <div className='flex items-center justify-between pb-2 px-6'>
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900">
+                        <h1 className="text-1xl font-semibold text-gray-900 mx-5 -py-3">
                             Manajemen User
                         </h1>
-                        <p className="text-sm text-gray-500 mt-1">
+                        <p className="text-sm text-gray-500 mt-1 mx-5">
                             Kelola pengguna dan role
                         </p>
                     </div>
                     <button
                         onClick={() => setShowModal(true)}
-                        className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-white-700 text-white font-medium rounded-lg transition-colors gap-2"
+                        className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-white-700 text-white font-medium rounded-lg transition-colors gap-2 mx-5"
                     >
-                        <CirclePlus className="w-5 h-5" />
+                        <CirclePlus className="w-4 h-4" />
                     </button>
-                </div>
-
-                {/* Filters */}
-                <div className="">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Role
-                            </label>
-                            <select className="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
-                                <option value="all">Semua Role</option>
-                                <option value="admin">Admin</option>
-                                <option value="programmer">Programmer</option>
-                                <option value="customer">Customer</option>
-                            </select>
-                        </div>
-                        <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Cari
-                            </label>
-                            <input
-                                type="text"
-                                placeholder="Cari nama atau email..."
-                                className=" border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                            />
-                        </div>
                     </div>
                 </div>
+
+              
 
                 {/* Users Table */}
                 <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
                     <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200 mb-6 mt-6">
+                        <table className="min-w-full divide-y divide-gray-200 mb-6 mt-8">
                             <thead className="bg-white-50">
                                 <tr>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -123,7 +100,7 @@ export default function UsersIndex({ users, filters }) {
                                         key={user.id}
                                         className="hover:bg-gray-50"
                                     >
-                                        <td className="px-6 py-4 whitespace-nowrap">
+                                        <td className="px-3 py-4 whitespace-nowrap">
                                             <div className="flex items-center">
                                                 <div className="ml-4">
                                                     <div className="text-sm font-medium text-gray-900">
@@ -139,7 +116,7 @@ export default function UsersIndex({ users, filters }) {
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <span
-                                                className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getRoleBadge(
+                                                className={`px-0 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getRoleBadge(
                                                     user.role,
                                                 )}`}
                                             >
@@ -199,7 +176,7 @@ export default function UsersIndex({ users, filters }) {
                             onClick={() => setShowModal(false)}
                         />
                         <div className="relative bg-white rounded-lg max-w-lg w-full p-6">
-                            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                            <h3 className="text-lg font-semibold text-gray-900 mb-5">
                                 Tambah User Baru
                             </h3>
                             <form onSubmit={handleSubmit} className="space-y-4">

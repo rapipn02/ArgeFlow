@@ -13,7 +13,7 @@ import Footer from '../Components/Landing/Footer';
 export default function Landing() {
     return (
         <ThemeProvider defaultTheme="dark">
-            <Head title="Platform Freelance Programmer Terbaik" />
+            <Head title="ArgeFlow" />
             
             <div className="min-h-screen bg-background text-foreground">
                 <Navbar />

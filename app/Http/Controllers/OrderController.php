@@ -15,7 +15,7 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
-        $orders = Order::with(['service', 'team', 'rating'])
+        $orders = Order::with(['service', 'team.members.user', 'rating'])
             ->where('user_id', $request->user()->id)
             ->latest()
             ->paginate(10);
@@ -89,7 +89,7 @@ class OrderController extends Controller
             abort(403, 'Unauthorized access');
         }
 
-        $order->load(['service', 'team.members', 'rating']);
+        $order->load(['service', 'team.members.user', 'rating']);
 
         return Inertia::render('Orders/Show', [
             'order' => $order,

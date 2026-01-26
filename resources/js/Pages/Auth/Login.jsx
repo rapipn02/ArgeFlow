@@ -170,29 +170,7 @@ export default function Login({ status, canResetPassword }) {
                                 )}
                             </div>
 
-                            {/* Remember Me & Forgot Password */}
-                            <div className="flex items-center justify-between">
-                                <label className="flex items-center gap-2 cursor-pointer">
-                                    <input
-                                        type="checkbox"
-                                        checked={data.remember}
-                                        onChange={(e) => setData('remember', e.target.checked)}
-                                        className="w-4 h-4 rounded border-border bg-background/50 text-primary focus:ring-2 focus:ring-primary"
-                                    />
-                                    <span className="text-sm text-muted-foreground">
-                                        Ingat saya
-                                    </span>
-                                </label>
-                                
-                                {canResetPassword && (
-                                    <Link
-                                        href={route('password.request')}
-                                        className="text-sm text-primary hover:text-primary/80 transition-colors"
-                                    >
-                                        Lupa password?
-                                    </Link>
-                                )}
-                            </div>
+
 
                             {/* Submit Button */}
                             <button

@@ -30,6 +30,7 @@ class AdminTeamController extends Controller
                     'id' => $team->id,
                     'name' => $team->name,
                     'description' => $team->description,
+                    'specialization' => $team->specialization,
                     'members_count' => $team->members_count,
                     'members' => $team->members
                         ->filter(function ($member) {
@@ -69,6 +70,7 @@ class AdminTeamController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'specialization' => 'required|string|in:web,mobile,fullstack',
         ]);
 
         $team = Team::create($validated);
@@ -86,6 +88,7 @@ class AdminTeamController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'specialization' => 'required|string|in:web,mobile,fullstack',
         ]);
 
         $team->update($validated);
@@ -178,10 +181,37 @@ class AdminTeamController extends Controller
         $selectedTeamId = array_key_first($teamWorkloads);
 
         if ($selectedTeamId) {
-            $order->update(['team_id' => $selectedTeamId]);
-            return redirect()->back()->with('success', 'Tim berhasil di-assign secara otomatis');
+            $order->update([
+                'team_id' => $selectedTeamId,
+                'status' => 'in_progress' // Set status jadi in_progress setelah assign
+            ]);
+            return redirect()->back()->with('success', 'Tim berhasil di-assign dan proyek dimulai');
         }
 
         return redirect()->back()->with('error', 'Tidak ada tim yang tersedia');
+    }
+
+    /**
+     * Manual assign team to an order (untuk dari dashboard)
+     */
+    public function manualAssign(Request $request, $orderId)
+    {
+        $validated = $request->validate([
+            'team_id' => 'required|exists:teams,id',
+        ]);
+
+        $order = Order::findOrFail($orderId);
+
+        // Validasi order sudah bayar DP
+        if ($order->payment_status !== 'dp_paid') {
+            return redirect()->back()->with('error', 'Order belum dibayar DP');
+        }
+
+        $order->update([
+            'team_id' => $validated['team_id'],
+            'status' => 'in_progress' // Langsung set in_progress
+        ]);
+
+        return redirect()->back()->with('success', 'Tim berhasil di-assign dan proyek dimulai');
     }
 }

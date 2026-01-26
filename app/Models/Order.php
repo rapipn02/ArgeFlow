@@ -83,13 +83,47 @@ class Order extends Model
         return $this->belongsTo(Team::class);
     }
 
+
     /**
-     * Get the rating for this order
+     * Get the rating for this order (team rating)
      */
-    public function rating()
+    public function teamRating()
     {
         return $this->hasOne(TeamRating::class);
     }
+
+    /**
+     * Get the rating for this order (individual rating)
+     */
+    public function rating()
+    {
+        return $this->hasOne(Rating::class);
+    }
+
+    /**
+     * Get all progress reports for this order
+     */
+    public function progress()
+    {
+        return $this->hasMany(OrderProgress::class);
+    }
+
+    /**
+     * Get all files for this order
+     */
+    public function files()
+    {
+        return $this->hasMany(OrderFile::class);
+    }
+
+    /**
+     * Get all revisions for this order
+     */
+    public function revisions()
+    {
+        return $this->hasMany(Revision::class);
+    }
+
 
     /**
      * Scope to get orders by status
@@ -128,9 +162,13 @@ class Order extends Model
      */
     public function markDpAsPaid()
     {
+        // Jika sudah ada team_id (client pilih sendiri), langsung in_progress
+        // Jika belum (auto_assign), tetap dp_paid tunggu admin assign team
+        $status = $this->team_id ? 'in_progress' : 'dp_paid';
+        
         $this->update([
             'payment_status' => 'dp_paid',
-            'status' => 'in_progress',
+            'status' => $status,
             'dp_paid_at' => now(),
         ]);
     }

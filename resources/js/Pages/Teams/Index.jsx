@@ -207,12 +207,12 @@ function TeamCard({ team, index, isSelected, onSelect, serviceId }) {
                                 <div key={idx} className="flex items-center gap-3">
                                     <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center flex-shrink-0">
                                         <span className="text-xs font-semibold text-white">
-                                            {member.name.charAt(0)}
+                                            {member.name ? member.name.charAt(0).toUpperCase() : '?'}
                                         </span>
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <p className="text-sm font-medium truncate">{member.name}</p>
-                                        <p className="text-xs text-muted-foreground truncate">{member.role}</p>
+                                        <p className="text-sm font-medium truncate">{member.name || 'Unknown'}</p>
+                                        <p className="text-xs text-muted-foreground truncate">{member.role || 'Member'}</p>
                                     </div>
                                     <CheckCircle2 className="w-4 h-4 text-primary flex-shrink-0" />
                                 </div>

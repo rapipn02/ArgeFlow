@@ -35,21 +35,21 @@ class AdminSeeder extends Seeder
         $incomeTransactions = [
             [
                 'type' => 'income',
-                'category' => 'project_payment',
+                'category' => 'project payment',
                 'amount' => 5000000,
                 'description' => 'Pembayaran DP Website Landing Page - PT ABC',
                 'transaction_date' => Carbon::now()->subDays(5),
             ],
             [
                 'type' => 'income',
-                'category' => 'project_payment',
+                'category' => 'project payment',
                 'amount' => 3000000,
                 'description' => 'Pelunasan Mobile App Development - CV XYZ',
                 'transaction_date' => Carbon::now()->subDays(10),
             ],
             [
                 'type' => 'income',
-                'category' => 'project_payment',
+                'category' => 'project payment',
                 'amount' => 2500000,
                 'description' => 'Pembayaran DP E-Commerce Website',
                 'transaction_date' => Carbon::now()->subDays(15),
@@ -106,7 +106,7 @@ class AdminSeeder extends Seeder
             // Random income
             Transaction::create([
                 'type' => 'income',
-                'category' => 'project_payment',
+                'category' => 'project payment',
                 'amount' => rand(3000000, 10000000),
                 'description' => 'Pembayaran Proyek - Bulan ' . Carbon::create($year, $month)->format('F'),
                 'transaction_date' => Carbon::create($year, $month, 15),

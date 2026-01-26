@@ -51,6 +51,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
     Route::post('/orders/{order}/cancel', [\App\Http\Controllers\OrderController::class, 'cancel'])->name('orders.cancel');
 
+    // Progress & Comments
+    Route::get('/orders/{order}/progress', [\App\Http\Controllers\ProgressController::class, 'index'])->name('orders.progress');
+    Route::post('/orders/{order}/progress', [\App\Http\Controllers\ProgressController::class, 'store'])->name('orders.progress.store');
+    Route::put('/orders/{order}/progress/{progress}', [\App\Http\Controllers\ProgressController::class, 'update'])->name('orders.progress.update');
+    Route::delete('/orders/{order}/progress/{progress}', [\App\Http\Controllers\ProgressController::class, 'destroy'])->name('orders.progress.destroy');
+    Route::post('/orders/{order}/progress/{progress}/comments', [\App\Http\Controllers\ProgressController::class, 'addComment'])->name('orders.progress.comments.store');
+    Route::delete('/orders/{order}/progress/{progress}/comments/{comment}', [\App\Http\Controllers\ProgressController::class, 'deleteComment'])->name('orders.progress.comments.destroy');
+
     // Payments
     Route::get('/payment/success', [\App\Http\Controllers\PaymentController::class, 'success'])->name('payment.success');
     Route::get('/payment/failed', [\App\Http\Controllers\PaymentController::class, 'failed'])->name('payment.failed');
@@ -61,6 +69,28 @@ Route::middleware('auth')->group(function () {
     // Invoices
     Route::get('/invoice/{order}', [\App\Http\Controllers\InvoiceController::class, 'show'])->name('invoice.show');
     Route::get('/invoice/{order}/download', [\App\Http\Controllers\InvoiceController::class, 'download'])->name('invoice.download');
+
+    // Programmer Routes
+    Route::middleware('programmer')->prefix('programmer')->name('programmer.')->group(function () {
+        // Dashboard
+        Route::get('/dashboard', [\App\Http\Controllers\Programmer\ProgrammerDashboardController::class, 'index'])->name('dashboard');
+
+        // Projects
+        Route::get('/projects', [\App\Http\Controllers\Programmer\ProgrammerProjectController::class, 'index'])->name('projects.index');
+        Route::get('/projects/{order}', [\App\Http\Controllers\Programmer\ProgrammerProjectController::class, 'show'])->name('projects.show');
+
+        // Earnings
+        Route::get('/earnings', [\App\Http\Controllers\Programmer\ProgrammerEarningController::class, 'index'])->name('earnings.index');
+
+        // Profile
+        Route::get('/profile', [\App\Http\Controllers\Programmer\ProgrammerProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [\App\Http\Controllers\Programmer\ProgrammerProfileController::class, 'update'])->name('profile.update');
+        Route::get('/profile/setup', [\App\Http\Controllers\Programmer\ProgrammerProfileController::class, 'setup'])->name('profile.setup');
+        Route::post('/profile/setup', [\App\Http\Controllers\Programmer\ProgrammerProfileController::class, 'storeSetup'])->name('profile.setup.store');
+
+        // Teams
+        Route::get('/teams', [\App\Http\Controllers\Programmer\ProgrammerTeamController::class, 'index'])->name('teams.index');
+    });
 
     // Admin Routes (Superadmin only)
     Route::middleware('superadmin')->prefix('admin')->name('admin.')->group(function () {
@@ -81,6 +111,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/teams/{team}/assign', [\App\Http\Controllers\Admin\AdminTeamController::class, 'assignMember'])->name('teams.assign');
         Route::delete('/teams/{team}/members/{user}', [\App\Http\Controllers\Admin\AdminTeamController::class, 'removeMember'])->name('teams.remove-member');
         Route::post('/orders/{order}/auto-assign', [\App\Http\Controllers\Admin\AdminTeamController::class, 'autoAssign'])->name('orders.auto-assign');
+        Route::post('/orders/{order}/manual-assign', [\App\Http\Controllers\Admin\AdminTeamController::class, 'manualAssign'])->name('orders.manual-assign');
 
         // Services
         Route::resource('services', \App\Http\Controllers\Admin\AdminServiceController::class);
