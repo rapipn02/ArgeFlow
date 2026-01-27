@@ -2,7 +2,7 @@ import { Head, Link, router, useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
-import Navbar from '@/Components/Landing/Navbar';
+import NavMpruy from '@/Components/NavMpruy';
 import { 
     ArrowLeft, 
     Plus,
@@ -45,7 +45,7 @@ export default function Progress({ order, progressList, canAddProgress }) {
         }
 
         if (editingProgress) {
-            router.post(route('orders.progress.update', { order: order.id, progress: editingProgress.id }), {
+            router.post(route('programmer.orders.progress.update', { order: order.id, progress: editingProgress.id }), {
                 _method: 'PUT',
                 ...Object.fromEntries(formData)
             }, {
@@ -55,7 +55,7 @@ export default function Progress({ order, progressList, canAddProgress }) {
                 },
             });
         } else {
-            router.post(route('orders.progress.store', order.id), formData, {
+            router.post(route('programmer.orders.progress.store', order.id), formData, {
                 onSuccess: () => {
                     setShowAddModal(false);
                     progressForm.reset();
@@ -66,7 +66,7 @@ export default function Progress({ order, progressList, canAddProgress }) {
 
     const handleDeleteProgress = (progressId) => {
         if (confirm('Yakin ingin menghapus progress ini?')) {
-            router.delete(route('orders.progress.destroy', { order: order.id, progress: progressId }));
+            router.delete(route('programmer.orders.progress.destroy', { order: order.id, progress: progressId }));
         }
     };
 
@@ -92,7 +92,7 @@ export default function Progress({ order, progressList, canAddProgress }) {
     return (
         <AuthenticatedLayout>
             <Head title={`Progress Order #${order.order_number}`} />
-            <Navbar />
+            <NavMpruy />
 
             <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 py-12">
                 <div className="container mx-auto px-4 max-w-5xl">
@@ -122,11 +122,21 @@ export default function Progress({ order, progressList, canAddProgress }) {
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 onClick={() => setShowAddModal(true)}
-                                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:shadow-lg transition-all"
+                                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-600 text-white rounded-xl hover:shadow-lg transition-all"
                             >
                                 <Plus className="w-5 h-5" />
                                 <span className="font-medium">Tambah Progress</span>
                             </motion.button>
+                        )}
+                        
+                        {!canAddProgress && ['programmer'].includes(window.Laravel?.auth?.user?.role) && (
+                            <div className="px-4 py-2 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400 rounded-xl border border-yellow-200 dark:border-yellow-800">
+                                <p className="text-sm font-medium">
+                                    {order.status === 'pending' ? 
+                                        'Menunggu pembayaran DP untuk mulai mengirim progress' : 
+                                        'Anda tidak memiliki akses untuk menambah progress'}
+                                </p>
+                            </div>
                         )}
                     </div>
 
@@ -152,7 +162,7 @@ export default function Progress({ order, progressList, canAddProgress }) {
                                             {/* Progress Header */}
                                             <div className="flex items-start gap-4 mb-4">
                                                 <div className="relative">
-                                                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg">
+                                                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold shadow-lg">
                                                         {progress.progress_percentage}%
                                                     </div>
                                                     <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white dark:border-gray-800" />
@@ -174,7 +184,7 @@ export default function Progress({ order, progressList, canAddProgress }) {
                                                             initial={{ width: 0 }}
                                                             animate={{ width: `${progress.progress_percentage}%` }}
                                                             transition={{ duration: 1, ease: "easeOut" }}
-                                                            className="h-full bg-gradient-to-r from-blue-500 to-purple-600"
+                                                            className="h-full bg-gradient-to-r from-blue-500 to-blue-600"
                                                         />
                                                     </div>
 
@@ -183,16 +193,38 @@ export default function Progress({ order, progressList, canAddProgress }) {
                                                     </p>
 
                                                     {/* File Attachment */}
-                                                    {progress.file_path && (
-                                                        <a
-                                                            href={`/storage/${progress.file_path}`}
-                                                            target="_blank"
-                                                            className="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg text-sm transition-colors"
-                                                        >
-                                                            <Download className="w-4 h-4" />
-                                                            <span>Download File</span>
-                                                        </a>
-                                                    )}
+                                                    {progress.file_path && (() => {
+                                                        const fileExtension = progress.file_path.split('.').pop().toLowerCase();
+                                                        const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExtension);
+                                                        
+                                                        return isImage ? (
+                                                            <div className="mt-3">
+                                                                <img
+                                                                    src={`/storage/${progress.file_path}`}
+                                                                    alt="Progress attachment"
+                                                                    className="max-w-full h-auto rounded-lg border border-gray-200 dark:border-gray-600"
+                                                                    style={{ maxHeight: '400px' }}
+                                                                />
+                                                                <a
+                                                                    href={`/storage/${progress.file_path}`}
+                                                                    target="_blank"
+                                                                    className="inline-flex items-center gap-1 mt-2 text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                                                                >
+                                                                    <Download className="w-3 h-3" />
+                                                                    Lihat ukuran penuh
+                                                                </a>
+                                                            </div>
+                                                        ) : (
+                                                            <a
+                                                                href={`/storage/${progress.file_path}`}
+                                                                target="_blank"
+                                                                className="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg text-sm transition-colors"
+                                                            >
+                                                                <Download className="w-4 h-4" />
+                                                                <span>Download File</span>
+                                                            </a>
+                                                        );
+                                                    })()}
                                                 </div>
 
                                                 {/* Action Buttons */}
@@ -229,7 +261,7 @@ export default function Progress({ order, progressList, canAddProgress }) {
                                                                     <span className="text-sm font-medium text-gray-900 dark:text-white">
                                                                         {comment.user.name}
                                                                     </span>
-                                                                    <span className="text-xs px-2 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full">
+                                                                    <span className="text-xs px- py-0.5 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full">
                                                                         {comment.user.role}
                                                                     </span>
                                                                     <span className="text-xs text-gray-500">

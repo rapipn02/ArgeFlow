@@ -1,6 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
 import ProgrammerLayout from '@/Layouts/ProgrammerLayout';
-import { DollarSign, FolderKanban, CheckCircle, Users, ArrowUpRight } from 'lucide-react';
+import { DollarSign, FolderKanban, CheckCircle, Users, ArrowUpRight, WalletCards,Wallet } from 'lucide-react';
 
 export default function Dashboard({ stats, recentProjects, teams }) {
     const formatCurrency = (amount) => {
@@ -77,14 +77,14 @@ export default function Dashboard({ stats, recentProjects, teams }) {
 
     return (
         <ProgrammerLayout>
-            <Head title="Dashboard Programmer" />
+            <Head title="Dashboard Programmer " />
 
             <div className="space-y-6">
                 {/* Header */}
-                <div className="border-b border-gray-150 -mx-8">
+                <div className="border-b border-gray-150 -mx-8 -mt-3">
                     <div className='flex items-center justify-between pb-2 px-6'>
                         <div>
-                            <h1 className="text-1xl font-semibold text-gray-900">
+                            <h1 className="text-2xl font-semibold text-gray-900">
                                 Dashboard Programmer
                             </h1>
                             <p className="text-sm text-gray-500 mt-1">
@@ -97,7 +97,7 @@ export default function Dashboard({ stats, recentProjects, teams }) {
                 {/* Stats Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 gap-y-5">
                     <StatCard
-                        icon={DollarSign}
+                        icon={Wallet}
                         title="Total Earnings"
                         value={formatCurrency(stats.total_earnings)}
                         subtitle={`Pending: ${formatCurrency(stats.pending_earnings)}`}

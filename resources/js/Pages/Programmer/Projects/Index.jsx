@@ -60,7 +60,7 @@ export default function Index({ projects, filters }) {
 
             <div className="space-y-6">
                 {/* Header */}
-                <div className="border-b border-gray-150 -mx-8">
+                <div className="border-b border-gray-150 -mx-8 -mt-3">
                     <div className='flex items-center justify-between pb-2 px-6'>
                         <div>
                             <h1 className="text-1xl font-semibold text-gray-900">
@@ -74,7 +74,7 @@ export default function Index({ projects, filters }) {
                 </div>
 
                 {/* Filters */}
-                <div className="bg-white rounded-xl border border-gray-200 p-6">
+                <div className=" rounded-xl p-6">
                     {/* Status Tabs */}
                     <div className="flex flex-wrap gap-2 mb-4">
                         {statusTabs.map((tab) => (
@@ -104,18 +104,13 @@ export default function Index({ projects, filters }) {
                                 className="w-full pl-10 pr-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-gray-900"
                             />
                         </div>
-                        <button
-                            type="submit"
-                            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium"
-                        >
-                            Search
-                        </button>
+
                     </form>
                 </div>
 
                 {/* Projects Table */}
                 <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                    <div className="overflow-x-auto">
+                    <div className="overflow-x-auto mt-8">
                         {projects.data.length > 0 ? (
                             <table className="min-w-full divide-y">
                                 <thead>

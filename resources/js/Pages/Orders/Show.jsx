@@ -3,7 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { useState } from 'react';
-import Navbar from '@/Components/Landing/Navbar';
+import Navbar from '@/Components/NavMpruy';
 import { 
     Package, 
     ArrowLeft, 
@@ -15,7 +15,8 @@ import {
     Calendar,
     DollarSign,
     RefreshCw,
-    TrendingUp
+    TrendingUp,
+    Calculator
 } from 'lucide-react';
 
 export default function Show({ order }) {
@@ -40,20 +41,20 @@ export default function Show({ order }) {
 
     const getStatusColor = (status) => {
         const colors = {
-            pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
-            in_progress: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
-            completed: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-            cancelled: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
+            pending: 'text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
+            in_progress: ' text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
+            completed: ' text-green-800 dark:bg-green-900/30 dark:text-green-400',
+            cancelled: ' text-red-800 dark:bg-red-900/30 dark:text-red-400',
         };
         return colors[status] || 'bg-gray-100 text-gray-800';
     };
 
     const getPaymentStatusColor = (status) => {
         const colors = {
-            pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
-            dp_paid: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
-            fully_paid: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-            failed: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
+            pending: 'text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
+            dp_paid: ' text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
+            fully_paid: ' text-green-800 dark:bg-green-900/30 dark:text-green-400',
+            failed: 'text-red-800 dark:bg-red-900/30 dark:text-red-400',
         };
         return colors[status] || 'bg-gray-100 text-gray-800';
     };
@@ -103,12 +104,12 @@ export default function Show({ order }) {
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-8 shadow-xl border border-gray-200/50 dark:border-gray-700/50"
+                                className="bg-red-150 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-8 shadow-xl border border-gray-200 dark:border-gray-700"
                             >
                                 <div className="flex items-start justify-between mb-6">
-                                    <div className="flex items-start gap-4">
-                                        <div className="p-3 bg-blue-600 rounded-2xl">
-                                            <Package className="w-8 h-8 text-white" />
+                                    <div className="flex items-start gap-2">
+                                        <div className="p-3 rounded-2xl">
+                                            <Package className="w-8 h-8 text-blue-700" />
                                         </div>
                                         <div>
                                             <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
@@ -163,7 +164,7 @@ export default function Show({ order }) {
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.1 }}
-                                    className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-gray-200/50 dark:border-gray-700/50"
+                                    className=" dark:bg-gray-800 backdrop-blur-xl rounded-3xl p-6 shadow-xl "
                                 >
                                     <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                                         <FileText className="w-5 h-5 text-blue-600" />
@@ -175,7 +176,7 @@ export default function Show({ order }) {
                                             <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                                 Catatan:
                                             </div>
-                                            <div className="text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/50 p-4 rounded-xl">
+                                            <div className="text-gray-600 dark:text-gray-400 bg-black-100 dark:bg-gray-900/50 p-4 rounded-xl">
                                                 {order.notes}
                                             </div>
                                         </div>
@@ -186,7 +187,7 @@ export default function Show({ order }) {
                                             <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                                 Kebutuhan & Spesifikasi:
                                             </div>
-                                            <div className="text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/50 p-4 rounded-xl whitespace-pre-wrap">
+                                            <div className="text-gray-600 dark:text-gray-400 bg-black-50 p-4 rounded-xl whitespace-pre-wrap">
                                                 {order.requirements}
                                             </div>
                                         </div>
@@ -199,7 +200,7 @@ export default function Show({ order }) {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.2 }}
-                                className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-gray-200/50 dark:border-gray-700/50"
+                                className="bg-gray-50 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-gray-200 dark:border-gray-700"
                             >
                                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                                     <Calendar className="w-5 h-5 text-blue-600" />
@@ -260,10 +261,10 @@ export default function Show({ order }) {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.3 }}
-                                className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-gray-200/50 dark:border-gray-700/50 sticky top-24"
+                                className="bg-gray-100 rounded-3xl p-6 shadow-xl border border-gray-200 dark:border-gray-700 sticky top-24"
                             >
                                 <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                                    <DollarSign className="w-6 h-6 text-blue-600" />
+                                    <Calculator className="w-6 h-6 text-blue-600" />
                                     Ringkasan Biaya
                                 </h3>
 
@@ -299,7 +300,7 @@ export default function Show({ order }) {
                                 {(order.payment_status === 'dp_paid' || order.payment_status === 'fully_paid') && (
                                     <Link
                                         href={route('orders.progress', { order: order.id })}
-                                        className="w-full flex items-center justify-center gap-2 py-4 mb-3 rounded-xl font-semibold text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg hover:shadow-xl transition-all"
+                                        className="w-full flex items-center justify-center gap-2 py-4 mb-3 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-700 hover:to-blue-700 shadow-lg hover:shadow-xl transition-all"
                                     >
                                         <TrendingUp className="w-5 h-5" />
                                         <span>Lihat Progress</span>

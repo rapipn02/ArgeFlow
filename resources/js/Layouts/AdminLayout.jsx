@@ -14,7 +14,9 @@ import {
     PanelLeftClose,
     PanelLeftOpen,
     CircleUser,
-    UserRoundCog 
+    UserRoundCog,
+    TrendingUp,
+    ChartColumnIncreasing 
 } from 'lucide-react';
 
 export default function AdminLayout({ children }) {
@@ -36,6 +38,12 @@ export default function AdminLayout({ children }) {
             href: route('admin.transactions.index'),
             icon: FileText,
             current: route().current('admin.transactions.*'),
+        },
+        {
+            name: 'Progress Projek',
+            href: route('admin.progress.index'),
+            icon: ChartColumnIncreasing,
+            current: route().current('admin.progress.*'),
         },
         {
             name: 'Layanan',

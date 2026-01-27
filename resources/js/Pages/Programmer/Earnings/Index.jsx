@@ -68,7 +68,7 @@ export default function Index({ stats, recentTransactions, bankInfo }) {
 
             <div className="space-y-6">
                 {/* Header */}
-                <div className="border-b border-gray-150 -mx-8">
+                <div className="border-b border-gray-150 -mx-8 -mt-3">
                     <div className='flex items-center justify-between pb-2 px-6'>
                         <div>
                             <h1 className="text-1xl font-semibold text-gray-900">
@@ -122,7 +122,7 @@ export default function Index({ stats, recentTransactions, bankInfo }) {
                             </div>
                             <div>
                                 <p className="text-xs text-gray-500 mb-1">Nomor Rekening</p>
-                                <p className="font-semibold text-gray-900 font-mono">{bankInfo.account_number || 'Belum diatur'}</p>
+                                <p className="font-semibold text-gray-900">{bankInfo.account_number || 'Belum diatur'}</p>
                             </div>
                             <div>
                                 <p className="text-xs text-gray-500 mb-1">Nama Pemilik</p>
@@ -130,7 +130,7 @@ export default function Index({ stats, recentTransactions, bankInfo }) {
                             </div>
                         </div>
                         {(!bankInfo.bank_name || !bankInfo.account_number) && (
-                            <p className="mt-4 text-sm text-orange-600 bg-orange-50 p-3 rounded-lg border border-orange-200">
+                            <p className="mt-4 text-sm p-3 rounded-lg text-red-400">
                                 Silakan update informasi rekening bank di profil Anda untuk menerima pembayaran.
                             </p>
                         )}

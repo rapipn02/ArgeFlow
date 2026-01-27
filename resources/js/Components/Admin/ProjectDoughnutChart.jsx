@@ -130,7 +130,7 @@ export default function ProjectDoughnutChart({ ordersData }) {
                 <select
                     value={period}
                     onChange={(e) => setPeriod(e.target.value)}
-                    className="text-xs border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 py-1 px-2"
+                    className="text-xs border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 py-1 px-3"
                 >
                     <option value="week">Minggu</option>
                     <option value="month">Bulan</option>

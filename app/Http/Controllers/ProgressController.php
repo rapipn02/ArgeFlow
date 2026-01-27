@@ -65,9 +65,10 @@ class ProgressController extends Controller
                 ];
             });
 
-        // Check if user can add progress (only team members)
+        // Check if user can add progress (only team members after DP is paid)
         $canAddProgress = $user->role === 'programmer' && $order->team && 
-                         $order->team->members()->where('user_id', $user->id)->exists();
+                         $order->team->members()->where('user_id', $user->id)->exists() &&
+                         in_array($order->status, ['dp_paid', 'in_progress', 'final_payment', 'completed']);
 
         return Inertia::render('Orders/Progress', [
             'order' => [
@@ -92,6 +93,11 @@ class ProgressController extends Controller
         // Verify user is in the team
         if ($user->role !== 'programmer' || !$order->team || !$order->team->members()->where('user_id', $user->id)->exists()) {
             abort(403, 'Only team members can add progress');
+        }
+
+        // Verify DP is paid
+        if (!in_array($order->status, ['dp_paid', 'in_progress', 'final_payment', 'completed'])) {
+            return redirect()->back()->with('error', 'Progress hanya bisa dikirim setelah DP dibayar');
         }
 
         $validated = $request->validate([
@@ -126,6 +132,11 @@ class ProgressController extends Controller
         // Verify user is the progress creator
         if ($progress->programmer_id !== $user->id) {
             abort(403, 'You can only edit your own progress');
+        }
+
+        // Verify DP is still paid
+        if (!in_array($order->status, ['dp_paid', 'in_progress', 'final_payment', 'completed'])) {
+            return redirect()->back()->with('error', 'Progress hanya bisa diupdate setelah DP dibayar');
         }
 
         $validated = $request->validate([

@@ -95,7 +95,7 @@ export default function ServicesIndex({ services }) {
                                 </div>
                                 <button
                                     onClick={() => handleToggle(service.id)}
-                                    className={`p-2 rounded-lg transition-colors ${
+                                    className={`p-3 rounded-lg transition-colors ${
                                         service.is_active
                                             ? ' text-green-600'
                                             : ' text-gray-400 '
@@ -114,7 +114,7 @@ export default function ServicesIndex({ services }) {
                             </p>
 
                             {/* Price */}
-                            <div className="mb-4 p-3 rounded-lg">
+                            <div className="mb-2 p-1 rounded-lg">
                                 <div className="flex items-center justify-between">
                                     <span className="text-sm text-gray-600">
                                         Harga
@@ -152,7 +152,7 @@ export default function ServicesIndex({ services }) {
                                                 key={idx}
                                                 className="text-sm text-gray-600 flex items-start gap-2"
                                             >
-                                                <span className="text-blue-600 mt-1">
+                                                <span className="text-blue-600 mt-3">
                                                     •
                                                 </span>
                                                 <span className="flex-1">
@@ -166,7 +166,7 @@ export default function ServicesIndex({ services }) {
 
 
                             {/* Actions */}
-                            <div className="flex gap-2 pt-4 border-t border-gray-200">
+                            <div className="flex gap-4 pt-4 border-t border-gray-200">
                                 <button
                                     onClick={() => handleDelete(service.id)}
                                     className="flex-1 px-3 py-2  text-red-600 hover:bg-red-100 font-medium rounded-lg text-sm transition-colors"

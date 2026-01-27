@@ -90,7 +90,7 @@ class ProgrammerProjectController extends Controller
                 ->with('error', 'Anda tidak memiliki akses ke project ini.');
         }
 
-        $order->load(['service', 'user', 'team.members.user']);
+        $order->load(['service', 'user', 'team.members.user', 'progress.programmer', 'progress.comments.user']);
 
         $projectData = [
             'id' => $order->id,
@@ -126,8 +126,33 @@ class ProgrammerProjectController extends Controller
             'created_at' => $order->created_at->format('d M Y H:i'),
         ];
 
+        // Get progress list
+        $progressList = $order->progress()
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function ($progress) {
+                return [
+                    'id' => $progress->id,
+                    'description' => $progress->description,
+                    'file_path' => $progress->file_path,
+                    'progress_percentage' => $progress->progress_percentage,
+                    'created_at' => $progress->created_at->format('d M Y H:i'),
+                    'programmer' => [
+                        'id' => $progress->programmer->id,
+                        'name' => $progress->programmer->name,
+                        'avatar' => $progress->programmer->avatar,
+                    ],
+                    'comments_count' => $progress->comments->count(),
+                ];
+            });
+
+        // Check if programmer can add progress (DP must be paid)
+        $canAddProgress = in_array($order->status, ['dp_paid', 'in_progress', 'final_payment', 'completed']);
+
         return Inertia::render('Programmer/Projects/Show', [
             'project' => $projectData,
+            'progressList' => $progressList,
+            'canAddProgress' => $canAddProgress,
         ]);
     }
 }

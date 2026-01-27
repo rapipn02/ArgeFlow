@@ -1,8 +1,6 @@
 import { Head, Link, router } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { motion } from 'framer-motion';
-import Navbar from '@/Components/Landing/Navbar';
-import { 
+import { motion } from 'framer-motion';import { 
     Package, 
     Clock, 
     CheckCircle2, 
@@ -10,11 +8,20 @@ import {
     Eye,
     CreditCard,
     Filter,
-    Search
+    Search,
+    CircleEllipsis,
+    SquareCode,
+    User,
+
 } from 'lucide-react';
 import { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle }from '@/Components/ui/card'; 
+import { Button } from '@/Components/ui/button';
+import { ThemeToggle } from '@/Components/ThemeToggle';
+import { Star, Users, ArrowRight, LogOut, Briefcase, Award } from 'lucide-react';
 
-export default function Index({ orders }) {
+
+export default function Index({ orders,auth }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
     
@@ -32,10 +39,10 @@ export default function Index({ orders }) {
 
     const getStatusColor = (status) => {
         const colors = {
-            pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
-            dp_paid: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
-            fully_paid: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-            failed: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
+            pending: 'text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
+            dp_paid: 'text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
+            fully_paid: 'text-green-800 dark:bg-green-900/30 dark:text-green-400',
+            failed: 'text-red-800 dark:bg-red-900/30 dark:text-red-400',
         };
         return colors[status] || 'bg-gray-100 text-gray-800';
     };
@@ -80,7 +87,7 @@ export default function Index({ orders }) {
     return (
         <AuthenticatedLayout>
             <Head title="Daftar Order" />
-            <Navbar />
+            <Navbar auth={auth} />
 
             <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
                 <div className="container mx-auto px-4 max-w-7xl">
@@ -98,43 +105,7 @@ export default function Index({ orders }) {
                         </p>
                     </motion.div>
 
-                    {/* Filters */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 }}
-                        className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-gray-200/50 dark:border-gray-700/50 mb-6"
-                    >
-                        <div className="flex flex-col md:flex-row gap-4">
-                            {/* Search */}
-                            <div className="flex-1 relative">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                <input
-                                    type="text"
-                                    placeholder="Cari order..."
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                />
-                            </div>
-
-                            {/* Status Filter */}
-                            <div className="relative">
-                                <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                <select
-                                    value={statusFilter}
-                                    onChange={(e) => setStatusFilter(e.target.value)}
-                                    className="pl-10 pr-8 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none cursor-pointer"
-                                >
-                                    <option value="all">Semua Status</option>
-                                    <option value="pending">Menunggu Pembayaran</option>
-                                    <option value="dp_paid">DP Dibayar</option>
-                                    <option value="fully_paid">Lunas</option>
-                                    <option value="failed">Gagal</option>
-                                </select>
-                            </div>
-                        </div>
-                    </motion.div>
+                   
 
                     {/* Orders List */}
                     {ordersData && ordersData.length > 0 ? (
@@ -158,13 +129,13 @@ export default function Index({ orders }) {
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.1 * index }}
-                                        className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl transition-shadow"
+                                        className="bg-gray-100  dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl transition-shadow"
                                     >
                                         <div className="flex flex-col lg:flex-row lg:items-center gap-6">
                                             {/* Icon */}
                                             <div className="flex-shrink-0">
                                                 <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center">
-                                                    <Package className="w-8 h-8 text-white" />
+                                                    <SquareCode className="w-8 h-8 text-white" />
                                                 </div>
                                             </div>
 
@@ -187,7 +158,7 @@ export default function Index({ orders }) {
                                                     </div>
                                                 </div>
 
-                                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                                                <div className="grid grid-cols-2 md:grid-cols-5 gap-3 text-sm">
                                                     <div>
                                                         <span className="text-gray-600 dark:text-gray-400">Total:</span>
                                                         <span className="ml-2 font-semibold text-gray-900 dark:text-white">
@@ -223,8 +194,8 @@ export default function Index({ orders }) {
                                                     href={route('orders.show', { order: order.id })}
                                                     className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-all shadow-md hover:shadow-lg"
                                                 >
-                                                    <Eye className="w-4 h-4" />
-                                                    <span>Detail</span>
+                                                    <CircleEllipsis className="w-4 h-4" />
+                                                    
                                                 </Link>
                                                 
                                                 {order.payment_status === 'pending' && (
@@ -266,5 +237,54 @@ export default function Index({ orders }) {
                 </div>
             </div>
         </AuthenticatedLayout>
+    );
+}
+
+
+function Navbar({ auth }) {
+    return (
+        <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-lg">
+            <div className="container mx-auto px-4">
+                <div className="flex items-center justify-between h-20">
+                    {/* Logo */}
+                    <Link href="/" className="flex items-center gap-3">
+                        <img 
+                            src="/logo.png" 
+                            alt="ArgeFlow Logo" 
+                            className="w-12 h-12 object-contain"
+                        />
+                        <span className="font-bold text-xl">ArgeFlow</span>
+                    </Link>
+
+                    {/* Right Actions */}
+                    <div className="flex items-center gap-4">
+                        <ThemeToggle />
+                        
+                        {/* User Menu */}
+                        <div className="flex items-center gap-2">
+                            <div className="hidden md:block text-right">
+                                <p className="text-sm font-medium">{auth.user.name}</p>
+                                <p className="text-xs text-muted-foreground">{auth.user.email}</p>
+                            </div>
+                            
+                            <Link href={route('profile.edit')}>
+                                <Button variant="ghost" size="icon">
+                                    <User className="w-5 h-5" />
+                                </Button>
+                            </Link>
+                            
+                            <Link 
+                                href={route('logout')} 
+                                method="post" 
+                                as="button"
+                                className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+                            >
+                                <LogOut className="w-5 h-5" />
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
     );
 }

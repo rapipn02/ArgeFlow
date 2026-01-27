@@ -21,7 +21,7 @@ export default function Setup() {
         <ProgrammerLayout>
             <Head title="Profile Setup" />
 
-            <div className="max-w-3xl mx-auto space-y-6">
+            <div className="max-w-3xl mx-auto space-y-6 -mt-3">
                 {/* Header */}
                 <div className="text-center">
                     <h1 className="text-2xl font-bold text-gray-900">

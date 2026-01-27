@@ -51,11 +51,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
     Route::post('/orders/{order}/cancel', [\App\Http\Controllers\OrderController::class, 'cancel'])->name('orders.cancel');
 
-    // Progress & Comments
+    // Progress & Comments (Shared: Client + Programmer can view and comment)
     Route::get('/orders/{order}/progress', [\App\Http\Controllers\ProgressController::class, 'index'])->name('orders.progress');
-    Route::post('/orders/{order}/progress', [\App\Http\Controllers\ProgressController::class, 'store'])->name('orders.progress.store');
-    Route::put('/orders/{order}/progress/{progress}', [\App\Http\Controllers\ProgressController::class, 'update'])->name('orders.progress.update');
-    Route::delete('/orders/{order}/progress/{progress}', [\App\Http\Controllers\ProgressController::class, 'destroy'])->name('orders.progress.destroy');
     Route::post('/orders/{order}/progress/{progress}/comments', [\App\Http\Controllers\ProgressController::class, 'addComment'])->name('orders.progress.comments.store');
     Route::delete('/orders/{order}/progress/{progress}/comments/{comment}', [\App\Http\Controllers\ProgressController::class, 'deleteComment'])->name('orders.progress.comments.destroy');
 
@@ -78,6 +75,11 @@ Route::middleware('auth')->group(function () {
         // Projects
         Route::get('/projects', [\App\Http\Controllers\Programmer\ProgrammerProjectController::class, 'index'])->name('projects.index');
         Route::get('/projects/{order}', [\App\Http\Controllers\Programmer\ProgrammerProjectController::class, 'show'])->name('projects.show');
+
+        // Progress Management (Programmer Actions)
+        Route::post('/orders/{order}/progress', [\App\Http\Controllers\ProgressController::class, 'store'])->name('orders.progress.store');
+        Route::put('/orders/{order}/progress/{progress}', [\App\Http\Controllers\ProgressController::class, 'update'])->name('orders.progress.update');
+        Route::delete('/orders/{order}/progress/{progress}', [\App\Http\Controllers\ProgressController::class, 'destroy'])->name('orders.progress.destroy');
 
         // Earnings
         Route::get('/earnings', [\App\Http\Controllers\Programmer\ProgrammerEarningController::class, 'index'])->name('earnings.index');
@@ -116,6 +118,10 @@ Route::middleware('auth')->group(function () {
         // Services
         Route::resource('services', \App\Http\Controllers\Admin\AdminServiceController::class);
         Route::post('/services/{service}/toggle', [\App\Http\Controllers\Admin\AdminServiceController::class, 'toggleActive'])->name('services.toggle');
+
+        // Progress & Comments Monitoring
+        Route::get('/progress', [\App\Http\Controllers\Admin\AdminProgressController::class, 'index'])->name('progress.index');
+        Route::get('/progress/{order}', [\App\Http\Controllers\Admin\AdminProgressController::class, 'show'])->name('progress.show');
     });
 });
 

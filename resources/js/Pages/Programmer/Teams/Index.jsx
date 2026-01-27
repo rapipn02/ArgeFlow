@@ -9,7 +9,7 @@ export default function Index({ teams }) {
 
             <div className="space-y-6">
                 {/* Header */}
-                <div className="border-b border-gray-150 -mx-8">
+                <div className="border-b border-gray-150 -mx-8 -mt-3">
                     <div className='flex items-center justify-between pb-2 px-6'>
                         <div>
                             <h1 className="text-1xl font-semibold text-gray-900">
