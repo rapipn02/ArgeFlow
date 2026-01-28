@@ -42,7 +42,7 @@ export default function ProgrammerLayout({ children }) {
                 fixed top-0 left-0 z-50 h-screen w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700
                 transform transition-transform duration-300 ease-in-out
                 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-                lg:translate-x-0
+                lg:translate-x-0    
             `}>
                 <div className="flex flex-col h-full">
                     {/* Logo */}
@@ -75,12 +75,12 @@ export default function ProgrammerLayout({ children }) {
                                     className={`
                                         flex items-center gap-3 px-4 py-3 rounded-lg transition-all
                                         ${active 
-                                            ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30' 
-                                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                            ? 'bg-gray-100 text-gray-900 ' 
+                                            : 'text-gray-500 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                                         }
                                     `}
                                 >
-                                    <Icon className="w-5 h-5" />
+                                    <Icon className="w-4 h-4" />
                                     <span className="font-medium">{item.name}</span>
                                 </Link>
                             );

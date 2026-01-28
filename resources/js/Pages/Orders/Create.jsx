@@ -6,6 +6,7 @@ import { Users, Sparkles, ArrowRight, CheckCircle2, User, LogOut } from 'lucide-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import Navbar from '@/Components/NavMpruy';
 export default function Create({ auth, service, team }) {
     const { data, setData, post, processing, errors } = useForm({
         service_id: service.id,
@@ -213,111 +214,3 @@ export default function Create({ auth, service, team }) {
     );
 }
 
-
-function Navbar({ auth }) {
-    return (
-        <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-lg">
-            <div className="container mx-auto px-4">
-                <div className="flex items-center justify-between h-20">
-                    {/* Logo */}
-                    <Link href="/" className="flex items-center gap-3">
-                        <img 
-                            src="/logo.png" 
-                            alt="ArgeFlow Logo" 
-                            className="w-12 h-12 object-contain"
-                        />
-                        <span className="font-bold text-xl">ArgeFlow</span>
-                    </Link>
-
-                    {/* Right Actions */}
-                    <div className="flex items-center gap-4">
-                        <ThemeToggle />
-                        
-                        {/* User Menu */}
-                        <div className="flex items-center gap-2">
-                            <div className="hidden md:block text-right">
-                                <p className="text-sm font-medium">{auth.user.name}</p>
-                                <p className="text-xs text-muted-foreground">{auth.user.email}</p>
-                            </div>
-                            
-                            <Link href={route('profile.edit')}>
-                                <Button variant="ghost" size="icon">
-                                    <User className="w-5 h-5" />
-                                </Button>
-                            </Link>
-                            
-                            <Link 
-                                href={route('logout')} 
-                                method="post" 
-                                as="button"
-                                className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
-                            >
-                                <LogOut className="w-5 h-5" />
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    );
-}
-
-function OptionCard({ icon: Icon, title, description, features, buttonText, onClick, popular = false, index }) {
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="relative"
-        >
-            {/* Popular Badge */}
-            {popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
-                    <div className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 text-white text-sm font-medium shadow-lg">
-                        <Sparkles className="w-3 h-3" />
-                        <span>Rekomendasi</span>
-                    </div>
-                </div>
-            )}
-
-            <Card className={`h-full transition-all duration-300 hover:shadow-lg ${
-                popular ? 'border-primary/50 shadow-md' : ''
-            }`}>
-                <CardHeader className="text-center pb-4">
-                    {/* Icon */}
-                    <div className="mx-auto mb-4 w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-                        <Icon className="w-8 h-8 text-white" />
-                    </div>
-                    
-                    <CardTitle className="text-2xl">{title}</CardTitle>
-                    <CardDescription className="text-base mt-2">
-                        {description}
-                    </CardDescription>
-                </CardHeader>
-
-                <CardContent className="space-y-6">
-                    {/* Features List */}
-                    <ul className="space-y-3">
-                        {features.map((feature, idx) => (
-                            <li key={idx} className="flex items-start gap-3">
-                                <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                                <span className="text-sm text-muted-foreground">{feature}</span>
-                            </li>
-                        ))}
-                    </ul>
-
-                    {/* CTA Button */}
-                    <Button 
-                        className="w-full group"
-                        size="lg"
-                        variant={popular ? 'default' : 'outline'}
-                        onClick={onClick}
-                    >
-                        {buttonText}
-                        <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                </CardContent>
-            </Card>
-        </motion.div>
-    );
-}

@@ -56,6 +56,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/orders/{order}/progress/{progress}/comments', [\App\Http\Controllers\ProgressController::class, 'addComment'])->name('orders.progress.comments.store');
     Route::delete('/orders/{order}/progress/{progress}/comments/{comment}', [\App\Http\Controllers\ProgressController::class, 'deleteComment'])->name('orders.progress.comments.destroy');
 
+    // Progress Reactions (Client can like/dislike progress)
+    Route::post('/progress/{progress}/reaction', [\App\Http\Controllers\ProgressReactionController::class, 'toggle'])->name('progress.reaction.toggle');
+    // Revision & Completion (Client Actions)
+    Route::post('/orders/{order}/revisions', [\App\Http\Controllers\RevisionController::class, 'store'])->name('orders.revisions.store');
+    Route::post('/orders/{order}/accept-completion', [\App\Http\Controllers\RevisionController::class, 'acceptCompletion'])->name('orders.accept-completion');
+
+    // Team Rating (Client can rate team after order completion)
+    Route::post('/orders/{order}/team-rating', [\App\Http\Controllers\TeamRatingController::class, 'store'])->name('team-ratings.store');
+
     // Payments
     Route::get('/payment/success', [\App\Http\Controllers\PaymentController::class, 'success'])->name('payment.success');
     Route::get('/payment/failed', [\App\Http\Controllers\PaymentController::class, 'failed'])->name('payment.failed');
@@ -80,6 +89,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/orders/{order}/progress', [\App\Http\Controllers\ProgressController::class, 'store'])->name('orders.progress.store');
         Route::put('/orders/{order}/progress/{progress}', [\App\Http\Controllers\ProgressController::class, 'update'])->name('orders.progress.update');
         Route::delete('/orders/{order}/progress/{progress}', [\App\Http\Controllers\ProgressController::class, 'destroy'])->name('orders.progress.destroy');
+        Route::post('/orders/{order}/submit-for-review', [\App\Http\Controllers\ProgressController::class, 'submitForReview'])->name('orders.submit-for-review');
 
         // Earnings
         Route::get('/earnings', [\App\Http\Controllers\Programmer\ProgrammerEarningController::class, 'index'])->name('earnings.index');

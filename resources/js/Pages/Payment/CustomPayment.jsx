@@ -22,7 +22,10 @@ import {
 export default function CustomPayment({ auth,order, midtransClientKey }) {
     const [selectedMethod, setSelectedMethod] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
-    const [paymentType, setPaymentType] = useState('dp'); // 'dp' or 'final'
+    // Auto-detect payment type: if dp already paid, default to 'final'
+    const [paymentType, setPaymentType] = useState(
+        order.payment_status === 'dp_paid' ? 'final' : 'dp'
+    );
 
     const amount = paymentType === 'dp' ? order.dp_amount : order.final_amount;
 

@@ -89,7 +89,9 @@ export default function Success({ auth,order }) {
                                             Status Pembayaran
                                         </div>
                                         <div className="font-semibold text-green-600">
-                                            {order.payment_status === 'dp_paid' ? 'DP Dibayar' : 'Lunas'}
+                                            {order.payment_status === 'dp_paid' ? 'DP Dibayar' : 
+                                             order.payment_status === 'fully_paid' ? 'Lunas' : 
+                                             'Pending'}
                                         </div>
                                     </div>
                                 </div>

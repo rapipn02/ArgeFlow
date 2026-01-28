@@ -28,7 +28,7 @@ class ProgrammerProjectController extends Controller
             if ($request->status === 'incoming') {
                 $query->where('status', 'dp_paid');
             } elseif ($request->status === 'in_progress') {
-                $query->whereIn('status', ['in_progress', 'final_payment']);
+                $query->whereIn('status', ['in_progress', 'awaiting_review', 'revision_requested', 'final_payment']);
             } elseif ($request->status === 'completed') {
                 $query->where('status', 'completed');
             }
@@ -147,7 +147,7 @@ class ProgrammerProjectController extends Controller
             });
 
         // Check if programmer can add progress (DP must be paid)
-        $canAddProgress = in_array($order->status, ['dp_paid', 'in_progress', 'final_payment', 'completed']);
+        $canAddProgress = in_array($order->status, ['dp_paid', 'in_progress', 'revision_requested', 'final_payment', 'completed']);
 
         return Inertia::render('Programmer/Projects/Show', [
             'project' => $projectData,

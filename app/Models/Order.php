@@ -29,6 +29,9 @@ class Order extends Model
         'final_paid_at',
         'notes',
         'requirements',
+        'revision_count',
+        'completion_submitted_at',
+        'accepted_at',
     ];
 
     protected $casts = [
@@ -37,6 +40,9 @@ class Order extends Model
         'final_amount' => 'decimal:2',
         'dp_paid_at' => 'datetime',
         'final_paid_at' => 'datetime',
+        'completion_submitted_at' => 'datetime',
+        'accepted_at' => 'datetime',
+        'revision_count' => 'integer',
     ];
 
     /**
@@ -207,5 +213,67 @@ class Order extends Model
     public function isPending()
     {
         return $this->payment_status === 'pending';
+    }
+
+    /**
+     * Check if can request revision (max 2)
+     */
+    public function canRequestRevision()
+    {
+        return $this->revision_count < 2 && $this->status === 'awaiting_review';
+    }
+
+    /**
+     * Submit completion (progress 100%)
+     */
+    public function submitCompletion()
+    {
+        $this->update([
+            'status' => 'awaiting_review',
+            'completion_submitted_at' => now(),
+        ]);
+    }
+
+    /**
+     * Accept completion and move to final payment
+     */
+    public function acceptCompletion()
+    {
+        $this->update([
+            'status' => 'final_payment',
+            'accepted_at' => now(),
+        ]);
+    }
+
+    /**
+     * Request revision
+     */
+    public function requestRevision()
+    {
+        if (!$this->canRequestRevision()) {
+            throw new \Exception('Maksimal revisi adalah 2 kali');
+        }
+
+        $this->update([
+            'status' => 'revision_requested',
+            'revision_count' => $this->revision_count + 1,
+            'completion_submitted_at' => null,
+        ]);
+    }
+
+    /**
+     * Get latest progress
+     */
+    public function getLatestProgress()
+    {
+        return $this->progress()->orderBy('created_at', 'desc')->first();
+    }
+
+    /**
+     * Check if has 100% progress
+     */
+    public function has100Progress()
+    {
+        return $this->progress()->where('progress_percentage', 100)->exists();
     }
 }

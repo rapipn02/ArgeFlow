@@ -26,10 +26,18 @@ class PaymentController extends Controller
             abort(403, 'Unauthorized access');
         }
 
+        // For final payment, check if order is in final_payment status
+        if ($order->payment_status === 'dp_paid') {
+            if ($order->status !== 'final_payment') {
+                return redirect()->route('orders.show', $order)
+                    ->with('info', 'Pembayaran pelunasan hanya dapat dilakukan setelah proyek diterima (status Final Payment)');
+            }
+        }
+
         // Check if order can be paid
-        if (!in_array($order->payment_status, ['pending', 'failed'])) {
+        if (!in_array($order->payment_status, ['pending', 'failed', 'dp_paid'])) {
             return redirect()->route('orders.show', $order)
-                ->with('info', 'This order has already been paid');
+                ->with('info', 'Order ini sudah lunas');
         }
 
         $order->load(['service', 'team']);
@@ -113,12 +121,34 @@ class PaymentController extends Controller
                 $order->midtrans_order_id
             );
 
+            // Update order status if payment is successful
+            if (in_array($status->transaction_status, ['capture', 'settlement'])) {
+                // Extract payment type from order_id
+                $parts = explode('-', $order->midtrans_order_id);
+                $paymentType = $parts[2] ?? 'dp';
+                
+                \Log::info('Checking payment status', [
+                    'order_id' => $order->id,
+                    'midtrans_order_id' => $order->midtrans_order_id,
+                    'payment_type' => $paymentType,
+                    'transaction_status' => $status->transaction_status,
+                    'current_payment_status' => $order->payment_status
+                ]);
+                
+                if ($paymentType === 'dp' && $order->payment_status === 'pending') {
+                    $order->markDpAsPaid();
+                } elseif ($paymentType === 'final' && $order->payment_status === 'dp_paid') {
+                    $order->markAsFullyPaid();
+                }
+            }
+
             return response()->json([
                 'status' => 'success',
                 'transaction_status' => $status->transaction_status,
                 'payment_status' => $order->fresh()->payment_status,
             ]);
         } catch (\Exception $e) {
+            \Log::error('Check status error: ' . $e->getMessage());
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),

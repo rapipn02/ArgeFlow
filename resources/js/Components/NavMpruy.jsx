@@ -7,7 +7,7 @@ export default function NavMpruy() {
     const { auth } = usePage().props;
     
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-lg">
+        <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/40 bg-background/50 backdrop-blur-lg">
             <div className="container mx-auto px-4">
                 <div className="flex items-center justify-between h-20">
                     {/* Logo */}
@@ -32,11 +32,7 @@ export default function NavMpruy() {
                                     <p className="text-xs text-muted-foreground">{auth.user.email}</p>
                                 </div>
                                 
-                                <Link href={route('profile.edit')}>
-                                    <Button variant="ghost" size="icon">
-                                        <User className="w-5 h-5" />
-                                    </Button>
-                                </Link>
+                           
 
                                 <Link href={route('orders.index')}>
                                     <Button variant="ghost" size="icon">

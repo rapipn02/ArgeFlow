@@ -33,16 +33,19 @@ class ProgressController extends Controller
             abort(403, 'Unauthorized access');
         }
 
-        $progressList = OrderProgress::with(['programmer', 'comments.user'])
+        $progressList = OrderProgress::with(['programmer', 'comments.user', 'reactions'])
             ->where('order_id', $order->id)
             ->orderBy('created_at', 'desc')
             ->get()
-            ->map(function ($progress) {
+            ->map(function ($progress) use ($user) {
                 return [
                     'id' => $progress->id,
                     'description' => $progress->description,
                     'file_path' => $progress->file_path,
                     'progress_percentage' => $progress->progress_percentage,
+                    'likes_count' => $progress->likes_count,
+                    'dislikes_count' => $progress->dislikes_count,
+                    'user_reaction' => $progress->userReaction($user->id)?->type,
                     'created_at' => $progress->created_at->format('d M Y H:i'),
                     'programmer' => [
                         'id' => $progress->programmer->id,
@@ -68,7 +71,27 @@ class ProgressController extends Controller
         // Check if user can add progress (only team members after DP is paid)
         $canAddProgress = $user->role === 'programmer' && $order->team && 
                          $order->team->members()->where('user_id', $user->id)->exists() &&
-                         in_array($order->status, ['dp_paid', 'in_progress', 'final_payment', 'completed']);
+                         in_array($order->status, ['dp_paid', 'in_progress', 'revision_requested', 'final_payment', 'completed']);
+
+        // Get revisions
+        $revisions = $order->revisions()
+            ->with('client')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function ($revision) {
+                return [
+                    'id' => $revision->id,
+                    'description' => $revision->description,
+                    'file_path' => $revision->file_path,
+                    'status' => $revision->status,
+                    'revision_number' => $revision->revision_number,
+                    'created_at' => $revision->created_at->format('d M Y H:i'),
+                    'client' => [
+                        'id' => $revision->client->id,
+                        'name' => $revision->client->name,
+                    ],
+                ];
+            });
 
         return Inertia::render('Orders/Progress', [
             'order' => [
@@ -77,8 +100,11 @@ class ProgressController extends Controller
                 'service_name' => $order->service->name ?? 'N/A',
                 'status' => $order->status,
                 'payment_status' => $order->payment_status,
+                'revision_count' => $order->revision_count,
+                'completion_submitted_at' => $order->completion_submitted_at?->format('d M Y H:i'),
             ],
             'progressList' => $progressList,
+            'revisions' => $revisions,
             'canAddProgress' => $canAddProgress,
         ]);
     }
@@ -96,7 +122,7 @@ class ProgressController extends Controller
         }
 
         // Verify DP is paid
-        if (!in_array($order->status, ['dp_paid', 'in_progress', 'final_payment', 'completed'])) {
+        if (!in_array($order->status, ['dp_paid', 'in_progress', 'revision_requested', 'final_payment', 'completed'])) {
             return redirect()->back()->with('error', 'Progress hanya bisa dikirim setelah DP dibayar');
         }
 
@@ -111,13 +137,24 @@ class ProgressController extends Controller
             $filePath = $request->file('file')->store('progress-files', 'public');
         }
 
-        OrderProgress::create([
+        $progress = OrderProgress::create([
             'order_id' => $order->id,
             'programmer_id' => $user->id,
             'description' => $validated['description'],
             'progress_percentage' => $validated['progress_percentage'],
             'file_path' => $filePath,
         ]);
+
+        // If progress is 100%, auto submit for review
+        if ($validated['progress_percentage'] == 100 && in_array($order->status, ['in_progress', 'revision_requested'])) {
+            $order->submitCompletion();
+            return redirect()->back()->with('success', 'Progress 100% berhasil dikirim! Menunggu review dari client.');
+        }
+
+        // Update order status to in_progress if still dp_paid
+        if ($order->status === 'dp_paid') {
+            $order->update(['status' => 'in_progress']);
+        }
 
         return redirect()->back()->with('success', 'Progress berhasil ditambahkan');
     }
@@ -216,5 +253,33 @@ class ProgressController extends Controller
         $comment->delete();
 
         return redirect()->back()->with('success', 'Komentar berhasil dihapus');
+    }
+
+    /**
+     * Manually submit order for review (for existing 100% progress)
+     */
+    public function submitForReview(Order $order)
+    {
+        $user = auth()->user();
+
+        // Verify user is in the team
+        if ($user->role !== 'programmer' || !$order->team || !$order->team->members()->where('user_id', $user->id)->exists()) {
+            abort(403, 'Only team members can submit for review');
+        }
+
+        // Check if order has 100% progress
+        if (!$order->has100Progress()) {
+            return redirect()->back()->with('error', 'Belum ada progress 100%');
+        }
+
+        // Check if order status is valid
+        if (!in_array($order->status, ['dp_paid', 'in_progress', 'revision_requested'])) {
+            return redirect()->back()->with('error', 'Order tidak dalam status yang valid untuk submit review');
+        }
+
+        // Submit for completion
+        $order->submitCompletion();
+
+        return redirect()->back()->with('success', 'Progress 100% berhasil dikirim untuk review client!');
     }
 }

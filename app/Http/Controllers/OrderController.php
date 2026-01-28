@@ -89,7 +89,7 @@ class OrderController extends Controller
             abort(403, 'Unauthorized access');
         }
 
-        $order->load(['service', 'team.members.user', 'rating']);
+        $order->load(['service', 'team.members.user', 'teamRating']);
 
         return Inertia::render('Orders/Show', [
             'order' => $order,

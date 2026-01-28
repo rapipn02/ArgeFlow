@@ -10,8 +10,10 @@ import {
     FileText,
     CheckCircle2
 } from 'lucide-react';
+import Navbar from '@/Components/NavMpruy';
 
-export default function Show({ order }) {
+
+export default function Show({ order,auth }) {
     const handlePrint = () => {
         window.print();
     };
@@ -19,7 +21,7 @@ export default function Show({ order }) {
     return (
         <AuthenticatedLayout>
             <Head title={`Invoice #${order.order_number}`} />
-
+            <Navbar auth={auth} />
             <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 print:bg-white">
                 <div className="container mx-auto px-4 max-w-4xl">
                     {/* Action Buttons - Hidden on print */}
@@ -40,13 +42,7 @@ export default function Show({ order }) {
                                 <Printer className="w-4 h-4" />
                                 <span>Print</span>
                             </button>
-                            <Link
-                                href={route('invoice.download', { order: order.id })}
-                                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white transition-all"
-                            >
-                                <Download className="w-4 h-4" />
-                                <span>Download PDF</span>
-                            </Link>
+                            
                         </div>
                     </div>
 
@@ -143,7 +139,7 @@ export default function Show({ order }) {
                                         <td className="py-4 text-right">
                                             {order.dp_paid_at ? (
                                                 <span className="inline-flex items-center gap-1 text-green-600">
-                                                    <CheckCircle2 className="w-4 h-4" />
+                                                    <div className="w-4 h-4" />
                                                     <span className="text-sm font-medium">Paid</span>
                                                 </span>
                                             ) : (
@@ -164,7 +160,7 @@ export default function Show({ order }) {
                                         <td className="py-4 text-right">
                                             {order.final_paid_at ? (
                                                 <span className="inline-flex items-center gap-1 text-green-600">
-                                                    <CheckCircle2 className="w-4 h-4" />
+                                                    <div className="w-4 h-4" />
                                                     <span className="text-sm font-medium">Paid</span>
                                                 </span>
                                             ) : (
@@ -254,8 +250,7 @@ export default function Show({ order }) {
 
                         {/* Footer */}
                         <div className="text-center text-sm text-gray-600 dark:text-gray-400 pt-8 border-t border-gray-200 dark:border-gray-700">
-                            <p className="mb-2">Thank you for your business!</p>
-                            <p>For any questions regarding this invoice, please contact us at support@argeflow.com</p>
+                            <p className="mb-2">Terimakasih Sudah Mempercayakan Kami untuk Membuat Layanan Anda, Salam Hangat Kami, ArgeFlow</p>
                         </div>
                     </motion.div>
                 </div>

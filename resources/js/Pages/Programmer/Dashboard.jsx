@@ -35,7 +35,7 @@ export default function Dashboard({ stats, recentProjects, teams }) {
                 case 'income':
                     return {
                         bg: 'bg-white',
-                        icon: 'bg-green-100 text-green-600',
+                        icon: 'bg-blue-100 text-blue-600',
                         value: 'text-gray-900',
                     };
                 case 'balance':

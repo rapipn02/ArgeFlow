@@ -83,13 +83,20 @@ export default function Show({ project, progressList, canAddProgress }) {
                             <span className={`px-3 py-1 rounded-full text-sm font-medium ${statusColors[project.status]}`}>
                                 {statusLabels[project.status]}
                             </span>
+                            <Link
+                                href={route('orders.progress', project.id)}
+                                className="flex items-center px-2 py-2  "
+                            >
+                                <div className="" />
+                                <span className="font-medium text-black hover:text-green-700  transition-colors">Lihat Progress</span>
+                            </Link>
                             {canAddProgress && (
                                 <button
                                     onClick={() => setShowProgressModal(true)}
-                                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                                    className="flex items-center px-2 py-2  text-white rounded-lg transition-colors"
                                 >
-                                    <Plus className="w-4 h-4" />
-                                    <span className="font-medium">Kirim Progress</span>
+                                    <div className="" />
+                                    <span className="font-medium hover:text-blue-700 text-black">Kirim Progress</span>
                                 </button>
                             )}
                         </div>
@@ -328,8 +335,8 @@ export default function Show({ project, progressList, canAddProgress }) {
                         {/* Payment Info */}
                         <div className="bg-white rounded-xl border border-gray-200 p-6">
                             <div className="flex items-center gap-2 mb-4">
-                                <DollarSign className="w-5 h-5 text-green-600" />
-                                <h2 className="text-lg font-semibold text-gray-900">
+                                <div className="" />
+                                <h2 className="text-lg font-semibold text-gray-900 -mx-2">
                                     Detail Pembayaran
                                 </h2>
                             </div>

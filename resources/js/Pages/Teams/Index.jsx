@@ -94,11 +94,7 @@ function Navbar({ auth }) {
                                 <p className="text-xs text-muted-foreground">{auth.user.email}</p>
                             </div>
                             
-                            <Link href={route('profile.edit')}>
-                                <Button variant="ghost" size="icon">
-                                    <User className="w-5 h-5" />
-                                </Button>
-                            </Link>
+                         
                             
                             <Link 
                                 href={route('logout')} 

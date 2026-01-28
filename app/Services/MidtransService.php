@@ -91,12 +91,22 @@ class MidtransService
             $orderId = $notification->order_id;
 
             // Extract order number from order_id (format: ORD-XXX-dp/final-timestamp)
-            $orderNumber = explode('-', $orderId)[0] . '-' . explode('-', $orderId)[1];
-            $paymentType = explode('-', $orderId)[2]; // 'dp' or 'final'
+            $parts = explode('-', $orderId);
+            $orderNumber = $parts[0] . '-' . $parts[1];
+            $paymentType = $parts[2] ?? 'dp'; // 'dp' or 'final'
+
+            \Log::info('Midtrans Notification', [
+                'order_id' => $orderId,
+                'order_number' => $orderNumber,
+                'payment_type' => $paymentType,
+                'transaction_status' => $transactionStatus,
+                'fraud_status' => $fraudStatus
+            ]);
 
             $order = Order::where('order_number', $orderNumber)->first();
 
             if (!$order) {
+                \Log::error('Order not found: ' . $orderNumber);
                 throw new \Exception('Order not found');
             }
 
@@ -113,12 +123,19 @@ class MidtransService
                 $this->updateOrderStatus($order, $paymentType, 'failed');
             }
 
+            \Log::info('Order status updated', [
+                'order_id' => $order->id,
+                'payment_status' => $order->payment_status,
+                'status' => $order->status
+            ]);
+
             return [
                 'status' => 'success',
                 'order' => $order,
                 'transaction_status' => $transactionStatus,
             ];
         } catch (\Exception $e) {
+            \Log::error('Midtrans notification error: ' . $e->getMessage());
             throw new \Exception('Failed to handle notification: ' . $e->getMessage());
         }
     }
@@ -128,11 +145,26 @@ class MidtransService
      */
     private function updateOrderStatus(Order $order, string $paymentType, string $status)
     {
+        \Log::info('Updating order status', [
+            'order_id' => $order->id,
+            'payment_type' => $paymentType,
+            'status' => $status,
+            'current_payment_status' => $order->payment_status
+        ]);
+
         if ($status === 'success') {
-            if ($paymentType === 'dp') {
+            if ($paymentType === 'dp' && $order->payment_status === 'pending') {
+                \Log::info('Marking DP as paid', ['order_id' => $order->id]);
                 $order->markDpAsPaid();
-            } else {
+            } elseif ($paymentType === 'final' && $order->payment_status === 'dp_paid') {
+                \Log::info('Marking as fully paid', ['order_id' => $order->id]);
                 $order->markAsFullyPaid();
+            } else {
+                \Log::warning('Payment type or status mismatch', [
+                    'order_id' => $order->id,
+                    'payment_type' => $paymentType,
+                    'current_payment_status' => $order->payment_status
+                ]);
             }
         } elseif ($status === 'failed') {
             $order->update([

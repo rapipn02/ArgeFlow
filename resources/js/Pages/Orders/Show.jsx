@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import axios from 'axios';
 import { useState } from 'react';
 import Navbar from '@/Components/NavMpruy';
+import TeamRatingModal from '@/Components/TeamRatingModal';
 import { 
     Package, 
     ArrowLeft, 
@@ -16,11 +17,14 @@ import {
     DollarSign,
     RefreshCw,
     TrendingUp,
-    Calculator
+    Calculator,
+    PackageCheck,
+    FileCheck
 } from 'lucide-react';
 
 export default function Show({ order }) {
     const [isRefreshing, setIsRefreshing] = useState(false);
+    const [showRatingModal, setShowRatingModal] = useState(false);
 
     const handleRefreshStatus = async () => {
         setIsRefreshing(true);
@@ -43,6 +47,9 @@ export default function Show({ order }) {
         const colors = {
             pending: 'text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
             in_progress: ' text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
+            awaiting_review: ' text-purple-800 dark:bg-purple-900/30 dark:text-purple-400',
+            revision_requested: ' text-orange-800 dark:bg-orange-900/30 dark:text-orange-400',
+            final_payment: ' text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-400',
             completed: ' text-green-800 dark:bg-green-900/30 dark:text-green-400',
             cancelled: ' text-red-800 dark:bg-red-900/30 dark:text-red-400',
         };
@@ -63,6 +70,9 @@ export default function Show({ order }) {
         const texts = {
             pending: 'Menunggu Pembayaran',
             in_progress: 'Sedang Dikerjakan',
+            awaiting_review: 'Menunggu Review',
+            revision_requested: 'Revisi Diminta',
+            final_payment: 'Menunggu Pelunasan',
             completed: 'Selesai',
             cancelled: 'Dibatalkan',
         };
@@ -104,7 +114,7 @@ export default function Show({ order }) {
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="bg-red-150 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-8 shadow-xl border border-gray-200 dark:border-gray-700"
+                                className="bg-gray-100  rounded-3xl p-8 shadow-xl border border-gray-200 dark:border-gray-700"
                             >
                                 <div className="flex items-start justify-between mb-6">
                                     <div className="flex items-start gap-2">
@@ -140,7 +150,7 @@ export default function Show({ order }) {
                                         <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">
                                             Layanan
                                         </div>
-                                        <div className="font-semibold text-gray-900 dark:text-white">
+                                        <div className=" bg-white/50 font-semibold text-gray-900 dark:text-white">
                                             {order.service.name}
                                         </div>
                                     </div>
@@ -150,7 +160,7 @@ export default function Show({ order }) {
                                             <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">
                                                 Tim
                                             </div>
-                                            <div className="font-semibold text-gray-900 dark:text-white">
+                                            <div className=" bg-white/40 font-semibold text-gray-900 dark:text-white">
                                                 {order.team.name}
                                             </div>
                                         </div>
@@ -164,7 +174,7 @@ export default function Show({ order }) {
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.1 }}
-                                    className=" dark:bg-gray-800 backdrop-blur-xl rounded-3xl p-6 shadow-xl "
+                                    className=" bg-gray-100 backdrop-blur-xl rounded-3xl p-6 shadow-xl "
                                 >
                                     <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                                         <FileText className="w-5 h-5 text-blue-600" />
@@ -176,7 +186,7 @@ export default function Show({ order }) {
                                             <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                                 Catatan:
                                             </div>
-                                            <div className="text-gray-600 dark:text-gray-400 bg-black-100 dark:bg-gray-900/50 p-4 rounded-xl">
+                                            <div className="bg-white/50 text-gray-600 dark:text-gray-400 bg-black-100 dark:bg-gray-900/50 p-4 rounded-xl">
                                                 {order.notes}
                                             </div>
                                         </div>
@@ -187,7 +197,7 @@ export default function Show({ order }) {
                                             <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                                 Kebutuhan & Spesifikasi:
                                             </div>
-                                            <div className="text-gray-600 dark:text-gray-400 bg-black-50 p-4 rounded-xl whitespace-pre-wrap">
+                                            <div className="bg-white/50 text-gray-600 dark:text-gray-400 bg-black-50 p-4 rounded-xl whitespace-pre-wrap">
                                                 {order.requirements}
                                             </div>
                                         </div>
@@ -200,7 +210,7 @@ export default function Show({ order }) {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.2 }}
-                                className="bg-gray-50 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-gray-200 dark:border-gray-700"
+                                className="bg-gray-100 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-gray-200 dark:border-gray-700"
                             >
                                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                                     <Calendar className="w-5 h-5 text-blue-600" />
@@ -222,12 +232,13 @@ export default function Show({ order }) {
                                         </div>
                                         <div className="text-right">
                                             <div className="font-bold text-gray-900 dark:text-white">
-                                                Rp {order.dp_amount.toLocaleString('id-ID')}
+                                                Rp {Number(order.dp_amount).toLocaleString('id-ID')}
                                             </div>
                                             {order.dp_paid_at && (
-                                                <CheckCircle2 className="w-5 h-5 text-green-600 ml-auto" />
+                                                <PackageCheck className="w-5 h-5 text-green-600 ml-auto" />
                                             )}
                                         </div>
+
                                     </div>
 
                                     <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900/50 rounded-xl">
@@ -244,12 +255,13 @@ export default function Show({ order }) {
                                         </div>
                                         <div className="text-right">
                                             <div className="font-bold text-gray-900 dark:text-white">
-                                                Rp {order.final_amount.toLocaleString('id-ID')}
+                                                Rp {Number(order.dp_amount).toLocaleString('id-ID')}
                                             </div>
                                             {order.final_paid_at && (
-                                                <CheckCircle2 className="w-5 h-5 text-green-600 ml-auto" />
+                                                <PackageCheck className="w-5 h-5 text-green-600 ml-auto" />
                                             )}
                                         </div>
+
                                     </div>
                                 </div>
                             </motion.div>
@@ -271,15 +283,36 @@ export default function Show({ order }) {
                                 <div className="space-y-3 mb-6">
                                     <div className="flex justify-between text-gray-600 dark:text-gray-400">
                                         <span>Total Harga</span>
-                                        <span>Rp {order.total_amount.toLocaleString('id-ID')}</span>
+                                     <span>
+                                        {new Intl.NumberFormat('id-ID', {
+                                            style: 'currency',
+                                            currency: 'IDR',
+                                            minimumFractionDigits: 0
+                                        }).format(order.total_amount)}
+                                    </span>
+
                                     </div>
                                     <div className="flex justify-between text-gray-600 dark:text-gray-400">
                                         <span>DP (40%)</span>
-                                        <span>Rp {order.dp_amount.toLocaleString('id-ID')}</span>
+                                        <span>
+                                            {new Intl.NumberFormat('id-ID', {
+                                                style: 'currency',
+                                                currency: 'IDR',
+                                                minimumFractionDigits: 0
+                                            }).format(order.dp_amount)}
+                                        </span>
+
                                     </div>
                                     <div className="flex justify-between text-gray-600 dark:text-gray-400">
                                         <span>Pelunasan (60%)</span>
-                                        <span>Rp {order.final_amount.toLocaleString('id-ID')}</span>
+                                        <span>
+                                            {new Intl.NumberFormat('id-ID', {
+                                                style: 'currency',
+                                                currency: 'IDR',
+                                                minimumFractionDigits: 0
+                                            }).format(order.final_amount)}
+                                        </span>
+
                                     </div>
                                 </div>
 
@@ -317,7 +350,7 @@ export default function Show({ order }) {
                                     </Link>
                                 )}
 
-                                {order.payment_status === 'dp_paid' && (
+                                {order.payment_status === 'dp_paid' && order.status === 'final_payment' && (
                                     <Link
                                         href={route('payment.show', { order: order.id })}
                                         className="w-full flex items-center justify-center gap-2 py-4 rounded-xl font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-lg hover:shadow-xl transition-all"
@@ -327,14 +360,76 @@ export default function Show({ order }) {
                                     </Link>
                                 )}
 
+                                {order.payment_status === 'dp_paid' && order.status !== 'final_payment' && (
+                                    <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
+                                        <Clock className="w-8 h-8 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
+                                        <div className="font-semibold text-blue-800 dark:text-blue-300 mb-1">
+                                            DP Sudah Dibayar
+                                        </div>
+                                        <div className="text-sm text-blue-600 dark:text-blue-400">
+                                            Pelunasan dapat dilakukan setelah Anda menerima hasil pekerjaan
+                                        </div>
+                                    </div>
+                                )}
+
                                 {order.payment_status === 'fully_paid' && (
                                     <div className="space-y-3">
-                                        <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-xl border border-green-200 dark:border-green-800">
-                                            <CheckCircle2 className="w-12 h-12 text-green-600 mx-auto mb-2" />
+                                        <div className="text-center p-4 rounded-xl ">
+                                            <FileCheck className="w-12 h-12 text-green-600 mx-auto mb-2" />
                                             <div className="font-semibold text-green-800 dark:text-green-300">
                                                 Pembayaran Lunas
                                             </div>
                                         </div>
+
+                                        {/* Rating Button - Show if not rated yet */}
+                                        {!order.team_rating && order.team && (
+                                            <button
+                                                onClick={() => setShowRatingModal(true)}
+                                                className="w-full flex items-center justify-center gap-2 py-4 mb-3 rounded-xl font-semibold text-white  hover:from-yellow-600 hover:to-orange-600 shadow-lg hover:shadow-xl transition-all"
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+                                                </svg>
+                                                <span>Beri Rating Tim</span>
+                                            </button>
+                                        )}
+
+                                        {/* Show rating if already given */}
+                                        {order.team_rating && (
+                                            <div className="p-4 border rounded-3xl bg-gray-100">
+                                                <div className="flex items-center gap-2 mb-2 justify-center">
+                                                    <div className="flex justify-center gap-1">
+                                                        {[1, 2, 3, 4, 5].map((star) => (
+                                                            <svg
+                                                                key={star}
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                viewBox="0 0 24 24"
+                                                                fill="currentColor"
+                                                                className={`w-5 h-5 ${
+                                                                    star <= order.team_rating.rating
+                                                                        ? 'text-yellow-400'
+                                                                        : 'text-gray-300'
+                                                                }`}
+                                                            >
+                                                                <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
+                                                            </svg>
+                                                        ))}
+                                                    </div>
+                                                    <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                                                        ({order.team_rating.rating}/5)
+                                                    </span>
+                                                </div>
+                                                {order.team_rating.review && (
+                                                    <p className="text-sm text-gray-600 dark:text-gray-400 italic">
+                                                        "{order.team_rating.review}"
+                                                    </p>
+                                                )}
+                                                <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">
+                                                    Terima kasih atas rating Anda!
+                                                </p>
+                                            </div>
+                                        )}
+
                                         <Link
                                             href={route('invoice.show', { order: order.id })}
                                             className="w-full flex items-center justify-center gap-2 py-4 rounded-xl font-semibold text-white bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-xl transition-all"
@@ -360,6 +455,13 @@ export default function Show({ order }) {
                     </div>
                 </div>
             </div>
+
+            {/* Team Rating Modal */}
+            <TeamRatingModal
+                order={order}
+                show={showRatingModal}
+                onClose={() => setShowRatingModal(false)}
+            />
         </AuthenticatedLayout>
     );
 }

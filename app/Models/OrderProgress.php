@@ -18,10 +18,14 @@ class OrderProgress extends Model
         'description',
         'file_path',
         'progress_percentage',
+        'likes_count',
+        'dislikes_count',
     ];
 
     protected $casts = [
         'progress_percentage' => 'integer',
+        'likes_count' => 'integer',
+        'dislikes_count' => 'integer',
     ];
 
     /**
@@ -46,5 +50,32 @@ class OrderProgress extends Model
     public function comments()
     {
         return $this->hasMany(ProgressComment::class, 'progress_id');
+    }
+
+    /**
+     * Get the reactions for this progress
+     */
+    public function reactions()
+    {
+        return $this->hasMany(ProgressReaction::class, 'order_progress_id');
+    }
+
+    /**
+     * Update reaction counts
+     */
+    public function updateReactionCounts()
+    {
+        $this->update([
+            'likes_count' => $this->reactions()->where('type', 'like')->count(),
+            'dislikes_count' => $this->reactions()->where('type', 'dislike')->count(),
+        ]);
+    }
+
+    /**
+     * Get user's reaction for this progress
+     */
+    public function userReaction($userId)
+    {
+        return $this->reactions()->where('user_id', $userId)->first();
     }
 }
