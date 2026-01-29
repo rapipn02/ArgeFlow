@@ -60,8 +60,8 @@ export default function Show({ project, progressList }) {
                 </div>
 
                 {/* Project Info Card */}
-                <div className="p-6">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div className="p-3">
+                    <div className="bg-slate-50 rounded-xl border border-gray-200  p-4 grid grid-cols-1 md:grid-cols-4 gap-3">
                         <div>
                             <p className="text-xs text-gray-500 mb-1">Service</p>
                             <div className="flex items-center gap-2">
@@ -70,11 +70,11 @@ export default function Show({ project, progressList }) {
                             </div>
                         </div>
                         <div>
-                            <p className="text-xs text-gray-500 mb-1">Client</p>
+                            <p className="text-xs text-gray-500 mb-1 mx-9">Client</p>
                             <div className="flex items-center gap-2">
-                                <div className="w-4 h-4 text-gray-400 -mx-3" />
+                                <div className="w-4 h-4 text-gray-400 " />
                                 <div>
-                                    <p className="text-sm font-semibold text-gray-900">{project.client_name}</p>
+                                    <p className="text-sm font-semibold text-gray-900 mx-3">{project.client_name}</p>
                                     <p className="text-xs text-gray-500"></p>
                                 </div>
                             </div>
@@ -107,9 +107,15 @@ export default function Show({ project, progressList }) {
                                 {/* Progress Header */}
                                 <div className="p-6 border-b border-gray-200">
                                     <div className="flex items-start gap-4 mb-4">
-                                        <div className="w-14 h-14 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-lg shadow-lg flex-shrink-0">
-                                            {progress.progress_percentage}%
-                                        </div>
+                                     <div className="w-16 h-16 rounded-full bg-blue-500 flex flex-col items-center justify-center text-white shadow-lg flex-shrink-0 leading-none">
+                                                <span className="text-[9px] font-medium uppercase tracking-wide">
+                                                    Progress
+                                                </span>
+                                                <span className="text-sm font-bold">
+                                                    {progress.progress_percentage}%
+                                                </span>
+                                            </div>
+
                                         <div className="flex-1">
                                             <div className="flex items-center gap-2 mb-1">
                                                 <h3 className="font-semibold text-gray-900">

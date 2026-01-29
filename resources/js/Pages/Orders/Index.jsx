@@ -1,243 +1,249 @@
 import { Head, Link, router } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { motion } from 'framer-motion';import { 
-    Package, 
-    Clock, 
-    CheckCircle2, 
-    XCircle,
-    Eye,
-    CreditCard,
-    Filter,
-    Search,
-    CircleEllipsis,
-    SquareCode,
-    User,
-
-} from 'lucide-react';
+import { Search, TrendingUp, MessageSquare, User, Calendar, Package, Filter, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 import Navbar from '@/Components/NavMpruy';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle }from '@/Components/ui/card'; 
-import { Button } from '@/Components/ui/button';
-import { ThemeToggle } from '@/Components/ThemeToggle';
-import { Star, Users, ArrowRight, LogOut, Briefcase, Award } from 'lucide-react';
 
+export default function Index({ projects, filters, auth }) {
+    const [search, setSearch] = useState(filters?.search || '');
+    const [statusFilter, setStatusFilter] = useState(filters?.status || '');
 
-export default function Index({ orders,auth }) {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [statusFilter, setStatusFilter] = useState('all');
-    
-    // Debug output
-    console.log('Raw orders prop:', orders);
-    console.log('Is array?', Array.isArray(orders));
-    console.log('Has data?', orders?.data);
-    console.log('Type:', typeof orders);
-    
-    // Safely get orders data - handle both paginated and non-paginated formats
-    const ordersData = Array.isArray(orders) ? orders : (orders?.data || []);
-    
-    console.log('Final ordersData:', ordersData);
-    console.log('ordersData length:', ordersData.length);
-
-    const getStatusColor = (status) => {
-        const colors = {
-            pending: 'text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
-            dp_paid: 'text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
-            fully_paid: 'text-green-800 dark:bg-green-900/30 dark:text-green-400',
-            failed: 'text-red-800 dark:bg-red-900/30 dark:text-red-400',
-        };
-        return colors[status] || 'bg-gray-100 text-gray-800';
+    const handleSearch = (e) => {
+        e.preventDefault();
+        router.get(route('orders.index'), { search, status: statusFilter }, {
+            preserveState: true,
+            replace: true,
+        });
     };
 
-    const getStatusIcon = (status) => {
-        const icons = {
-            pending: Clock,
-            dp_paid: CheckCircle2,
-            fully_paid: CheckCircle2,
-            failed: XCircle,
-        };
-        return icons[status] || Clock;
+    const statusColors = {
+        pending: ' font-semibold text-yellow-800',
+        dp_paid: ' font-semibold text-blue-800',
+        in_progress: 'font-semibold text-purple-800',
+        awaiting_review: 'font-semibold text-pink-800',
+        revision_requested: 'font-semibold text-orange-800',
+        final_payment: ' font-semibold text-orange-800',
+        completed: ' font-semibold text-green-800',
+        cancelled: 'font-semibold text-red-800',
     };
 
-    const getStatusText = (status) => {
-        const texts = {
-            pending: 'Menunggu Pembayaran',
-            dp_paid: 'DP Dibayar',
-            fully_paid: 'Lunas',
-            failed: 'Gagal',
-        };
-        return texts[status] || status;
+    const statusLabels = {
+        pending: 'Pending',
+        dp_paid: 'DP Paid',
+        in_progress: 'In Progress',
+        awaiting_review: 'Awaiting Review',
+        revision_requested: 'Revision Requested',
+        final_payment: 'Final Payment',
+        completed: 'Completed',
+        cancelled: 'Cancelled',
     };
-    
-    // Safety check
-    if (!orders) {
-        return (
-            <AuthenticatedLayout>
-                <Head title="Daftar Order" />
-                <Navbar />
-                <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
-                    <div className="container mx-auto px-4 max-w-7xl">
-                        <div className="bg-white p-8 rounded-lg text-center">
-                            <p className="text-red-600">Error: Data orders tidak ditemukan</p>
-                        </div>
-                    </div>
-                </div>
-            </AuthenticatedLayout>
-        );
-    }
+
+    const formatCurrency = (amount) => {
+        return new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0,
+        }).format(amount);
+    };
+
+    // Safely get projects data
+    const projectsData = projects?.data || [];
 
     return (
         <AuthenticatedLayout>
             <Head title="Daftar Order" />
             <Navbar auth={auth} />
 
-            <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
+            <div className="min-h-screen bg-gray-50 py-12">
                 <div className="container mx-auto px-4 max-w-7xl">
-                    {/* Header */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="mb-8"
-                    >
-                        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
-                            Daftar Order
-                        </h1>
-                        <p className="text-gray-600 dark:text-gray-400">
-                            Kelola dan pantau semua order Anda
-                        </p>
-                    </motion.div>
+                    <div className="space-y-6">
+                        {/* Header */}
+                        <div className="border-b border-gray-150 -mx-3">
+                            <div className='flex items-center justify-between pb-2 px-6'>
+                                <div>
+                                    <h1 className="text-1xl font-semibold text-gray-900">   
+                                        Daftar Order Saya
+                                    </h1>
+                                    <p className="text-sm text-gray-500 mt-1">
+                                        Monitor order dan progress project Anda
+                                    </p>
+                                </div>
+                                <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg border border-blue-200">
+                                    <Package className="w-4 h-4" />
+                                    <span className="text-sm font-medium">{projects.total} Projects</span>
+                                </div>
+                            </div>
+                        </div>
 
-                   
+                        {/* Search & Filter */}
+                        <div className=" p-4">
+                            <form onSubmit={handleSearch} className="flex gap-3">
+                                <div className="flex-1 relative">
+                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 " />
+                                    <input
+                                        type="text"
+                                        value={search}
+                                        onChange={(e) => setSearch(e.target.value)}
+                                        placeholder="cari "
+                                        className="w- pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    />
+                                </div>
+                            </form>
+                        </div>
 
-                    {/* Orders List */}
-                    {ordersData && ordersData.length > 0 ? (
-                        <div className="space-y">
-                            {ordersData.filter(order => {
-                                // Search filter
-                                const matchesSearch = searchTerm === '' || 
-                                    order.order_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                    order.service?.name?.toLowerCase().includes(searchTerm.toLowerCase());
-                                
-                                // Status filter
-                                const matchesStatus = statusFilter === 'all' || order.payment_status === statusFilter;
-                                
-                                return matchesSearch && matchesStatus;
-                            }).map((order, index) => {
-                                const StatusIcon = getStatusIcon(order.payment_status);
-                                
-                                return (
-                                    <motion.div
-                                        key={order.id}
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.1 * index }}
-                                        className="bg-gray-100  dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl transition-shadow"
+                        {/* Orders List */}
+                        <div className="grid grid-cols-1 gap-4">
+                            {projectsData.length > 0 ? (
+                                projectsData.map((project) => (
+                                    <Link
+                                        key={project.id}
+                                        href={route('orders.show', project.id)}
+                                        className="bg-slate-50 rounded-xl border border-gray-300 p-6 hover:shadow-lg hover:border-blue-30 transition-all group"
                                     >
-                                        <div className="flex flex-col lg:flex-row lg:items-center gap-6">
-                                            {/* Icon */}
-                                            <div className="flex-shrink-0">
-                                                <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center">
-                                                    <SquareCode className="w-8 h-8 text-white" />
-                                                </div>
-                                            </div>
-
-                                            {/* Order Info */}
-                                            <div className="flex-1 space-y-2">
-                                                <div className="flex items-start justify-between gap-4">
-                                                    <div>
-                                                        <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                                                            {order.service.name}
-                                                        </h3>
-                                                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                                                            Order #{order.order_number}
-                                                        </p>
+                                        <div className="flex items-start justify-between">
+                                            <div className="flex-1">
+                                                {/* Order Header */}
+                                                <div className="flex items-start gap-4 mb-4">
+                                                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-blue-500 flex items-center justify-center flex-shrink-0">
+                                                        <Package className="w-6 h-6 text-white" />
                                                     </div>
-                                                    <div className={`flex items-center gap-2 px-4 py-2 rounded-full ${getStatusColor(order.payment_status)}`}>
-                                                        <StatusIcon className="w-4 h-4" />
-                                                        <span className="text-sm font-semibold">
-                                                            {getStatusText(order.payment_status)}
-                                                        </span>
-                                                    </div>
-                                                </div>
-
-                                                <div className="grid grid-cols-2 md:grid-cols-5 gap-3 text-sm">
-                                                    <div>
-                                                        <span className="text-gray-600 dark:text-gray-400">Total:</span>
-                                                        <span className="ml-2 font-semibold text-gray-900 dark:text-white">
-                                                            Rp {order.total_amount.toLocaleString('id-ID')}
-                                                        </span>
-                                                    </div>
-                                                    <div>
-                                                        <span className="text-gray-600 dark:text-gray-400">DP:</span>
-                                                        <span className="ml-2 font-semibold text-gray-900 dark:text-white">
-                                                            Rp {order.dp_amount.toLocaleString('id-ID')}
-                                                        </span>
-                                                    </div>
-                                                    {order.team && (
-                                                        <div>
-                                                            <span className="text-gray-600 dark:text-gray-400">Tim:</span>
-                                                            <span className="ml-2 font-semibold text-gray-900 dark:text-white">
-                                                                {order.team.name}
+                                                    <div className="flex-1">
+                                                        <div className="flex items-center gap-2 mb-1">
+                                                            <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                                                                #{project.order_number}
+                                                            </h3>
+                                                            <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${statusColors[project.status]}`}>
+                                                                {statusLabels[project.status]}
                                                             </span>
                                                         </div>
-                                                    )}
-                                                    <div>
-                                                        <span className="text-gray-600 dark:text-gray-400">Tanggal:</span>
-                                                        <span className="ml-2 font-semibold text-gray-900 dark:text-white">
-                                                            {new Date(order.created_at).toLocaleDateString('id-ID')}
-                                                        </span>
+                                                        <p className="text-sm text-gray-600">
+                                                            {project.service_name}
+                                                        </p>
                                                     </div>
+                                                </div>
+
+                                                {/* Order Info */}
+                                                <div className="grid grid-cols-3 gap-4 mb-4">
+                                                    <div>
+                                                        <p className="text-xs text-gray-500 mb-1 mx-5">Status Pembayaran</p>
+                                                        <div className="flex items-center gap-1 ">
+                                                            <div className="w-4 h-4 text-gray-400" />
+                                                            <p className="text-sm font-medium text-gray-900">
+                                                                {project.payment_status === 'pending' && 'Pending'}
+                                                                {project.payment_status === 'dp_paid' && 'DP Dibayar'}
+                                                                {project.payment_status === 'fully_paid' && 'Lunas'}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-xs text-gray-500 mb-1">Tim</p>
+                                                        <p className="text-sm font-medium text-gray-900">{project.team_name}</p>
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-xs text-gray-500 mb-1">Total Amount</p>
+                                                        <p className="text-sm font-medium text-gray-900">{formatCurrency(project.total_amount)}</p>
+                                                    </div>
+                                                </div>
+
+                                                {/* Progress Stats */}
+                                                <div className="flex items-center gap-12 p-3 rounded-lg">
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="w-8 h-8 rounded-full  flex items-center justify-center">
+                                                            <TrendingUp className="w-4 h-4 text-blue-600" />
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-xs text-gray-500">Progress Updates</p>
+                                                           <p className="text-sm font-bold text-gray-900">{project.progress_count}</p>
+                                                        </div>
+                                                    </div>
+                                                  
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="w-8 h-8 rounded-full flex items-center justify-center">
+                                                            <MessageSquare className="w-4 h-4 text-purple-600" />
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-xs text-gray-500">Total Comments</p>
+                                                            <p className="text-sm font-bold text-gray-900">{project.comments_count}</p>
+                                                        </div>
+                                                    </div>
+                                                    {project.latest_progress && (
+                                                        <>
+                                                           
+                                                            <div className="flex items-center gap-2">
+                                                                <div className="w-8 h-8 rounded-full flex items-center justify-center">
+                                                                    <span className="text-xs font-bold text-green-600">
+                                                                        {project.latest_progress.percentage}%
+                                                                    </span>
+                                                                </div>
+                                                                <div>
+                                                                    <p className="text-xs text-gray-500">Latest Progress</p>
+                                                                    <p className="text-xs font-medium text-gray-900">
+                                                                        {project.latest_progress.created_at}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </>
+                                                    )}
                                                 </div>
                                             </div>
 
-                                            {/* Actions */}
-                                            <div className="flex flex-col gap-2">
-                                                <Link
-                                                    href={route('orders.show', { order: order.id })}
-                                                    className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-all shadow-md hover:shadow-lg"
-                                                >
-                                                    <CircleEllipsis className="w-4 h-4" />
-                                                    
-                                                </Link>
-                                                
-                                                {order.payment_status === 'pending' && (
-                                                    <Link
-                                                        href={route('payment.show', { order: order.id })}
-                                                        className="flex items-center justify-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-semibold transition-all"
-                                                    >
-                                                        <CreditCard className="w-4 h-4" />
-                                                        <span>Bayar</span>
-                                                    </Link>
-                                                )}
-                                            </div>
+                                            {/* Arrow Icon */}
+                                            <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" />
                                         </div>
-                                    </motion.div>
-                                );
-                            })}
+                                    </Link>
+                                ))
+                            ) : (
+                                <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
+                                    <Package className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                                        Tidak Ada Order
+                                    </h3>
+                                    <p className="text-gray-500 mb-4">
+                                        {search || statusFilter ? 'Tidak ditemukan order yang sesuai dengan filter' : 'Belum ada order'}
+                                    </p>
+                                    <Link
+                                        href={route('services.index')}
+                                        className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-all"
+                                    >
+                                        Lihat Layanan
+                                    </Link>
+                                </div>
+                            )}
                         </div>
-                    ) : (
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl p-12 shadow-lg border border-gray-200/50 dark:border-gray-700/50 text-center"
-                        >
-                            <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                                Belum Ada Order
-                            </h3>
-                            <p className="text-gray-600 dark:text-gray-400 mb-6">
-                                Anda belum memiliki order. Mulai dengan memilih layanan yang Anda butuhkan.
-                            </p>
-                            <Link
-                                href={route('services.index')}
-                                className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl"
-                            >
-                                Lihat Layanan
-                            </Link>
-                        </motion.div>
-                    )}
+
+                        {/* Pagination */}
+                        {projectsData.length > 0 && projects.links && (
+                            <div className="flex items-center justify-between  p-4">
+                                <div className="text-sm text-gray-600">
+                                    Menampilkan {projects.from} - {projects.to} dari {projects.total} Projects
+                                </div>
+                                <div className="flex gap-2">
+                                    {projects.links.map((link, index) => (
+                                        link.url ? (
+                                            <Link
+                                                key={index}
+                                                href={link.url}
+                                                className={`px-3 py-1 rounded-lg text-sm transition-colors ${
+                                                    link.active
+                                                        ? 'bg-blue-600 text-white'
+                                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                                }`}
+                                                dangerouslySetInnerHTML={{ __html: link.label }}
+                                            />
+                                        ) : (
+                                            <span
+                                                key={index}
+                                                className="px-3 py-1 rounded-lg text-sm bg-gray-100 text-gray-400 cursor-not-allowed"
+                                                dangerouslySetInnerHTML={{ __html: link.label }}
+                                            />
+                                        )
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </AuthenticatedLayout>
     );
 }
-

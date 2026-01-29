@@ -48,6 +48,7 @@ class AdminTeamController extends Controller
                     'average_rating' => $team->average_rating ?? 0,
                     'workload' => $activeOrders,
                     'status' => $activeOrders > 3 ? 'busy' : 'available',
+                    'is_available' => $team->is_available,
                 ];
             });
 
@@ -164,8 +165,8 @@ class AdminTeamController extends Controller
     {
         $order = Order::findOrFail($orderId);
 
-        // Get team with lowest workload
-        $teams = Team::all();
+        // Get team with lowest workload (only active teams)
+        $teams = Team::where('is_available', true)->get();
         $teamWorkloads = [];
 
         foreach ($teams as $team) {
@@ -213,5 +214,31 @@ class AdminTeamController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Tim berhasil di-assign dan proyek dimulai');
+    }
+
+    /**
+     * Toggle team availability (aktif/nonaktif)
+     */
+    public function toggleAvailability($id)
+    {
+        $team = Team::findOrFail($id);
+        
+        // Jika ingin menonaktifkan tim, cek apakah ada order aktif
+        if ($team->is_available) {
+            $activeOrders = Order::where('team_id', $id)
+                ->whereIn('status', ['in_progress', 'final_payment'])
+                ->count();
+            
+            if ($activeOrders > 0) {
+                return redirect()->back()->with('error', 'Tidak dapat menonaktifkan tim yang masih memiliki ' . $activeOrders . ' order aktif');
+            }
+        }
+        
+        $team->update([
+            'is_available' => !$team->is_available
+        ]);
+        
+        $status = $team->is_available ? 'diaktifkan' : 'dinonaktifkan';
+        return redirect()->back()->with('success', 'Tim berhasil ' . $status);
     }
 }

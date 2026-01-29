@@ -44,6 +44,25 @@ class AdminDashboardController extends Controller
         // Arus kas bulan ini
         $monthlyCashFlow = $monthlyIncome - $monthlyExpense;
 
+        // Statistics projek
+        $totalProjects = Order::count();
+        $monthlyProjects = Order::whereMonth('created_at', $currentMonth)
+            ->whereYear('created_at', $currentYear)
+            ->count();
+        $totalCompletedProjects = Order::where('status', 'completed')->count();
+        $monthlyCompletedProjects = Order::where('status', 'completed')
+            ->whereMonth('accepted_at', $currentMonth)
+            ->whereYear('accepted_at', $currentYear)
+            ->count();
+        $activeProjects = Order::whereIn('status', ['pending', 'in_progress', 'final_payment'])->count();
+
+        // Statistics tim
+        $activeTeams = Team::whereHas('orders', function ($query) {
+            $query->whereIn('status', ['in_progress', 'final_payment']);
+        })->count();
+        $totalTeams = Team::count();
+        $inactiveTeams = $totalTeams - $activeTeams;
+
         // Transaksi terbaru (8 terakhir)
         $recentTransactions = Transaction::with('creator')
             ->orderBy('transaction_date', 'desc')
@@ -106,6 +125,41 @@ class AdminDashboardController extends Controller
                 'formatted' => ($monthlyCashFlow >= 0 ? '+' : '') . 'Rp ' . number_format((float) abs($monthlyCashFlow), 0, ',', '.'),
                 'subtitle' => 'Selisih masuk - keluar bulan ini',
             ],
+            'total_projects' => [
+                'value' => $totalProjects,
+                'formatted' => number_format($totalProjects, 0, ',', '.'),
+                'subtitle' => 'Semua projek yang pernah masuk',
+            ],
+            'monthly_projects' => [
+                'value' => $monthlyProjects,
+                'formatted' => number_format($monthlyProjects, 0, ',', '.'),
+                'subtitle' => 'Bulan ' . Carbon::now()->format('F'),
+            ],
+            'total_completed_projects' => [
+                'value' => $totalCompletedProjects,
+                'formatted' => number_format($totalCompletedProjects, 0, ',', '.'),
+                'subtitle' => 'Projek yang sudah selesai',
+            ],
+            'monthly_completed_projects' => [
+                'value' => $monthlyCompletedProjects,
+                'formatted' => number_format($monthlyCompletedProjects, 0, ',', '.'),
+                'subtitle' => 'Bulan ' . Carbon::now()->format('F'),
+            ],
+            'active_projects' => [
+                'value' => $activeProjects,
+                'formatted' => number_format($activeProjects, 0, ',', '.'),
+                'subtitle' => 'Sedang dikerjakan',
+            ],
+            'active_teams' => [
+                'value' => $activeTeams,
+                'formatted' => number_format($activeTeams, 0, ',', '.'),
+                'subtitle' => 'Tim yang sedang mengerjakan projek',
+            ],
+            'inactive_teams' => [
+                'value' => $inactiveTeams,
+                'formatted' => number_format($inactiveTeams, 0, ',', '.'),
+                'subtitle' => 'Tim yang tidak ada projek',
+            ],
         ];
 
         // Additional stats
@@ -137,7 +191,9 @@ class AdminDashboardController extends Controller
             });
 
         // Get available teams untuk assign
-        $availableTeams = Team::all()->map(function ($team) {
+        $availableTeams = Team::where('is_available', true)
+            ->get()
+            ->map(function ($team) {
             $activeOrders = Order::where('team_id', $team->id)
                 ->whereIn('status', ['in_progress', 'final_payment'])
                 ->count();

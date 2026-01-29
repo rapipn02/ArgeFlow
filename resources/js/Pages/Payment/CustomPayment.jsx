@@ -146,9 +146,9 @@ export default function CustomPayment({ auth,order, midtransClientKey }) {
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-8 shadow-xl border border-gray-200/50 dark:border-gray-700/50"
+                                className="bg-slate-50 dark:bg-gray-800/80 backdrop-blur-xl rounded-xl p-6  border border-gray-300 dark:border-gray-700/50"
                             >
-                                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                                <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                                     Pilih Metode Pembayaran
                                 </h1>
                                 <p className="text-gray-600 dark:text-gray-400">
@@ -161,7 +161,7 @@ export default function CustomPayment({ auth,order, midtransClientKey }) {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.1 }}
-                                className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-gray-200/50 dark:border-gray-700/50"
+                                className="bg-slate-50 dark:bg-gray-800/80  rounded-xl p-6 border border-gray-300 dark:border-gray-700/50"
                             >
                                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                                     Tipe Pembayaran
@@ -171,7 +171,7 @@ export default function CustomPayment({ auth,order, midtransClientKey }) {
                                         onClick={() => setPaymentType('dp')}
                                         className={`p-4 rounded-xl border-2 transition-all ${
                                             paymentType === 'dp'
-                                                ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
+                                                ? 'border-blue-200 bg-blue-50 dark:bg-blue-900/20'
                                                 : 'border-gray-200 dark:border-gray-700 hover:border-blue-300'
                                         }`}
                                     >
@@ -210,7 +210,7 @@ export default function CustomPayment({ auth,order, midtransClientKey }) {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.2 }}
-                                className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-gray-200/50 dark:border-gray-700/50"
+                                className="bg-slate-50 dark:bg-gray-800/80  rounded-xl p-6 border border-gray-300 "
                             >
                                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                                     Metode Pembayaran
@@ -225,9 +225,9 @@ export default function CustomPayment({ auth,order, midtransClientKey }) {
                                                 animate={{ opacity: 1, x: 0 }}
                                                 transition={{ delay: 0.1 * index }}
                                                 onClick={() => setSelectedMethod(method.id)}
-                                                className={`relative group p-6 rounded-2xl border-2 transition-all duration-300 ${
+                                                className={`relative group p-6 rounded-xl border-2 transition-all duration-300 ${
                                                     selectedMethod === method.id
-                                                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 shadow-lg scale-[1.02]'
+                                                        ? 'border-blue-200 bg-blue-50 dark:bg-blue-900/20 shadow-lg scale-[1.02]'
                                                         : 'border-gray-200 dark:border-gray-700 hover:border-blue-300 hover:shadow-md'
                                                 }`}
                                             >
@@ -271,7 +271,7 @@ export default function CustomPayment({ auth,order, midtransClientKey }) {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.3 }}
-                                className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-gray-200/50 dark:border-gray-700/50 sticky top-24"
+                                className="bg-slate-50 dark:bg-gray-800/80  rounded-xl p-6 border border-gray-300 dark:border-gray-700/50 sticky top-24"
                             >
                                 <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
                                     Ringkasan Order

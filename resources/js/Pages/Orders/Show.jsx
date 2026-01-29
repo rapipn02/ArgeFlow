@@ -19,7 +19,9 @@ import {
     TrendingUp,
     Calculator,
     PackageCheck,
-    FileCheck
+    FileCheck,
+    BookCheck,
+    ClockFading
 } from 'lucide-react';
 
 export default function Show({ order }) {
@@ -114,7 +116,7 @@ export default function Show({ order }) {
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="bg-gray-100  rounded-3xl p-8 shadow-xl border border-gray-200 dark:border-gray-700"
+                                className="bg-slate-50 rounded-xl p-6 border border-gray-300"
                             >
                                 <div className="flex items-start justify-between mb-6">
                                     <div className="flex items-start gap-2">
@@ -174,7 +176,7 @@ export default function Show({ order }) {
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.1 }}
-                                    className=" bg-gray-100 backdrop-blur-xl rounded-3xl p-6 shadow-xl "
+                                    className=" bg-slate-50 border border-gray-300 rounded-xl p-6 "
                                 >
                                     <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                                         <FileText className="w-5 h-5 text-blue-600" />
@@ -210,7 +212,7 @@ export default function Show({ order }) {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.2 }}
-                                className="bg-gray-100 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-gray-200 dark:border-gray-700"
+                                className="bg-slate-50 rounded-xl p-6 shadow-xl border border-gray-300 "
                             >
                                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                                     <Calendar className="w-5 h-5 text-blue-600" />
@@ -218,7 +220,7 @@ export default function Show({ order }) {
                                 </h3>
 
                                 <div className="space-y-3">
-                                    <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900/50 rounded-xl">
+                                    <div className="flex items-center justify-between p-4 bg-white/50 dark:bg-gray-900/50 rounded-xl">
                                         <div>
                                             <div className="font-semibold text-gray-900 dark:text-white">
                                                 DP (40%)
@@ -241,7 +243,7 @@ export default function Show({ order }) {
 
                                     </div>
 
-                                    <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900/50 rounded-xl">
+                                    <div className="flex items-center justify-between p-4 bg-white/50 dark:bg-gray-900/50 rounded-xl">
                                         <div>
                                             <div className="font-semibold text-gray-900 dark:text-white">
                                                 Pelunasan (60%)
@@ -273,7 +275,7 @@ export default function Show({ order }) {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.3 }}
-                                className="bg-gray-100 rounded-3xl p-6 shadow-xl border border-gray-200 dark:border-gray-700 sticky top-24"
+                                className="bg-slate-50 rounded-xl p-6 border border-gray-300 dark:border-gray-700 sticky top-24"
                             >
                                 <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                                     <Calculator className="w-6 h-6 text-blue-600" />
@@ -281,7 +283,7 @@ export default function Show({ order }) {
                                 </h3>
 
                                 <div className="space-y-3 mb-6">
-                                    <div className="flex justify-between text-gray-600 dark:text-gray-400">
+                                    <div className="flex justify-between text-black dark:text-gray-400 font-semibold">
                                         <span>Total Harga</span>
                                      <span>
                                         {new Intl.NumberFormat('id-ID', {
@@ -292,7 +294,7 @@ export default function Show({ order }) {
                                     </span>
 
                                     </div>
-                                    <div className="flex justify-between text-gray-600 dark:text-gray-400">
+                                    <div className="flex justify-between text-black dark:text-black font-semibold">
                                         <span>DP (40%)</span>
                                         <span>
                                             {new Intl.NumberFormat('id-ID', {
@@ -303,7 +305,7 @@ export default function Show({ order }) {
                                         </span>
 
                                     </div>
-                                    <div className="flex justify-between text-gray-600 dark:text-gray-400">
+                                    <div className="flex justify-between text-black dark:text-gray-400 font-semibold">
                                         <span>Pelunasan (60%)</span>
                                         <span>
                                             {new Intl.NumberFormat('id-ID', {
@@ -317,16 +319,7 @@ export default function Show({ order }) {
                                 </div>
 
                                 {/* Refresh Status Button - for orders that might have webhook issues */}
-                                {(order.payment_status === 'pending' || order.payment_status === 'dp_paid') && (
-                                    <button
-                                        onClick={handleRefreshStatus}
-                                        disabled={isRefreshing}
-                                        className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all mb-4"
-                                    >
-                                        <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-                                        <span>{isRefreshing ? 'Memeriksa...' : 'Refresh Status Pembayaran'}</span>
-                                    </button>
-                                )}
+           
 
                                 {/* Actions */}
                                 {/* Progress Button - Available for dp_paid and fully_paid */}
@@ -335,7 +328,7 @@ export default function Show({ order }) {
                                         href={route('orders.progress', { order: order.id })}
                                         className="w-full flex items-center justify-center gap-2 py-4 mb-3 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-700 hover:to-blue-700 shadow-lg hover:shadow-xl transition-all"
                                     >
-                                        <TrendingUp className="w-5 h-5" />
+                                        <BookCheck className="w-5 h-5" />
                                         <span>Lihat Progress</span>
                                     </Link>
                                 )}
@@ -361,12 +354,12 @@ export default function Show({ order }) {
                                 )}
 
                                 {order.payment_status === 'dp_paid' && order.status !== 'final_payment' && (
-                                    <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
-                                        <Clock className="w-8 h-8 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
+                                    <div className="text-center p-4 bg-slate-50 dark:bg-blue-900/20 rounded-xl border border-gray-200 dark:border-blue-800">
+                                        <ClockFading className="w-8 h-8 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
                                         <div className="font-semibold text-blue-800 dark:text-blue-300 mb-1">
                                             DP Sudah Dibayar
                                         </div>
-                                        <div className="text-sm text-blue-600 dark:text-blue-400">
+                                        <div className="text-sm text-black dark:text-blue-400">
                                             Pelunasan dapat dilakukan setelah Anda menerima hasil pekerjaan
                                         </div>
                                     </div>

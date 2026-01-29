@@ -294,13 +294,19 @@ const handleReaction = async (progressId, type) => {
                                                 <div className="absolute left-6 top-16 bottom-0 w-0.5 bg-gradient-to-b from-blue-200 to-transparent dark:from-blue-800" />
                                             )}
 
-                                            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl border border-gray-200/50 dark:border-gray-700/50 p-6 hover:shadow-xl transition-shadow">
+                                            <div className="bg-white     rounded-xl border border-gray-200 p-6 ">
                                                 {/* Progress Header */}
                                                 <div className="flex items-start gap-4 mb-4">
                                                     <div className="relative">
-                                                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold shadow-lg">
-                                                            {progress.progress_percentage}%
-                                                        </div>
+                                                     <div className="w-14 h-14 rounded-full bg-blue-500 flex flex-col items-center justify-center text-white shadow-lg flex-shrink-0 leading-none">
+                                                <span className="text-[8px] font-medium uppercase tracking-wide">
+                                                    Progress
+                                                </span>
+                                                <span className="text-sm font-bold">
+                                                    {progress.progress_percentage}%
+                                                </span>
+                                            </div>
+
                                                         <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white dark:border-gray-800" />
                                                     </div>
 
@@ -541,7 +547,7 @@ const handleReaction = async (progressId, type) => {
                                         animate={{ scale: 1, y: 0 }}
                                         exit={{ scale: 0.9, y: 20 }}
                                         onClick={(e) => e.stopPropagation()}
-                                        className="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+                                        className="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
                                     >
                                         <div className="flex items-center justify-between mb-6">
                                             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -562,17 +568,26 @@ const handleReaction = async (progressId, type) => {
                                                     Persentase Progress
                                                 </label>
                                                 <div className="flex items-center gap-4">
-                                                    <input
-                                                        type="range"
-                                                        min="0"
-                                                        max="100"
-                                                        value={progressForm.data.progress_percentage}
-                                                        onChange={(e) => progressForm.setData('progress_percentage', parseInt(e.target.value))}
-                                                        className="flex-1"
-                                                    />
-                                                    <div className="w-20 text-center px-4 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg font-bold">
-                                                        {progressForm.data.progress_percentage}%
-                                                    </div>
+                                                   <input
+                                                    type="range"
+                                                    min="0"
+                                                    max="100"
+                                                    value={progressForm.data.progress_percentage}
+                                                    onChange={(e) =>
+                                                        progressForm.setData('progress_percentage', parseInt(e.target.value))
+                                                    }
+                                                    className="flex-1 h-2 bg-blue-200 rounded-lg appearance-none cursor-pointer range-blue-700"
+                                                />
+
+                                                    <div className="w-16 h-16 rounded-full bg-blue-500 flex flex-col items-center justify-center text-white shadow-lg flex-shrink-0 leading-none">
+                                                <span className="text-[9px] font-medium uppercase tracking-wide">
+                                                    Progress
+                                                </span>
+                                                <span className="text-sm font-bold">
+                                                    {progress.progress_percentage}%
+                                                </span>
+                                            </div>
+
                                                 </div>
                                             </div>
 
@@ -625,7 +640,7 @@ const handleReaction = async (progressId, type) => {
                                                 <button
                                                     type="submit"
                                                     disabled={progressForm.processing}
-                                                    className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg disabled:opacity-50 transition-all"
+                                                    className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg disabled:opacity-50 transition-all"
                                                 >
                                                     {progressForm.processing ? 'Menyimpan...' : 'Simpan Progress'}
                                                 </button>

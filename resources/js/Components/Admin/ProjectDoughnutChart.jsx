@@ -36,6 +36,9 @@ export default function ProjectDoughnutChart({ ordersData }) {
             pending: 0,
             dp_paid: 0,
             in_progress: 0,
+            awaiting_review: 0,
+            revision_requested: 0,
+            final_payment: 0,
             completed: 0,
             cancelled: 0,
         };
@@ -43,6 +46,9 @@ export default function ProjectDoughnutChart({ ordersData }) {
         filtered.forEach((order) => {
             if (statusCounts.hasOwnProperty(order.status)) {
                 statusCounts[order.status]++;
+            } else {
+                // Log status yang tidak dikenali untuk debugging
+                console.warn('Unknown order status:', order.status);
             }
         });
 
@@ -52,7 +58,16 @@ export default function ProjectDoughnutChart({ ordersData }) {
     const statusCounts = filterDataByPeriod();
 
     const data = {
-        labels: ['Pending', 'DP Dibayar', 'Sedang Dikerjakan', 'Selesai', 'Dibatalkan'],
+        labels: [
+            'Pending', 
+            'DP Dibayar', 
+            'Sedang Dikerjakan', 
+            'Menunggu Review',
+            'Revisi Diminta',
+            'Pembayaran Akhir',
+            'Selesai', 
+            'Dibatalkan'
+        ],
         datasets: [
             {
                 label: 'Total Projek',
@@ -60,24 +75,34 @@ export default function ProjectDoughnutChart({ ordersData }) {
                     statusCounts.pending,
                     statusCounts.dp_paid,
                     statusCounts.in_progress,
+                    statusCounts.awaiting_review,
+                    statusCounts.revision_requested,
+                    statusCounts.final_payment,
                     statusCounts.completed,
                     statusCounts.cancelled,
                 ],
-                backgroundColor: [
-                    'rgba(251, 191, 36, 0.8)', // yellow - pending
-                    'rgba(59, 130, 246, 0.8)', // blue - dp_paid
-                    'rgba(139, 92, 246, 0.8)', // purple - in_progress
-                    'rgba(34, 197, 94, 0.8)', // green - completed
-                    'rgba(239, 68, 68, 0.8)', // red - cancelled
-                ],
-                borderColor: [
-                    'rgba(251, 191, 36, 1)',
-                    'rgba(59, 130, 246, 1)',
-                    'rgba(139, 92, 246, 1)',
-                    'rgba(34, 197, 94, 1)',
-                    'rgba(239, 68, 68, 1)',
-                ],
-                borderWidth: 2,
+                    backgroundColor: [
+                        'rgba(245, 158, 11, 0.65)',
+                        'rgba(37, 99, 235, 0.65)',
+                        'rgba(99, 102, 241, 0.65)',
+                        'rgba(219, 39, 119, 0.65)',
+                        'rgba(234, 88, 12, 0.65)',
+                        'rgba(2, 132, 199, 0.65)',
+                        'rgba(22, 163, 74, 0.65)',
+                        'rgba(185, 28, 28, 0.65)',
+                    ],
+                    borderColor: [
+                        'rgba(245, 158, 11, 1)',
+                        'rgba(37, 99, 235, 1)',
+                        'rgba(99, 102, 241, 1)',
+                        'rgba(219, 39, 119, 1)',
+                        'rgba(234, 88, 12, 1)',
+                        'rgba(2, 132, 199, 1)',
+                        'rgba(22, 163, 74, 1)',
+                        'rgba(185, 28, 28, 1)',
+                    ],
+                    borderWidth: 1.5,
+
             },
         ],
     };
@@ -130,7 +155,7 @@ export default function ProjectDoughnutChart({ ordersData }) {
                 <select
                     value={period}
                     onChange={(e) => setPeriod(e.target.value)}
-                    className="text-xs border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 py-1 px-3"
+                    className="text-xs border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 py-1 px-4 mx-2 pr-8"
                 >
                     <option value="week">Minggu</option>
                     <option value="month">Bulan</option>

@@ -177,6 +177,18 @@ class Order extends Model
             'status' => $status,
             'dp_paid_at' => now(),
         ]);
+        
+        // Catat transaksi pemasukan DP
+        Transaction::create([
+            'type' => 'income',
+            'category' => 'project payment',
+            'amount' => $this->dp_amount ?? ($this->total_amount * 0.5),
+            'description' => 'Pembayaran DP - ' . $this->service->name . ' (Order #' . $this->order_number . ')',
+            'reference_type' => 'App\\Models\\Order',
+            'reference_id' => $this->id,
+            'transaction_date' => now(),
+            'created_by' => 1, // System/Admin ID
+        ]);
     }
 
     /**
@@ -188,6 +200,18 @@ class Order extends Model
             'payment_status' => 'fully_paid',
             'status' => 'completed',
             'final_paid_at' => now(),
+        ]);
+        
+        // Catat transaksi pemasukan pelunasan
+        Transaction::create([
+            'type' => 'income',
+            'category' => 'project payment',
+            'amount' => $this->final_amount ?? ($this->total_amount * 0.5),
+            'description' => 'Pelunasan - ' . $this->service->name . ' (Order #' . $this->order_number . ')',
+            'reference_type' => 'App\\Models\\Order',
+            'reference_id' => $this->id,
+            'transaction_date' => now(),
+            'created_by' => 1, // System/Admin ID
         ]);
     }
 

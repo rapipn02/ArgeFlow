@@ -18,7 +18,6 @@ export default function ProgrammerLayout({ children }) {
     const navigation = [
         { name: 'Dashboard', href: route('programmer.dashboard'), icon: LayoutDashboard },
         { name: 'Projects', href: route('programmer.projects.index'), icon: FolderKanban },
-        { name: 'Earnings', href: route('programmer.earnings.index'), icon: DollarSign },
         { name: 'Teams', href: route('programmer.teams.index'), icon: Users },
         { name: 'Profile', href: route('programmer.profile.edit'), icon: User },
     ];

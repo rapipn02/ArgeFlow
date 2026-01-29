@@ -67,10 +67,10 @@ export default function ServicesIndex({ services }) {
                     </div>
                     <button
                         onClick={() => setShowModal(true)}
-                        className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors gap-2"
+                        className="inline-flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors gap-2 mx-4"
                     >
                         <Plus className="w-5 h-5" />
-                        Tambah Layanan
+                       
                     </button>
                     </div>
                 </div>
@@ -80,7 +80,9 @@ export default function ServicesIndex({ services }) {
                     {services.map((service) => (
                         <div
                             key={service.id}
-                            className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-shadow"
+                            className={`bg-slate-50 rounded-xl border border-gray-300 p-6 hover:shadow-lg transition-all ${
+                                service.is_active ? '' : 'opacity-50'
+                            }`}
                         >
                             <div className="flex items-start justify-between mb-4">
                                 <div className="flex-1">
@@ -88,23 +90,23 @@ export default function ServicesIndex({ services }) {
                                         {service.name}
                                     </h3>
                                     {service.category && (
-                                        <span className="inline-block mt-1 px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                        <span className="inline-block mt-1 px-2 py-2 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
                                             {service.category}
                                         </span>
                                     )}
                                 </div>
                                 <button
                                     onClick={() => handleToggle(service.id)}
-                                    className={`p-3 rounded-lg transition-colors ${
+                                    className={`p-3 rounded-lg transition-colors  -mx-2 -mt-2 ${
                                         service.is_active
                                             ? ' text-green-600'
                                             : ' text-gray-400 '
                                     }`}
                                 >
                                     {service.is_active ? (
-                                        <ToggleRight className="w-5 h-5" />
+                                        <ToggleRight className="w-6 h-6" />
                                     ) : (
-                                        <ToggleLeft className="w-5 h-5" />
+                                        <ToggleLeft className="w-6 h-6" />
                                     )}
                                 </button>
                             </div>

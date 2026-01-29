@@ -232,9 +232,15 @@ export default function Show({ project, progressList, canAddProgress }) {
                                             <div key={progress.id} className="p-4 bg-gray-50 rounded-lg border border-gray-200">
                                                 <div className="flex items-start justify-between mb-2">
                                                     <div className="flex items-center gap-2">
-                                                        <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">
-                                                            {progress.progress_percentage}%
-                                                        </div>
+                                                         <div className="w-12 h-12 rounded-full bg-blue-500 flex flex-col items-center justify-center text-white shadow-lg flex-shrink-0 leading-none">
+                                                <span className="text-[7px] font-medium uppercase tracking-wide">
+                                                    Progress
+                                                </span>
+                                                <span className="text-sm font-bold text-[12px]">
+                                                    {progress.progress_percentage}%
+                                                </span>
+                                            </div>
+
                                                         <div>
                                                             <p className="font-medium text-gray-900 text-sm">
                                                                 {progress.programmer.name}
@@ -431,7 +437,7 @@ export default function Show({ project, progressList, canAddProgress }) {
                                             max="100"
                                             value={progressForm.data.progress_percentage}
                                             onChange={(e) => progressForm.setData('progress_percentage', parseInt(e.target.value))}
-                                            className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                                            className="flex-1 h-2 bg-blue-200 rounded-lg appearance-none cursor-pointer"
                                         />
                                         <div className="w-16 text-center">
                                             <span className="text-2xl font-bold text-blue-600">

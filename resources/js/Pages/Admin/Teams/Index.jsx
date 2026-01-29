@@ -1,7 +1,7 @@
 import { Head, router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { useState } from 'react';
-import { Plus, Users, Star, Activity, UserPlus, UserMinus } from 'lucide-react';
+import { Plus, Users, Star, Activity, UserPlus, UserMinus, ToggleLeft, ToggleRight } from 'lucide-react';
 
 export default function TeamsIndex({ teams, programmers }) {
     const [showModal, setShowModal] = useState(false);
@@ -55,6 +55,12 @@ export default function TeamsIndex({ teams, programmers }) {
         }
     };
 
+    const handleToggleAvailability = (teamId) => {
+        router.post(route('admin.teams.toggle-availability', teamId), {}, {
+            preserveScroll: true,
+        });
+    };
+
     return (
         <AdminLayout>
             <Head title="Manajemen Tim" />
@@ -73,30 +79,31 @@ export default function TeamsIndex({ teams, programmers }) {
                     </div>
                     <button
                         onClick={() => setShowModal(true)}
-                        className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors gap-2"
+                        className="inline-flex items-center px-4 py-1 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors mx-3"
                     >
                         <Plus className="w-5 h-5" />
-                        Tambah Tim
                     </button>
                     </div>
                 </div>
 
                 {/* Teams Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {teams.map((team) => (
                         <div
                             key={team.id}
-                            className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-shadow"
+                            className={`bg-slate-50 rounded-xl border border-gray-300 p-6 hover:shadow-lg transition-all ${
+                                team.is_available ? '' : 'opacity-50'
+                            }`}
                         >
                             <div className="flex items-start justify-between mb-4">
                                 <div className="flex-1">
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <h3 className="text-lg font-semibold text-gray-900">
+                                    <div className="flex items-start mb-1">
+                                        <h3 className="font-semibold text-gray-900">
                                             {team.name}
                                         </h3>
-                                        <span className="px-8 py-1 mx-3 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
-                                            {team.specialization === 'web' && 'Web Dev'}
-                                            {team.specialization === 'mobile' && 'Mobile Dev'}
+                                        <span className="px-4 py-1 mx-2 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                            {team.specialization === 'web' && 'Web'}
+                                            {team.specialization === 'mobile' && 'Mobile'}
                                             {team.specialization === 'fullstack' && 'Fullstack'}
                                         </span>
                                     </div>
@@ -104,17 +111,22 @@ export default function TeamsIndex({ teams, programmers }) {
                                         {team.description || 'Tidak ada deskripsi'}
                                     </p>
                                 </div>
-                                <span
-                                    className={`px-8 py-1 text-xs font-semibold rounded-full ${
-                                        team.status === 'available'
-                                            ? 'bg-green-100 text-green-800'
-                                            : 'bg-yellow-100 text-yellow-800'
+                                {/* Toggle Button */}
+                                <button
+                                    onClick={() => handleToggleAvailability(team.id)}
+                                    className={`p-3\\ mx-1 -py-7 rounded-lg transition-colors ${
+                                        team.is_available
+                                            ? 'text-green-600'
+                                            : 'text-gray-400'
                                     }`}
+                                    title={team.is_available ? 'Nonaktifkan tim' : 'Aktifkan tim'}
                                 >
-                                    {team.status === 'available'
-                                        ? 'Tersedia'
-                                        : 'Sibuk'}
-                                </span>
+                                    {team.is_available ? (
+                                        <ToggleRight className="w-6 h-6" />
+                                    ) : (
+                                        <ToggleLeft className="w-6 h-6" />
+                                    )}
+                                </button>
                             </div>
 
                             {/* Stats */}

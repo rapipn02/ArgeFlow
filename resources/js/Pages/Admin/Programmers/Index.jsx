@@ -60,7 +60,6 @@ export default function ProgrammersIndex({ programmers, filters }) {
                         className="inline-flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white font-small rounded-lg transition-colors gap-2 mx-4"
                     >
                         <Plus className="w-4 h-4" />
-                        Tambah Programmer
                     </button>
                     </div>
                 </div>
@@ -71,7 +70,7 @@ export default function ProgrammersIndex({ programmers, filters }) {
                     {programmers.data.map((programmer) => (
                         <div
                             key={programmer.id}
-                            className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-shadow"
+                            className="bg-slate-50 rounded-xl border border-gray-300 p-6 hover:shadow-lg transition-shadow"
                         >
                             {/* Avatar */}
                             <div className="flex items-center gap-4 mb-4">

@@ -122,6 +122,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('teams', \App\Http\Controllers\Admin\AdminTeamController::class);
         Route::post('/teams/{team}/assign', [\App\Http\Controllers\Admin\AdminTeamController::class, 'assignMember'])->name('teams.assign');
         Route::delete('/teams/{team}/members/{user}', [\App\Http\Controllers\Admin\AdminTeamController::class, 'removeMember'])->name('teams.remove-member');
+        Route::post('/teams/{team}/toggle-availability', [\App\Http\Controllers\Admin\AdminTeamController::class, 'toggleAvailability'])->name('teams.toggle-availability');
         Route::post('/orders/{order}/auto-assign', [\App\Http\Controllers\Admin\AdminTeamController::class, 'autoAssign'])->name('orders.auto-assign');
         Route::post('/orders/{order}/manual-assign', [\App\Http\Controllers\Admin\AdminTeamController::class, 'manualAssign'])->name('orders.manual-assign');
 

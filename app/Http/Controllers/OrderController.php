@@ -15,13 +15,54 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
-        $orders = Order::with(['service', 'team.members.user', 'rating'])
+        // Build query for user's orders
+        $query = Order::with(['service', 'team', 'progress'])
             ->where('user_id', $request->user()->id)
-            ->latest()
-            ->paginate(10);
+            ->orderBy('created_at', 'desc');
+
+        // Search functionality
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('order_number', 'like', "%{$search}%")
+                    ->orWhereHas('service', function ($sq) use ($search) {
+                        $sq->where('name', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        // Filter by status
+        if ($request->has('status') && $request->status) {
+            $query->where('status', $request->status);
+        }
+
+        // Paginate results
+        $projects = $query->paginate(15)->through(function ($order) {
+            $progressCount = $order->progress()->count();
+            $commentsCount = $order->progress()->withCount('comments')->get()->sum('comments_count');
+            $latestProgress = $order->progress()->latest()->first();
+
+            return [
+                'id' => $order->id,
+                'order_number' => $order->order_number,
+                'service_name' => $order->service->name ?? 'N/A',
+                'team_name' => $order->team->name ?? 'Belum ditentukan',
+                'status' => $order->status,
+                'payment_status' => $order->payment_status,
+                'total_amount' => $order->total_amount,
+                'created_at' => $order->created_at->format('d M Y'),
+                'progress_count' => $progressCount,
+                'comments_count' => $commentsCount,
+                'latest_progress' => $latestProgress ? [
+                    'percentage' => $latestProgress->progress_percentage,
+                    'created_at' => $latestProgress->created_at->diffForHumans(),
+                ] : null,
+            ];
+        });
 
         return Inertia::render('Orders/Index', [
-            'orders' => $orders,
+            'projects' => $projects,
+            'filters' => $request->only(['search', 'status']),
         ]);
     }
 

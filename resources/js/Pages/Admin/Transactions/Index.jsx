@@ -1,7 +1,7 @@
 import { Head, router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { useState } from 'react';
-import { Plus, Search, Filter, Trash2, Edit, Eye } from 'lucide-react';
+import { Plus, Search, Filter, Trash2, Edit, Eye,CirclePlus } from 'lucide-react';
 
 export default function TransactionsIndex({ transactions, filters }) {
     const [showModal, setShowModal] = useState(false);
@@ -54,10 +54,9 @@ export default function TransactionsIndex({ transactions, filters }) {
                     </div>
                     <button
                         onClick={() => setShowModal(true)}
-                        className="inline-flex items-center px-2 py-2 bg-blue-600 hover:bg-blue-700 text-white font-small rounded-lg transition-colors gap-2 mx-3"
+                        className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-white-700 text-white font-medium rounded-lg transition-colors gap-2 mx-7"
                     >
-                        <Plus className="w-5 h-5" />
-                        Tambah Transaksi
+                        <CirclePlus className="w-4 h-4" />
                     </button>
                 </div>
 
@@ -86,24 +85,6 @@ export default function TransactionsIndex({ transactions, filters }) {
                                 <option value="salary">Gaji</option>
                                 <option value="operational">Operasional</option>
                             </select>
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Tanggal Mulai
-                            </label>
-                            <input
-                                type="date"
-                                className="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Tanggal Akhir
-                            </label>
-                            <input
-                                type="date"
-                                className="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                            />
                         </div>
                     </div>
                 </div>

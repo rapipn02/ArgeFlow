@@ -65,8 +65,8 @@ export default function Index({ projects, filters }) {
                 </div>
 
                 {/* Search & Filter */}
-                <div className=" p-4">
-                    <form onSubmit={handleSearch} className="flex gap-3">
+                <div className=" p-2">
+                    <form onSubmit={handleSearch} className="flex gap-2">
                         <div className="flex-1 relative">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 " />
                             <input
@@ -105,7 +105,7 @@ export default function Index({ projects, filters }) {
                                                         {statusLabels[project.status]}
                                                     </span>
                                                 </div>
-                                                <p className="text-sm text-gray-600">
+                                                <p className="text-sm text-black font-semibold">
                                                     {project.service_name}
                                                 </p>
                                             </div>

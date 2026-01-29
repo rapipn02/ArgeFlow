@@ -40,7 +40,7 @@ export default function AdminLayout({ children }) {
             current: route().current('admin.transactions.*'),
         },
         {
-            name: 'Progress Projek',
+            name: 'Progress Project',
             href: route('admin.progress.index'),
             icon: ChartColumnIncreasing,
             current: route().current('admin.progress.*'),
@@ -74,7 +74,7 @@ export default function AdminLayout({ children }) {
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Sidebar for desktop */}
-            <div className={`hidden lg:fixed lg:inset-y-0 lg:flex lg:flex-col transition-all duration-300 ${sidebarCollapsed ? 'lg:w-20' : 'lg:w-64'}`}>
+            <div className={`hidden lg:fixed lg:inset-y-0 lg:flex lg:flex-col transition-all duration-400 ease-in-out ${sidebarCollapsed ? 'lg:w-20' : 'lg:w-64'}`}>
                 <div className="flex flex-col flex-grow border-r border-gray-200 pt-5 pb-4 overflow-y-auto" style={{ backgroundColor: 'oklch(0.985 0 0)' }}>
                     {/* Logo/Brand */}
                     <div className="flex items-center flex-shrink-0 px-6 mb-8">
@@ -195,7 +195,6 @@ export default function AdminLayout({ children }) {
                                     onClick={() => setUserMenuOpen(!userMenuOpen)}
                                     className="ml-2 text-gray-400 hover:text-gray-600"
                                 >
-                                    <ChevronDown className="h-5 w-5" />
                                 </button>
                             </div>
                         )}
@@ -280,7 +279,7 @@ export default function AdminLayout({ children }) {
             </div>
 
             {/* Main content */}
-            <div className={`lg:flex lg:flex-col lg:flex-1 transition-all duration-300 ${sidebarCollapsed ? 'lg:pl-20' : 'lg:pl-64'}`}>
+            <div className={`lg:flex lg:flex-col lg:flex-1 transition-all duration-400 ease-in-out ${sidebarCollapsed ? 'lg:pl-20' : 'lg:pl-64'}`}>
                 {/* Mobile menu button */}
                 <div className="lg:hidden sticky top-0 z-10 bg-gray-100 border-b border-gray-200 px-4 py-3">
                     <button

@@ -119,8 +119,8 @@ export default function Dashboard({
                    
                     <StatCard
                         title="Total Projek"
-                        value={stats.total_expense.formatted}
-                        subtitle={stats.total_expense.subtitle}
+                        value={stats.total_projects.formatted}
+                        subtitle={stats.total_projects.subtitle}
                         type="balance"
                         icon={FolderInput}
                     />
@@ -128,43 +128,43 @@ export default function Dashboard({
                  
                     <StatCard
                         title="Projek Masuk Bulan Ini"
-                        value={stats.monthly_expense.formatted}
-                        subtitle={stats.monthly_expense.subtitle}
+                        value={stats.monthly_projects.formatted}
+                        subtitle={stats.monthly_projects.subtitle}
                         type="balance"
                         icon={FolderUp }
                     />
                      <StatCard
                         title="Projek Selesai Bulan Ini"
-                        value={stats.monthly_cash_flow.formatted}
-                        subtitle={stats.monthly_cash_flow.subtitle}
+                        value={stats.monthly_completed_projects.formatted}
+                        subtitle={stats.monthly_completed_projects.subtitle}
                         type="balance"
                         icon={FolderCheck}
                     />
                      <StatCard
                         title="Total Projek Selesai"
-                        value={stats.monthly_cash_flow.formatted}
-                        subtitle={stats.monthly_cash_flow.subtitle}
+                        value={stats.total_completed_projects.formatted}
+                        subtitle={stats.total_completed_projects.subtitle}
                         type="balance"
                         icon={LaptopMinimalCheck}
                     />
                     <StatCard
-                        title="Project On Progress  "
-                        value={stats.monthly_cash_flow.formatted}
-                        subtitle={stats.monthly_cash_flow.subtitle}
+                        title="Projek On Progress"
+                        value={stats.active_projects.formatted}
+                        subtitle={stats.active_projects.subtitle}
                         type="income"
                         icon={Hourglass}
                     />
                     <StatCard
                         title="Tim Yang Aktif"
-                        value={stats.monthly_cash_flow.formatted}
-                        subtitle={stats.monthly_cash_flow.subtitle}
-                        type= "income"
+                        value={stats.active_teams.formatted}
+                        subtitle={stats.active_teams.subtitle}
+                        type="income"
                         icon={Users}
                     />  
                      <StatCard
                         title="Tim Yang Tidak Aktif"
-                        value={stats.total_balance.formatted}
-                        subtitle={stats.total_balance.subtitle}
+                        value={stats.inactive_teams.formatted}
+                        subtitle={stats.inactive_teams.subtitle}
                         type="expense"
                         icon={UsersRound}
                     />
@@ -290,7 +290,7 @@ export default function Dashboard({
                     {/* Recent Transactions */}
                     <div className="lg:col-span-5">
                         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                            <div className="px-6 py-4 flex items-center justify-between">
+                            <div className="px-6 py-4 flex items-center justify-between mt-3 mb-3">
                                 <div>
                                     <h2 className="text-lg font-semibold text-gray-900">
                                         Transaksi Terbaru
@@ -304,7 +304,7 @@ export default function Dashboard({
                                         <ArrowUpRight className="w-5 h-5 mt-1" />
                                     </a>
                                 </div>
-                                <div className="overflow-x-auto"> 
+                                <div className="overflow-x-auto mb-5"> 
                                     <table className="min-w-full divide-y">
                                         <thead className="">
                                             <tr>
@@ -328,7 +328,7 @@ export default function Dashboard({
                                                         className="hover:bg-gray-50"
                                                     >
                                                         <td className="px-6 py-4 whitespace-nowrap">
-                                                            <div className="max-w-[220px] truncate text-sm text-sm font-medium text-gray-900">
+                                                            <div className="max-w-[220px] truncate text-sm font-medium text-gray-900">
                                                                 {
                                                                     transaction.detail
                                                                 }
@@ -340,7 +340,7 @@ export default function Dashboard({
                                                             </div>
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap">
-                                                            <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full text-gray-800">
+                                                            <span className="px- py-1 inline-flex text-xs leading-5 font-semibold rounded-full text-gray-800">
                                                                 {
                                                                     transaction.category
                                                                 }
