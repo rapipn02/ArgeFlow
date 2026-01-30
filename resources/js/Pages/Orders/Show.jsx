@@ -283,18 +283,42 @@ export default function Show({ order }) {
                                 </h3>
 
                                 <div className="space-y-3 mb-6">
-                                    <div className="flex justify-between text-black dark:text-gray-400 font-semibold">
-                                        <span>Total Harga</span>
-                                     <span>
-                                        {new Intl.NumberFormat('id-ID', {
-                                            style: 'currency',
-                                            currency: 'IDR',
-                                            minimumFractionDigits: 0
-                                        }).format(order.total_amount)}
-                                    </span>
-
+                                    <div className="flex justify-between text-black dark:text-gray-400 font-semibold text-sm">
+                                        <span>Harga Layanan</span>
+                                        <span>
+                                            {new Intl.NumberFormat('id-ID', {
+                                                style: 'currency',
+                                                currency: 'IDR',
+                                                minimumFractionDigits: 0
+                                            }).format(order.total_amount - (order.rush_fee || 0))}
+                                        </span>
                                     </div>
-                                    <div className="flex justify-between text-black dark:text-black font-semibold">
+                                    
+                                    {order.rush_fee > 0 && (
+                                        <div className="flex justify-between text-orange-600 dark:text-orange-400 font-semibold text-sm">
+                                            <span>Biaya Rush</span>
+                                            <span>
+                                                + {new Intl.NumberFormat('id-ID', {
+                                                    style: 'currency',
+                                                    currency: 'IDR',
+                                                    minimumFractionDigits: 0
+                                                }).format(order.rush_fee)}
+                                            </span>
+                                        </div>
+                                    )}
+                                    
+                                    <div className="flex justify-between text-black dark:text-gray-400 font-bold border-t border-gray-200 dark:border-gray-700 pt-3">
+                                        <span>Total Harga</span>
+                                        <span>
+                                            {new Intl.NumberFormat('id-ID', {
+                                                style: 'currency',
+                                                currency: 'IDR',
+                                                minimumFractionDigits: 0
+                                            }).format(order.total_amount)}
+                                        </span>
+                                    </div>
+                                    
+                                    <div className="flex justify-between text-black dark:text-black font-semibold text-sm">
                                         <span>DP (40%)</span>
                                         <span>
                                             {new Intl.NumberFormat('id-ID', {
@@ -303,9 +327,8 @@ export default function Show({ order }) {
                                                 minimumFractionDigits: 0
                                             }).format(order.dp_amount)}
                                         </span>
-
                                     </div>
-                                    <div className="flex justify-between text-black dark:text-gray-400 font-semibold">
+                                    <div className="flex justify-between text-black dark:text-gray-400 font-semibold text-sm">
                                         <span>Pelunasan (60%)</span>
                                         <span>
                                             {new Intl.NumberFormat('id-ID', {
@@ -314,8 +337,29 @@ export default function Show({ order }) {
                                                 minimumFractionDigits: 0
                                             }).format(order.final_amount)}
                                         </span>
-
                                     </div>
+                                    
+                                    {order.requested_days && (
+                                        <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800">
+                                            <div className="text-sm">
+                                                <div className="font-semibold text-blue-900 dark:text-blue-300 mb-1">
+                                                    Deadline Pengerjaan
+                                                </div>
+                                                <div className="text-blue-700 dark:text-blue-400">
+                                                    {order.requested_days} hari kerja
+                                                </div>
+                                                {order.deadline_date && (
+                                                    <div className="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                                                        Target: {new Date(order.deadline_date).toLocaleDateString('id-ID', {
+                                                            day: 'numeric',
+                                                            month: 'long',
+                                                            year: 'numeric'
+                                                        })}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Refresh Status Button - for orders that might have webhook issues */}

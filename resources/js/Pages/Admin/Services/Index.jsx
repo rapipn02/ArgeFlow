@@ -5,12 +5,15 @@ import { Plus, Trash2, Edit, ToggleLeft, ToggleRight, DollarSign } from 'lucide-
 
 export default function ServicesIndex({ services }) {
     const [showModal, setShowModal] = useState(false);
+    const [editingService, setEditingService] = useState(null);
     const [formData, setFormData] = useState({
         name: '',
         description: '',
         price: '',
         category: '',
         estimated_days: '',
+        standard_days: '',
+        risk_factor: '0.75',
         features: '',
         is_active: true,
     });
@@ -23,20 +26,53 @@ export default function ServicesIndex({ services }) {
                 ? formData.features.split('\n').filter((f) => f.trim())
                 : [],
         };
-        router.post(route('admin.services.store'), data, {
-            onSuccess: () => {
-                setShowModal(false);
-                setFormData({
-                    name: '',
-                    description: '',
-                    price: '',
-                    category: '',
-                    estimated_days: '',
-                    features: '',
-                    is_active: true,
-                });
-            },
+        
+        if (editingService) {
+            router.put(route('admin.services.update', editingService.id), data, {
+                onSuccess: () => {
+                    setShowModal(false);
+                    setEditingService(null);
+                    resetForm();
+                },
+            });
+        } else {
+            router.post(route('admin.services.store'), data, {
+                onSuccess: () => {
+                    setShowModal(false);
+                    resetForm();
+                },
+            });
+        }
+    };
+
+    const resetForm = () => {
+        setFormData({
+            name: '',
+            description: '',
+            price: '',
+            category: '',
+            standard_days: '',
+            risk_factor: '0.75',
+            features: '',
+            is_active: true,
         });
+    };
+
+    const handleEdit = (service) => {
+        setEditingService(service);
+        setFormData({
+            name: service.name,
+            description: service.description,
+            price: service.price,
+            category: service.category || '',
+            standard_days: service.standard_days || '',
+            risk_factor: service.risk_factor || '0.75',
+            features: Array.isArray(service.features) 
+                ? service.features.join('\n') 
+                : '',
+            is_active: service.is_active,
+        });
+        setShowModal(true);
     };
 
     const handleToggle = (id) => {
@@ -118,7 +154,7 @@ export default function ServicesIndex({ services }) {
                             {/* Price */}
                             <div className="mb-2 p-1 rounded-lg">
                                 <div className="flex items-center justify-between">
-                                    <span className="text-sm text-gray-600">
+                                    <span className="text-sm font-bold text-black -mx-1">
                                         Harga
                                     </span>
                                     <div className="flex items-center gap-1">
@@ -130,14 +166,16 @@ export default function ServicesIndex({ services }) {
                                 </div>
                             </div>
 
-                            {/* Estimated Days */}
-                            {service.estimated_days && (
+                           
+                            
+                            {/* Standard Days */}
+                            {service.standard_days && (
                                 <div className="mb-4 flex items-center justify-between text-sm">
                                     <span className="text-gray-600">
-                                        Estimasi Pengerjaan
+                                        Deadline Standar
                                     </span>
-                                    <span className="font-semibold text-gray-900">
-                                        {service.estimated_days} hari
+                                    <span className="font-semibold text-blue-600">
+                                        {service.standard_days} hari
                                     </span>
                                 </div>
                             )}
@@ -145,7 +183,7 @@ export default function ServicesIndex({ services }) {
                             {/* Features */}
                             {service.features && service.features.length > 0 && (
                                 <div className="mb-4">
-                                    <p className="text-xs font-semibold text-gray-500 uppercase mb-2">
+                                    <p className="text-xs font-bold text-black uppercase mb-2">
                                         Fitur
                                     </p>
                                     <ul className="space-y-1 max-h-32 overflow-y-auto">
@@ -154,9 +192,7 @@ export default function ServicesIndex({ services }) {
                                                 key={idx}
                                                 className="text-sm text-gray-600 flex items-start gap-2"
                                             >
-                                                <span className="text-blue-600 mt-3">
-                                                    •
-                                                </span>
+                                                
                                                 <span className="flex-1">
                                                     {feature}
                                                 </span>
@@ -168,11 +204,19 @@ export default function ServicesIndex({ services }) {
 
 
                             {/* Actions */}
-                            <div className="flex gap-4 pt-4 border-t border-gray-200">
+                            <div className="flex gap-2 pt-4 border-t border-gray-200">
+                                <button
+                                    onClick={() => handleEdit(service)}
+                                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2 text-blue-600 hover:bg-blue-50 font-medium rounded-lg text-sm transition-colors"
+                                >
+                                    <Edit className="w-4 h-4" />
+                                    Edit
+                                </button>
                                 <button
                                     onClick={() => handleDelete(service.id)}
-                                    className="flex-1 px-3 py-2  text-red-600 hover:bg-red-100 font-medium rounded-lg text-sm transition-colors"
+                                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2 text-red-600 hover:bg-red-50 font-medium rounded-lg text-sm transition-colors"
                                 >
+                                    <Trash2 className="w-4 h-4" />
                                     Hapus
                                 </button>
                             </div>
@@ -191,7 +235,7 @@ export default function ServicesIndex({ services }) {
                         />
                         <div className="relative bg-white rounded-lg max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
                             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                                Tambah Layanan Baru
+                                {editingService ? 'Edit Layanan' : 'Tambah Layanan Baru'}
                             </h3>
                             <form onSubmit={handleSubmit} className="space-y-4">
                                 <div className="grid grid-cols-2 gap-4">
@@ -263,7 +307,7 @@ export default function ServicesIndex({ services }) {
                                             placeholder="e.g., Web Development"
                                         />
                                     </div>
-                                    <div className="col-span-2">
+                                    <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
                                             Estimasi Hari
                                         </label>
@@ -273,12 +317,53 @@ export default function ServicesIndex({ services }) {
                                             onChange={(e) =>
                                                 setFormData({
                                                     ...formData,
-                                                    estimated_days:
-                                                        e.target.value,
+                                                    estimated_days: e.target.value,
                                                 })
                                             }
                                             className="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                            placeholder="Opsional"
                                         />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                                            Deadline Standar (hari) *
+                                        </label>
+                                        <input
+                                            type="number"
+                                            value={formData.standard_days}
+                                            onChange={(e) =>
+                                                setFormData({
+                                                    ...formData,
+                                                    standard_days: e.target.value,
+                                                })
+                                            }
+                                            className="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                            placeholder="Untuk rush fee calculation"
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                                            Risk Factor (0.0 - 1.0)
+                                        </label>
+                                        <input
+                                            type="number"
+                                            step="0.05"
+                                            min="0"
+                                            max="1"
+                                            value={formData.risk_factor}
+                                            onChange={(e) =>
+                                                setFormData({
+                                                    ...formData,
+                                                    risk_factor: e.target.value,
+                                                })
+                                            }
+                                            className="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                            placeholder="0.75 (default)"
+                                        />
+                                        <p className="text-xs text-gray-500 mt-1">
+                                            Tingkat kesulitan: 0.6 (mudah) - 0.9 (sulit)
+                                        </p>
                                     </div>
                                     <div className="col-span-2">
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -320,16 +405,20 @@ export default function ServicesIndex({ services }) {
                                 <div className="flex gap-3 pt-4">
                                     <button
                                         type="button"
-                                        onClick={() => setShowModal(false)}
+                                        onClick={() => {
+                                            setShowModal(false);
+                                            setEditingService(null);
+                                            resetForm();
+                                        }}
                                         className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50"
                                     >
                                         Batal
                                     </button>
                                     <button
                                         type="submit"
-                                        className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg"
+                                        className="flex-1 px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700"
                                     >
-                                        Simpan
+                                        {editingService ? 'Update Layanan' : 'Simpan Layanan'}
                                     </button>
                                 </div>
                             </form>

@@ -99,9 +99,38 @@ class OrderController extends Controller
             'team_preference' => 'nullable|in:choose_team,auto_assign',
             'notes' => 'nullable|string|max:1000',
             'requirements' => 'nullable|string|max:2000',
+            'requested_days' => 'required|integer|min:1',
+            'deadline_date' => 'required|date|after:today',
         ]);
 
         $service = Service::findOrFail($validated['service_id']);
+        $requestedDays = $validated['requested_days'];
+        $standardDays = $service->standard_days ?? 10;
+
+        // Dynamic pricing calculation
+        $basePrice = $service->price;
+        $rushFee = 0;
+        $accelerationFactor = 1.0;
+        
+        if ($requestedDays < $standardDays) {
+            // Get risk factor from service or config
+            $riskFactor = $service->risk_factor ?? config('pricing.default_risk_factor', 0.75);
+            $maxMultiplier = config('pricing.max_price_multiplier', 1.6);
+            $minMultiplier = config('pricing.min_price_multiplier', 1.0);
+            
+            // Calculate acceleration
+            $accelerationRatio = $standardDays / $requestedDays;
+            $accelerationFactor = 1 + (($accelerationRatio - 1) * $riskFactor);
+            
+            // Clamp to min/max
+            $accelerationFactor = max($minMultiplier, min($maxMultiplier, $accelerationFactor));
+            
+            // Calculate new total
+            $totalAmount = $basePrice * $accelerationFactor;
+            $rushFee = $totalAmount - $basePrice;
+        } else {
+            $totalAmount = $basePrice;
+        }
 
         // Create order
         $order = Order::create([
@@ -109,7 +138,10 @@ class OrderController extends Controller
             'service_id' => $service->id,
             'team_id' => $validated['team_id'] ?? null,
             'team_preference' => $validated['team_preference'] ?? 'auto_assign',
-            'total_amount' => $service->price,
+            'total_amount' => $totalAmount,
+            'requested_days' => $requestedDays,
+            'rush_fee' => $rushFee,
+            'deadline_date' => $validated['deadline_date'],
             'status' => 'pending',
             'payment_status' => 'pending',
             'notes' => $validated['notes'] ?? null,

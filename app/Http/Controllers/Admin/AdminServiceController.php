@@ -27,6 +27,8 @@ class AdminServiceController extends Controller
                     'is_active' => $service->is_active,
                     'features' => $service->features ?? [],
                     'estimated_days' => $service->estimated_days,
+                    'standard_days' => $service->standard_days,
+                    'risk_factor' => $service->risk_factor,
                     'category' => $service->category,
                 ];
             });
@@ -49,6 +51,8 @@ class AdminServiceController extends Controller
             'is_active' => 'boolean',
             'features' => 'nullable|array',
             'estimated_days' => 'nullable|integer|min:1',
+            'standard_days' => 'required|integer|min:1',
+            'risk_factor' => 'nullable|numeric|min:0|max:1',
             'category' => 'nullable|string|max:255',
         ]);
 
@@ -72,6 +76,8 @@ class AdminServiceController extends Controller
             'is_active' => 'boolean',
             'features' => 'nullable|array',
             'estimated_days' => 'nullable|integer|min:1',
+            'standard_days' => 'required|integer|min:1',
+            'risk_factor' => 'nullable|numeric|min:0|max:1',
             'category' => 'nullable|string|max:255',
         ]);
 

@@ -48,7 +48,7 @@ export default function Show({auth, team, serviceId }) {
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-8 shadow-xl border border-gray-200/50 dark:border-gray-700/50"
+                                className="bg-slate-50 rounded-xl p-8 border border-gray-300 dark:border-gray-700/50"
                             >
                                 <div className="flex items-start gap-6">
                                     <div className="p-4 bg-blue-600 rounded-2xl">
@@ -118,7 +118,7 @@ export default function Show({auth, team, serviceId }) {
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.2 }}
-                                    className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-gray-200/50 dark:border-gray-700/50"
+                                    className="bg-slate-50 dark:bg-gray-800/80 backdrop-blur-xl rounded-xl p-6 border border-gray-300 dark:border-gray-700/50"
                                 >
                                     <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                                         <Users className="w-6 h-6 text-blue-600" />
@@ -128,7 +128,7 @@ export default function Show({auth, team, serviceId }) {
                                         {team.members.map((member, index) => (
                                             <div
                                                 key={index}
-                                                className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-900/50 rounded-xl"
+                                                className="flex items-center gap-4 p-4 bg-gray-100 dark:bg-gray-900/50 rounded-xl"
                                             >
                                                 <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
                                                     {member.name?.charAt(0) || 'M'}
@@ -154,7 +154,7 @@ export default function Show({auth, team, serviceId }) {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.3 }}
-                                className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-gray-200/50 dark:border-gray-700/50 sticky top-24"
+                                className="bg-slate-50 dark:bg-gray-800/80  rounded-xl p-6 s border border-gray-300 dark:border-gray-700/50 sticky top-24"
                             >
                                 <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
                                     Pilih Tim Ini

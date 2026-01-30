@@ -18,6 +18,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    // Service API Routes
+    Route::get('/api/services', [\App\Http\Controllers\ServiceController::class, 'index'])->name('api.services.index');
+    Route::get('/api/services/{id}', [\App\Http\Controllers\ServiceController::class, 'show'])->name('api.services.show');
+    Route::post('/api/services/calculate-price', [\App\Http\Controllers\ServiceController::class, 'calculatePrice'])->name('api.services.calculate-price');
+
     // Service Selection
     Route::get('/services', function () {
         return Inertia::render('Services/Index');
@@ -25,18 +30,17 @@ Route::middleware('auth')->group(function () {
 
     // Team Preference
     Route::get('/services/{id}/team-preference', function ($id) {
-        // Mock service data - nanti akan diganti dengan data dari database
-        $services = [
-            1 => ['id' => 1, 'name' => 'Website Landing Page', 'price' => 3000000],
-            2 => ['id' => 2, 'name' => 'Web Company Profile', 'price' => 8000000],
-            3 => ['id' => 3, 'name' => 'E-Commerce Website', 'price' => 15000000],
-            4 => ['id' => 4, 'name' => 'Mobile App (Android)', 'price' => 20000000],
-        ];
-
-        $service = $services[$id] ?? abort(404);
+        $service = \App\Models\Service::findOrFail($id);
 
         return Inertia::render('Services/TeamPreference', [
-            'service' => $service
+            'service' => [
+                'id' => $service->id,
+                'name' => $service->name,
+                'price' => $service->price,
+                'description' => $service->description,
+                'standard_days' => $service->standard_days,
+                'risk_factor' => $service->risk_factor,
+            ]
         ]);
     })->name('services.team-preference');
 

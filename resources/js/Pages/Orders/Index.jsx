@@ -58,7 +58,7 @@ export default function Index({ projects, filters, auth }) {
                 <div className="container mx-auto px-4 max-w-7xl">
                     <div className="space-y-6">
                         {/* Header */}
-                        <div className="border-b border-gray-150 -mx-3">
+                        <div className=" border-gray-150 -mx-3">
                             <div className='flex items-center justify-between pb-2 px-6'>
                                 <div>
                                     <h1 className="text-1xl font-semibold text-gray-900">   
@@ -76,9 +76,9 @@ export default function Index({ projects, filters, auth }) {
                         </div>
 
                         {/* Search & Filter */}
-                        <div className=" p-4">
+                        <div className=" p-4 mt-3">
                             <form onSubmit={handleSearch} className="flex gap-3">
-                                <div className="flex-1 relative">
+                                <div className="flex-1 relative -mt-5">
                                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 " />
                                     <input
                                         type="text"

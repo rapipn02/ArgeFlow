@@ -29,6 +29,9 @@ class Order extends Model
         'final_paid_at',
         'notes',
         'requirements',
+        'requested_days',
+        'rush_fee',
+        'deadline_date',
         'revision_count',
         'completion_submitted_at',
         'accepted_at',
@@ -38,11 +41,14 @@ class Order extends Model
         'total_amount' => 'decimal:2',
         'dp_amount' => 'decimal:2',
         'final_amount' => 'decimal:2',
+        'rush_fee' => 'decimal:2',
         'dp_paid_at' => 'datetime',
         'final_paid_at' => 'datetime',
+        'deadline_date' => 'date',
         'completion_submitted_at' => 'datetime',
         'accepted_at' => 'datetime',
         'revision_count' => 'integer',
+        'requested_days' => 'integer',
     ];
 
     /**

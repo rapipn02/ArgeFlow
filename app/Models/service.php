@@ -14,6 +14,8 @@ class Service extends Model
         'name',
         'description',
         'price',
+        'standard_days',
+        'risk_factor',
         'icon',
         'is_active',
         'features',
@@ -23,6 +25,7 @@ class Service extends Model
 
     protected $casts = [
         'price' => 'decimal:2',
+        'risk_factor' => 'decimal:2',
         'is_active' => 'boolean',
         'features' => 'array',
     ];

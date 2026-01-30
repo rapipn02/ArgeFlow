@@ -1,7 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { motion } from 'framer-motion';
-import { Star, Users, CheckCircle2, ArrowRight, User, LogOut, Briefcase, Award } from 'lucide-react';
+import { Star, Users, CheckCircle2, ArrowRight, User, LogOut, Briefcase, Award, CheckCircle } from 'lucide-react';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/Components/ui/card';
 import { ThemeToggle } from '@/Components/ThemeToggle';
@@ -39,7 +39,7 @@ export default function Success({ auth,order }) {
                             transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
                             className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full mb-6"
                         >
-                            <CheckCircle2 className="w-12 h-12 text-white" />
+                            <CheckCircle className="w-12 h-12 text-white" />
                         </motion.div>
 
                         {/* Title */}
