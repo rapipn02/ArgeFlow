@@ -234,7 +234,7 @@ export default function Show({ order }) {
                                         </div>
                                         <div className="text-right">
                                             <div className="font-bold text-gray-900 dark:text-white">
-                                                Rp {Number(order.dp_amount).toLocaleString('id-ID')}
+                                                Rp {Number(order.dp_amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
                                             </div>
                                             {order.dp_paid_at && (
                                                 <PackageCheck className="w-5 h-5 text-green-600 ml-auto" />
@@ -257,7 +257,7 @@ export default function Show({ order }) {
                                         </div>
                                         <div className="text-right">
                                             <div className="font-bold text-gray-900 dark:text-white">
-                                                Rp {Number(order.dp_amount).toLocaleString('id-ID')}
+                                                Rp {Number(order.final_amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
                                             </div>
                                             {order.final_paid_at && (
                                                 <PackageCheck className="w-5 h-5 text-green-600 ml-auto" />
@@ -286,11 +286,7 @@ export default function Show({ order }) {
                                     <div className="flex justify-between text-black dark:text-gray-400 font-semibold text-sm">
                                         <span>Harga Layanan</span>
                                         <span>
-                                            {new Intl.NumberFormat('id-ID', {
-                                                style: 'currency',
-                                                currency: 'IDR',
-                                                minimumFractionDigits: 0
-                                            }).format(order.total_amount - (order.rush_fee || 0))}
+                                            Rp {Math.round(order.total_amount - (order.rush_fee || 0)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
                                         </span>
                                     </div>
                                     
@@ -298,11 +294,7 @@ export default function Show({ order }) {
                                         <div className="flex justify-between text-orange-600 dark:text-orange-400 font-semibold text-sm">
                                             <span>Biaya Rush</span>
                                             <span>
-                                                + {new Intl.NumberFormat('id-ID', {
-                                                    style: 'currency',
-                                                    currency: 'IDR',
-                                                    minimumFractionDigits: 0
-                                                }).format(order.rush_fee)}
+                                                + Rp {Math.round(order.rush_fee).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
                                             </span>
                                         </div>
                                     )}
@@ -310,32 +302,20 @@ export default function Show({ order }) {
                                     <div className="flex justify-between text-black dark:text-gray-400 font-bold border-t border-gray-200 dark:border-gray-700 pt-3">
                                         <span>Total Harga</span>
                                         <span>
-                                            {new Intl.NumberFormat('id-ID', {
-                                                style: 'currency',
-                                                currency: 'IDR',
-                                                minimumFractionDigits: 0
-                                            }).format(order.total_amount)}
+                                            Rp {Math.round(order.total_amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
                                         </span>
                                     </div>
                                     
                                     <div className="flex justify-between text-black dark:text-black font-semibold text-sm">
                                         <span>DP (40%)</span>
                                         <span>
-                                            {new Intl.NumberFormat('id-ID', {
-                                                style: 'currency',
-                                                currency: 'IDR',
-                                                minimumFractionDigits: 0
-                                            }).format(order.dp_amount)}
+                                            Rp {Math.round(order.dp_amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
                                         </span>
                                     </div>
                                     <div className="flex justify-between text-black dark:text-gray-400 font-semibold text-sm">
                                         <span>Pelunasan (60%)</span>
                                         <span>
-                                            {new Intl.NumberFormat('id-ID', {
-                                                style: 'currency',
-                                                currency: 'IDR',
-                                                minimumFractionDigits: 0
-                                            }).format(order.final_amount)}
+                                            Rp {Math.round(order.final_amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
                                         </span>
                                     </div>
                                     

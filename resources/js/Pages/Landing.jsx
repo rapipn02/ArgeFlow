@@ -12,7 +12,7 @@ import Footer from '../Components/Landing/Footer';
 
 export default function Landing() {
     return (
-        <ThemeProvider defaultTheme="dark">
+        <ThemeProvider defaultTheme="light">
             <Head title="ArgeFlow" />
             
             <div className="min-h-screen bg-background text-foreground">

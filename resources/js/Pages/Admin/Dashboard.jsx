@@ -38,6 +38,32 @@ export default function Dashboard({
 }) {
     const [assigningOrder, setAssigningOrder] = useState(null);
     const [selectedTeam, setSelectedTeam] = useState({});
+    const [selectedYear, setSelectedYear] = useState(2026);
+    const [selectedMonth, setSelectedMonth] = useState('all');
+
+    const months = [
+        { value: 1, label: 'Januari' },
+        { value: 2, label: 'Februari' },
+        { value: 3, label: 'Maret' },
+        { value: 4, label: 'April' },
+        { value: 5, label: 'Mei' },
+        { value: 6, label: 'Juni' },
+        { value: 7, label: 'Juli' },
+        { value: 8, label: 'Agustus' },
+        { value: 9, label: 'September' },
+        { value: 10, label: 'Oktober' },
+        { value: 11, label: 'November' },
+        { value: 12, label: 'Desember' },
+    ];
+
+    // Filter financial reports berdasarkan bulan yang dipilih
+    const filteredFinancialReports = selectedMonth === 'all' 
+        ? financialReports 
+        : financialReports.filter(report => {
+            const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
+                              'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            return report.month === monthNames[selectedMonth - 1];
+          });
 
     const handleAssignTeam = (orderId) => {
         if (!selectedTeam[orderId]) {
@@ -172,7 +198,7 @@ export default function Dashboard({
 
                 {/* Pending Team Assignment Section */}
                 {pendingTeamAssignment.length > 0 && (
-                    <div className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl border-2 border-orange-200 overflow-hidden">
+                    <div className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl border-2 border-orange-100 overflow-hidden">
                         <div className="px-6 py-4 bg-white/50 border-b border-orange-200">
                             <div className="flex items-center gap-3">
                                 <div className="p-2 bg-orange-100 rounded-lg">
@@ -224,7 +250,7 @@ export default function Dashboard({
                                                     <div>
                                                         <p className="text-xs text-gray-500">Total Proyek</p>
                                                         <p className="text-sm font-semibold text-gray-900">
-                                                            Rp {Number(order.total_amount).toLocaleString('id-ID')}
+                                                            Rp {Number(order.total_amount).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -249,7 +275,7 @@ export default function Dashboard({
                                                         ...selectedTeam,
                                                         [order.id]: e.target.value
                                                     })}
-                                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-3"
+                                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-3 text-black"
                                                 >
                                                     <option value="">-- Pilih Tim --</option>
                                                     {availableTeams.map((team) => (
@@ -262,7 +288,7 @@ export default function Dashboard({
                                                 <button
                                                     onClick={() => handleAssignTeam(order.id)}
                                                     disabled={!selectedTeam[order.id] || assigningOrder === order.id}
-                                                    className="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+                                                    className="w-full  py-2 bg-green-700 hover:bg-green-700 text-white font-medium rounded-lg disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
                                                 >
                                                     {assigningOrder === order.id ? (
                                                         <>
@@ -271,8 +297,8 @@ export default function Dashboard({
                                                         </>
                                                     ) : (
                                                         <>
-                                                            <CheckCircle className="w-4 h-4" />
-                                                            Assign & Mulai Proyek
+                                                            <div className="w-4 h-4" />
+                                                            ACC 
                                                         </>
                                                     )}
                                                 </button>
@@ -304,7 +330,8 @@ export default function Dashboard({
                                         <ArrowUpRight className="w-5 h-5 mt-1" />
                                     </a>
                                 </div>
-                                <div className="overflow-x-auto mb-5"> 
+                                {/* Desktop Table */}
+                                <div className="hidden md:block overflow-x-auto mb-5"> 
                                     <table className="min-w-full divide-y">
                                         <thead className="">
                                             <tr>
@@ -380,19 +407,82 @@ export default function Dashboard({
                                     </tbody>
                                 </table>
                             </div>
+
+                            {/* Mobile Cards */}
+                            <div className="md:hidden divide-y divide-gray-200">
+                                {recentTransactions.length > 0 ? (
+                                    recentTransactions.map((transaction) => (
+                                        <div key={transaction.id} className="p-4 hover:bg-gray-50">
+                                            <div className="mb-2">
+                                                <div className="text-sm font-medium text-gray-900 mb-1 truncate">
+                                                    {transaction.detail}
+                                                </div>
+                                                <div className="text-xs text-gray-500">
+                                                    {transaction.date}
+                                                </div>
+                                            </div>
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-xs font-semibold text-gray-800">
+                                                    {transaction.category}
+                                                </span>
+                                                <span
+                                                    className={`text-sm font-semibold ${
+                                                        transaction.type === 'income'
+                                                            ? 'text-green-600'
+                                                            : 'text-red-600'
+                                                    }`}
+                                                >
+                                                    {transaction.type === 'income' ? '+' : '-'}
+                                                    {transaction.nominal}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="px-6 py-8 text-center text-sm text-gray-500">
+                                        Belum ada transaksi
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
 
                     {/* Financial Report - Pie Chart */}
                     <div className="lg:col-span-2">
                         <div className="bg-white rounded-xl border border-gray-200 p-4  ">
-                            <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                                Laporan Keuangan
-                            </h2>
+                            <div className="flex items-center justify-between mb-4">
+                                <h2 className="text-lg font-semibold text-gray-900">
+                                    Laporan Keuangan
+                                </h2>
+                                <div className="flex gap-2">
+                                    <select
+                                        value={selectedYear}
+                                        onChange={(e) => setSelectedYear(Number(e.target.value))}
+                                        className="text-xs border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 py-1 px-2"
+                                    >
+                                        <option value={2026}>2026</option>
+                                    </select>
+                                    <select
+                                        value={selectedMonth}
+                                        onChange={(e) => setSelectedMonth(e.target.value === 'all' ? 'all' : Number(e.target.value))}
+                                        className="text-xs border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 py-1 px-2"
+                                    >
+                                        {months.map(month => (
+                                            <option key={month.value} value={month.value}>
+                                                {month.label}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
                             
                             {/* Project Doughnut Chart */}
                             <div className="mb-6">
-                                <ProjectDoughnutChart ordersData={allOrders} />
+                                <ProjectDoughnutChart 
+                                    ordersData={allOrders} 
+                                    selectedMonth={selectedMonth}
+                                    selectedYear={selectedYear}
+                                />
                             </div>
 
                             {/* Pie Chart Container */}
@@ -401,7 +491,7 @@ export default function Dashboard({
                                     {/* SVG Pie Chart */}
                                     <svg viewBox="0 0 100 100" className="transform -rotate-90">
                                         {(() => {
-                                            const total = financialReports.reduce((sum, report) => sum + report.income, 0);
+                                            const total = filteredFinancialReports.reduce((sum, report) => sum + report.income, 0);
                                             let currentAngle = 0;
                                             const colors = [
                                                 '#3b82f6', '#8b5cf6', '#f1eff0ff', 
@@ -410,7 +500,7 @@ export default function Dashboard({
                                                 '#a855f7', '#ef4444', '#84cc16'
                                             ];
                                             
-                                            return financialReports.map((report, index) => {
+                                            return filteredFinancialReports.map((report, index) => {
                                                 if (total === 0) return null;
                                                 
                                                 const percentage = (report.income / total) * 100;
@@ -460,8 +550,8 @@ export default function Dashboard({
                             
                             {/* Legend */}
                             <div className="space-y-2 max-h-32 overflow-y-auto">
-                                {financialReports.length > 0 ? (
-                                    financialReports.map((report, index) => {
+                                {filteredFinancialReports.length > 0 ? (
+                                    filteredFinancialReports.map((report, index) => {
                                         const colors = [
                                             '#3b82f6', '#8b5cf6', '#ec4899', 
                                             '#f59e0b', '#10b981', '#06b6d4',
@@ -484,7 +574,7 @@ export default function Dashboard({
                                                     </span>
                                                 </div>
                                                 <span className="text-sm font-semibold text-gray-900">
-                                                    Rp {report.income.toLocaleString('id-ID')}
+                                                    Rp {report.income.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                                                 </span>
                                             </div>
                                         );

@@ -21,11 +21,9 @@ export default function ProjectCard({ project }) {
     };
 
     const formatCurrency = (amount) => {
-        return new Intl.NumberFormat('id-ID', {
-            style: 'currency',
-            currency: 'IDR',
-            minimumFractionDigits: 0,
-        }).format(amount);
+        // Format: Rp 3.000.000 (with dots as thousand separators)
+        const formatted = Math.round(amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        return `Rp ${formatted}`;
     };
 
     return (

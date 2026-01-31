@@ -50,6 +50,7 @@ class OrderController extends Controller
                 'status' => $order->status,
                 'payment_status' => $order->payment_status,
                 'total_amount' => $order->total_amount,
+                'deadline_date' => $order->deadline_date ? $order->deadline_date->format('d M Y') : null,
                 'created_at' => $order->created_at->format('d M Y'),
                 'progress_count' => $progressCount,
                 'comments_count' => $commentsCount,

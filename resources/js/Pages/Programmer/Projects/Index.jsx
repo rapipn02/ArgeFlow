@@ -31,11 +31,9 @@ export default function Index({ projects, filters }) {
     ];
 
     const formatCurrency = (amount) => {
-        return new Intl.NumberFormat('id-ID', {
-            style: 'currency',
-            currency: 'IDR',
-            minimumFractionDigits: 0,
-        }).format(amount);
+        // Format: Rp 3.000.000 (with dots as thousand separators)
+        const formatted = Math.round(amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        return `Rp ${formatted}`;
     };
     const statusColors = {
         pending: 'text-yellow-800',
@@ -110,7 +108,8 @@ export default function Index({ projects, filters }) {
 
                 {/* Projects Table */}
                 <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                    <div className="overflow-x-auto mt-8">
+                    {/* Desktop Table */}
+                    <div className="hidden md:block overflow-x-auto mt-8">
                         {projects.data.length > 0 ? (
                             <table className="min-w-full divide-y">
                                 <thead>
@@ -123,6 +122,9 @@ export default function Index({ projects, filters }) {
                                         </th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Client
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Deadline
                                         </th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Status
@@ -157,6 +159,17 @@ export default function Index({ projects, filters }) {
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
+                                                {project.deadline_date && project.status !== 'completed' && project.payment_status !== 'fully_paid' ? (
+                                                    <div>
+                                                        <span className="text-sm font-medium text-orange-600">
+                                                            {project.deadline_date}
+                                                        </span>
+                                                    </div>
+                                                ) : (
+                                                    <span className="text-sm text-gray-400">-</span>
+                                                )}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
                                                 <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusColors[project.status]}`}>
                                                     {statusLabels[project.status]}
                                                 </span>
@@ -178,6 +191,69 @@ export default function Index({ projects, filters }) {
                                     ))}
                                 </tbody>
                             </table>
+                        ) : (
+                            <div className="px-6 py-12 text-center">
+                                <p className="text-sm text-gray-500">
+                                    {search || status !== 'all' 
+                                        ? 'Tidak ada project yang sesuai dengan filter'
+                                        : 'Belum ada project'
+                                    }
+                                </p>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Mobile Cards */}
+                    <div className="md:hidden divide-y divide-gray-200">
+                        {projects.data.length > 0 ? (
+                            projects.data.map((project) => (
+                                <div key={project.id} className="p-4 hover:bg-gray-50">
+                                    <div className="flex justify-between items-start mb-3">
+                                        <span className="text-sm font-mono text-gray-900">
+                                            #{project.order_number}
+                                        </span>
+                                        <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusColors[project.status]}`}>
+                                            {statusLabels[project.status]}
+                                        </span>
+                                    </div>
+                                    <div className="mb-2">
+                                        <div className="text-sm font-medium text-gray-900 mb-1">
+                                            {project.service_name}
+                                        </div>
+                                        <div className="text-xs text-gray-500">
+                                            {project.created_at}
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2 mb-3">
+                                        <div className="flex justify-between text-sm">
+                                            <span className="text-gray-500">Client:</span>
+                                            <span className="text-gray-900">{project.client_name}</span>
+                                        </div>
+                                        <div className="flex justify-between text-sm">
+                                            <span className="text-gray-500">Deadline:</span>
+                                            {project.deadline_date && project.status !== 'completed' && project.payment_status !== 'fully_paid' ? (
+                                                <span className="text-orange-600 font-medium">
+                                                    {project.deadline_date}
+                                                </span>
+                                            ) : (
+                                                <span className="text-gray-400">-</span>
+                                            )}
+                                        </div>
+                                        <div className="flex justify-between text-sm">
+                                            <span className="text-gray-500">Amount:</span>
+                                            <span className="font-semibold text-gray-900">
+                                                {formatCurrency(project.total_amount)}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <Link
+                                        href={route('programmer.projects.show', project.id)}
+                                        className="block w-full text-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium text-sm"
+                                    >
+                                        Lihat Detail
+                                    </Link>
+                                </div>
+                            ))
                         ) : (
                             <div className="px-6 py-12 text-center">
                                 <p className="text-sm text-gray-500">

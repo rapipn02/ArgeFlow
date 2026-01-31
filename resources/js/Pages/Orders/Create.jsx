@@ -94,11 +94,9 @@ export default function Create({ auth, service, team }) {
     }, [data.deadline_date, service]);
 
     const formatCurrency = (amount) => {
-        return new Intl.NumberFormat('id-ID', {
-            style: 'currency',
-            currency: 'IDR',
-            minimumFractionDigits: 0,
-        }).format(amount);
+        // Format: Rp 3.000.000 (with dots as thousand separators)
+        const formatted = Math.round(amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        return `Rp ${formatted}`;
     };
     
     const formatDate = (date) => {
@@ -242,9 +240,9 @@ export default function Create({ auth, service, team }) {
                                                 )}
                                                 
                                                 {priceCalculation.rush_fee === 0 && priceCalculation.requested_days >= priceCalculation.standard_days && (
-                                                    <div className="text-xs text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950/30 p-2 rounded flex items-center gap-2">
-                                                        <span>✓</span>
-                                                        <span>Tidak ada biaya tambahan - sesuai estimasi standar</span>
+                                                    <div className="text-xs text-green-600 dark:text-green-400  dark:bg-green-950/30 p-2 rounded flex items-center -mx-2 ">
+                                                     
+                                                        <span>Tidak ada biaya tambahan, sesuai estimasi standar</span>
                                                     </div>
                                                 )}
                                                 
@@ -310,7 +308,7 @@ export default function Create({ auth, service, team }) {
                                         <div className="flex items-start gap-3">
                                             <div className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0 -mx-3" />
                                             <div className="text-sm text-black dark:text-blue-300">
-                                                <div className="font-semibold mb-1">Informasi Penting</div>
+                                                <div className="font-semibold mb-1 text-red-500">Informasi Penting</div>
                                                 <ul className="list-disc list-inside space-y-1 text-xs">
                                                     <li>Setelah order dibuat, Anda akan diarahkan ke halaman pembayaran</li>
                                                     <li>Pembayaran DP sebesar 40% dari total harga</li>

@@ -149,7 +149,7 @@ const handlePayment = async () => {
                                 <div className="border-t border-gray-200 dark:border-gray-700 pt-4 space-y-3">
                                     <div className="flex justify-between text-gray-600 dark:text-gray-400">
                                         <span>Harga Layanan</span>
-                                        <span>Rp {(order.total_amount - (order.rush_fee || 0)).toLocaleString('id-ID')}</span>
+                                        <span>Rp {Math.round(order.total_amount - (order.rush_fee || 0)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</span>
                                     </div>
                                     
                                     {order.rush_fee > 0 && (
@@ -158,22 +158,22 @@ const handlePayment = async () => {
                                                 <Clock className="w-4 h-4" />
                                                 Biaya Rush
                                             </span>
-                                            <span>+ Rp {order.rush_fee.toLocaleString('id-ID')}</span>
+                                            <span>+ Rp {Math.round(order.rush_fee).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</span>
                                         </div>
                                     )}
                                     
                                     <div className="flex justify-between font-semibold text-gray-900 dark:text-white border-t border-gray-200 dark:border-gray-700 pt-3">
                                         <span>Total Harga</span>
-                                        <span>Rp {order.total_amount.toLocaleString('id-ID')}</span>
+                                        <span>Rp {Math.round(order.total_amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</span>
                                     </div>
                                     
                                     <div className="flex justify-between text-gray-600 dark:text-gray-400 text-sm">
                                         <span>DP (40%)</span>
-                                        <span>Rp {order.dp_amount.toLocaleString('id-ID')}</span>
+                                        <span>Rp {Math.round(order.dp_amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</span>
                                     </div>
                                     <div className="flex justify-between text-gray-600 dark:text-gray-400 text-sm">
                                         <span>Pelunasan (60%)</span>
-                                        <span>Rp {order.final_amount.toLocaleString('id-ID')}</span>
+                                        <span>Rp {Math.round(order.final_amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</span>
                                     </div>
                                     
                                     {order.requested_days && (
@@ -198,7 +198,7 @@ const handlePayment = async () => {
                                             Total Bayar
                                         </span>
                                         <span className="text-2xl font-bold text-blue-600">
-                                            Rp {amount.toLocaleString('id-ID')}
+                                            Rp {Math.round(amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
                                         </span>
                                     </div>
                                 </div>

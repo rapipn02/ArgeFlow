@@ -1,7 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { motion } from 'framer-motion';
-import { Star, Users, CheckCircle2, ArrowRight, User, LogOut, Briefcase, Award, CheckCircle } from 'lucide-react';
+import { Star, Users, CheckCircle2, ArrowRight, User, LogOut, Briefcase, Award, CheckCircle, CircleCheckBig } from 'lucide-react';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/Components/ui/card';
 import { ThemeToggle } from '@/Components/ThemeToggle';
@@ -39,7 +39,7 @@ export default function Success({ auth,order }) {
                             transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
                             className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full mb-6"
                         >
-                            <CheckCircle className="w-12 h-12 text-white" />
+                            <CircleCheckBig className="w-12 h-12 text-white" />
                         </motion.div>
 
                         {/* Title */}
@@ -73,7 +73,7 @@ export default function Success({ auth,order }) {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.5 }}
-                                className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-2xl p-6 mb-8 border border-green-200 dark:border-green-800"
+                                className="bg-slate-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-xl p-6 mb-8 border border-gray-300 dark:border-green-800"
                             >
                                 <div className="grid grid-cols-2 gap-4 text-left">
                                     <div>
@@ -103,7 +103,7 @@ export default function Success({ auth,order }) {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.6 }}
-                            className="bg-blue-50 dark:bg-blue-900/20 rounded-2xl p-6 mb-8 border border-blue-200 dark:border-blue-800"
+                            className="bg-slate-50 dark:bg-blue-900/20 rounded-xl p-6 mb-8 border border-gray-300 dark:border-blue-800"
                         >
                             <h3 className="font-semibold text-gray-900 dark:text-white mb-3 text-left">
                                 Langkah Selanjutnya:

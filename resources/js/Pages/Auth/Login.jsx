@@ -21,7 +21,7 @@ export default function Login({ status, canResetPassword }) {
     };
 
     return (
-        <ThemeProvider defaultTheme="dark">
+        <ThemeProvider defaultTheme="light">
             <Head title="Login - ArgeFlow" />
             
             <div className="min-h-screen flex bg-background text-foreground">

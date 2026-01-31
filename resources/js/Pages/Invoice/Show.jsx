@@ -111,7 +111,8 @@ export default function Show({ order,auth }) {
 
                         {/* Items Table */}
                         <div className="mb-12">
-                            <table className="w-full">
+                            {/* Desktop Table */}
+                            <table className="w-full hidden md:table">
                                 <thead>
                                     <tr className="border-b-2 border-gray-200 dark:border-gray-700">
                                         <th className="text-left py-4 text-sm font-semibold text-gray-600 dark:text-gray-400">
@@ -134,7 +135,7 @@ export default function Show({ order,auth }) {
                                             </div>
                                         </td>
                                         <td className="py-4 text-right font-semibold text-gray-900 dark:text-white">
-                                            Rp {order.dp_amount.toLocaleString('id-ID')}
+                                            Rp {order.dp_amount.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                                         </td>
                                         <td className="py-4 text-right">
                                             {order.dp_paid_at ? (
@@ -155,7 +156,7 @@ export default function Show({ order,auth }) {
                                             </div>
                                         </td>
                                         <td className="py-4 text-right font-semibold text-gray-900 dark:text-white">
-                                            Rp {order.final_amount.toLocaleString('id-ID')}
+                                            Rp {order.final_amount.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                                         </td>
                                         <td className="py-4 text-right">
                                             {order.final_paid_at ? (
@@ -170,6 +171,54 @@ export default function Show({ order,auth }) {
                                     </tr>
                                 </tbody>
                             </table>
+
+                            {/* Mobile Cards */}
+                            <div className="md:hidden space-y-4">
+                                <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                                    <div className="flex justify-between items-start mb-3">
+                                        <div>
+                                            <div className="font-medium text-gray-900 dark:text-white">Down Payment (40%)</div>
+                                            <div className="text-sm text-gray-600 dark:text-gray-400">
+                                                Initial payment for project kickoff
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex justify-between items-center">
+                                        <span className="font-semibold text-gray-900 dark:text-white">
+                                            Rp {order.dp_amount.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                                        </span>
+                                        {order.dp_paid_at ? (
+                                            <span className="inline-flex items-center gap-1 text-green-600 text-sm font-medium">
+                                                Paid
+                                            </span>
+                                        ) : (
+                                            <span className="text-sm font-medium text-yellow-600">Pending</span>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                                    <div className="flex justify-between items-start mb-3">
+                                        <div>
+                                            <div className="font-medium text-gray-900 dark:text-white">Final Payment (60%)</div>
+                                            <div className="text-sm text-gray-600 dark:text-gray-400">
+                                                Final payment upon project completion
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex justify-between items-center">
+                                        <span className="font-semibold text-gray-900 dark:text-white">
+                                            Rp {order.final_amount.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                                        </span>
+                                        {order.final_paid_at ? (
+                                            <span className="inline-flex items-center gap-1 text-green-600 text-sm font-medium">
+                                                Paid
+                                            </span>
+                                        ) : (
+                                            <span className="text-sm font-medium text-yellow-600">Pending</span>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         {/* Payment Summary */}
@@ -178,7 +227,7 @@ export default function Show({ order,auth }) {
                                 <div className="space-y-3">
                                     <div className="flex justify-between text-gray-600 dark:text-gray-400">
                                         <span>Subtotal</span>
-                                        <span>Rp {order.total_amount.toLocaleString('id-ID')}</span>
+                                        <span>Rp {order.total_amount.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</span>
                                     </div>
                                     <div className="flex justify-between text-gray-600 dark:text-gray-400">
                                         <span>Tax (0%)</span>
@@ -189,19 +238,19 @@ export default function Show({ order,auth }) {
                                             Total
                                         </span>
                                         <span className="text-lg font-bold text-gray-900 dark:text-white">
-                                            Rp {order.total_amount.toLocaleString('id-ID')}
+                                            Rp {order.total_amount.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                                         </span>
                                     </div>
                                     {order.payment_status === 'dp_paid' && (
                                         <div className="flex justify-between text-blue-600 font-semibold">
                                             <span>Amount Due</span>
-                                            <span>Rp {order.final_amount.toLocaleString('id-ID')}</span>
+                                            <span>Rp {order.final_amount.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</span>
                                         </div>
                                     )}
                                     {order.payment_status === 'fully_paid' && (
                                         <div className="flex justify-between text-green-600 font-semibold">
                                             <span>Amount Paid</span>
-                                            <span>Rp {order.total_amount.toLocaleString('id-ID')}</span>
+                                            <span>Rp {order.total_amount.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</span>
                                         </div>
                                     )}
                                 </div>

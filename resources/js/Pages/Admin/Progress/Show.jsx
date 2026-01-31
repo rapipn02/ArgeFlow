@@ -22,11 +22,9 @@ export default function Show({ project, progressList }) {
     };
 
     const formatCurrency = (amount) => {
-        return new Intl.NumberFormat('id-ID', {
-            style: 'currency',
-            currency: 'IDR',
-            minimumFractionDigits: 0,
-        }).format(amount);
+        // Format: Rp 3.000.000 (with dots as thousand separators)
+        const formatted = Math.round(amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        return `Rp ${formatted}`;
     };
 
     return (
@@ -61,32 +59,29 @@ export default function Show({ project, progressList }) {
 
                 {/* Project Info Card */}
                 <div className="p-3">
-                    <div className="bg-slate-50 rounded-xl border border-gray-200  p-4 grid grid-cols-1 md:grid-cols-4 gap-3">
+                    <div className="bg-slate-50 rounded-xl border border-gray-200 p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                         <div>
                             <p className="text-xs text-gray-500 mb-1">Service</p>
                             <div className="flex items-center gap-2">
                                 <Package className="w-4 h-4 text-gray-400" />
-                                <p className="text-sm font-semibold text-gray-900">{project.service_name}</p>
+                                <p className="text-sm font-semibold text-gray-900 truncate">{project.service_name}</p>
                             </div>
                         </div>
                         <div>
-                            <p className="text-xs text-gray-500 mb-1 mx-9">Client</p>
+                            <p className="text-xs text-gray-500 mb-1">Client</p>
                             <div className="flex items-center gap-2">
-                                <div className="w-4 h-4 text-gray-400 " />
-                                <div>
-                                    <p className="text-sm font-semibold text-gray-900 mx-3">{project.client_name}</p>
-                                    <p className="text-xs text-gray-500"></p>
-                                </div>
+                                <User className="w-4 h-4 text-gray-400" />
+                                <p className="text-sm font-semibold text-gray-900 truncate">{project.client_name}</p>
                             </div>
                         </div>
                         <div>
                             <p className="text-xs text-gray-500 mb-1">Team</p>
-                            <p className="text-sm font-semibold text-gray-900">{project.team_name}</p>
+                            <p className="text-sm font-semibold text-gray-900 truncate">{project.team_name}</p>
                         </div>
                         <div>
                             <p className="text-xs text-gray-500 mb-1">Total Amount</p>
-                            <div className="flex items-center gap- -mx-4">
-                                <div className="w-4 h-4 text-gray-400" />
+                            <div className="flex items-center gap-2">
+                                <DollarSign className="w-4 h-4 text-gray-400" />
                                 <p className="text-sm font-semibold text-gray-900">{formatCurrency(project.total_amount)}</p>
                             </div>
                         </div>

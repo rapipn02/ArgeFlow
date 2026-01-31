@@ -73,7 +73,8 @@ export default function UsersIndex({ users, filters }) {
 
                 {/* Users Table */}
                 <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                    <div className="overflow-x-auto">
+                    {/* Desktop Table */}
+                    <div className="hidden md:block overflow-x-auto">
                         <table className="min-w-full divide-y divide-gray-200 mb-6 mt-8">
                             <thead className="bg-white-50">
                                 <tr>
@@ -140,6 +141,40 @@ export default function UsersIndex({ users, filters }) {
                                 ))}
                             </tbody>
                         </table>
+                    </div>
+
+                    {/* Mobile Cards */}
+                    <div className="md:hidden divide-y divide-gray-200">
+                        {users.data.map((user) => (
+                            <div key={user.id} className="p-4 hover:bg-gray-50">
+                                <div className="flex justify-between items-start mb-3">
+                                    <div>
+                                        <div className="text-sm font-medium text-gray-900 mb-1">
+                                            {user.name}
+                                        </div>
+                                        <div className="text-sm text-gray-600">
+                                            {user.email}
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={() => handleDelete(user.id)}
+                                        className="text-red-600 hover:text-red-900"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                    </button>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span
+                                        className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getRoleBadge(user.role)}`}
+                                    >
+                                        {user.role}
+                                    </span>
+                                    <span className="text-xs text-gray-500">
+                                        {user.created_at}
+                                    </span>
+                                </div>
+                            </div>
+                        ))}
                     </div>
 
                     {/* Pagination */}

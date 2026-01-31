@@ -1,6 +1,7 @@
 import { TrendingUp, TrendingDown, Wallet } from 'lucide-react';
+import AnimatedCounter from './AnimatedCounter';
 
-export default function StatCard({ title, value, subtitle, type = 'neutral', icon: Icon }) {
+export default function StatCard({ title, value, subtitle, type = 'neutral', icon: Icon, animated = true }) {
     const getColorClasses = () => {
         switch (type) {
             case 'income':
@@ -38,6 +39,24 @@ export default function StatCard({ title, value, subtitle, type = 'neutral', ico
     const DefaultIcon = type === 'income' ? TrendingUp : type === 'expense' ? TrendingDown : Wallet;
     const IconComponent = Icon || DefaultIcon;
 
+    // Extract numeric value from string (e.g., "Rp 1.000.000" -> 1000000)
+    const extractNumber = (val) => {
+        if (typeof val === 'number') return val;
+        if (typeof val === 'string') {
+            // Remove "Rp", spaces, and dots (thousand separators)
+            const cleaned = val.replace(/Rp\s?/g, '').replace(/\./g, '').replace(/,/g, '');
+            const numMatch = cleaned.match(/\d+/);
+            if (numMatch) {
+                return parseInt(numMatch[0], 10);
+            }
+        }
+        return 0;
+    };
+
+    const numericValue = extractNumber(value);
+    const isCurrency = typeof value === 'string' && value.includes('Rp');
+    const isNumber = typeof value === 'number' || (typeof value === 'string' && /^\d+$/.test(value.replace(/\./g, '')));
+
     return (
         <div className={`${colors.bg} rounded-xl py-10 px-6 border border-gray-200 shadow-sm`}>
             <div className="flex items-start justify-between">
@@ -46,7 +65,15 @@ export default function StatCard({ title, value, subtitle, type = 'neutral', ico
                         {title}
                     </p>
                     <h3 className={`text-2xl font-bold ${colors.value} py-3 -translate-y-2`}>
-                        {value}
+                        {animated && numericValue > 0 && (isCurrency || isNumber) ? (
+                            isCurrency ? (
+                                <>Rp <AnimatedCounter value={numericValue} duration={2500} /></>
+                            ) : (
+                                <AnimatedCounter value={numericValue} duration={2500} />
+                            )
+                        ) : (
+                            value
+                        )}
                     </h3>
                     <p className="text-xs text-gray-500 ">{subtitle}</p>
                 </div>

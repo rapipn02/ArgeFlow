@@ -57,7 +57,7 @@ export default function Index({ teams }) {
                                             <div className="flex items-center justify-center gap-1 mb-1">
                                                 <Star className="w-4 h-4 text-yellow-500" />
                                                 <span className="text-xl font-bold text-gray-900">
-                                                    {team.average_rating.toFixed(1)}
+                                                    {parseFloat(team.average_rating || 0).toFixed(1)}
                                                 </span>
                                             </div>
                                             <p className="text-xs text-gray-500">Rating</p>

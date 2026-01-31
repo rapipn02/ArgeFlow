@@ -39,11 +39,9 @@ export default function Index({ projects, filters, auth }) {
     };
 
     const formatCurrency = (amount) => {
-        return new Intl.NumberFormat('id-ID', {
-            style: 'currency',
-            currency: 'IDR',
-            minimumFractionDigits: 0,
-        }).format(amount);
+        // Format: Rp 3.000.000 (with dots as thousand separators)
+        const formatted = Math.round(amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        return `Rp ${formatted}`;
     };
 
     // Safely get projects data
@@ -123,7 +121,7 @@ export default function Index({ projects, filters, auth }) {
                                                 </div>
 
                                                 {/* Order Info */}
-                                                <div className="grid grid-cols-3 gap-4 mb-4">
+                                                <div className="grid grid-cols-4 gap-4 mb-4">
                                                     <div>
                                                         <p className="text-xs text-gray-500 mb-1 mx-5">Status Pembayaran</p>
                                                         <div className="flex items-center gap-1 ">
@@ -143,6 +141,15 @@ export default function Index({ projects, filters, auth }) {
                                                         <p className="text-xs text-gray-500 mb-1">Total Amount</p>
                                                         <p className="text-sm font-medium text-gray-900">{formatCurrency(project.total_amount)}</p>
                                                     </div>
+                                                    {project.deadline_date && project.status !== 'completed' && project.payment_status !== 'fully_paid' && (
+                                                        <div>
+                                                            <p className="text-xs text-gray-500 mb-1">Deadline</p>
+                                                            <div className="flex items-center gap-1">
+                                                                <Calendar className="w-3.5 h-3.5 text-orange-500" />
+                                                                <p className="text-sm font-semibold text-orange-600">{project.deadline_date}</p>
+                                                            </div>
+                                                        </div>
+                                                    )}
                                                 </div>
 
                                                 {/* Progress Stats */}

@@ -11,7 +11,7 @@ export default function TeamList({ auth, teams, filters, serviceId }) {
     const [selectedTeam, setSelectedTeam] = useState(null);
 
     return (
-        <ThemeProvider defaultTheme="dark">
+        <ThemeProvider defaultTheme="light">
             <div className="min-h-screen bg-background">
                 <Head title="Pilih Tim Programmer" />
                 

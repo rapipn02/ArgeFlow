@@ -34,11 +34,9 @@ export default function Index({ projects, filters }) {
     };
 
     const formatCurrency = (amount) => {
-        return new Intl.NumberFormat('id-ID', {
-            style: 'currency',
-            currency: 'IDR',
-            minimumFractionDigits: 0,
-        }).format(amount);
+        // Format: Rp 3.000.000 (with dots as thousand separators)
+        const formatted = Math.round(amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        return `Rp ${formatted}`;
     };
 
     return (
@@ -65,16 +63,16 @@ export default function Index({ projects, filters }) {
                 </div>
 
                 {/* Search & Filter */}
-                <div className=" p-2">
+                <div className="p-2">
                     <form onSubmit={handleSearch} className="flex gap-2">
                         <div className="flex-1 relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 " />
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                             <input
                                 type="text"
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                placeholder="cari "
-                                className="w- pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="Cari project..."
+                                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             />
                         </div>
                     </form>
@@ -112,17 +110,16 @@ export default function Index({ projects, filters }) {
                                         </div>
 
                                         {/* Project Info */}
-                                        <div className="grid grid-cols-3 gap-4 mb-4">
+                                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-4">
                                             <div>
-                                                <p className="text-xs text-gray-500 mb-1 mx-5">Client</p>
-                                                <div className="flex items-center gap-1 ">
-                                                    <div className="w-4 h-4 text-gray-400" />
-                                                    <p className="text-sm font-medium text-gray-900">{project.client_name}</p>
+                                                <p className="text-xs text-gray-500 mb-1">Client</p>
+                                                <div className="flex items-center gap-1">
+                                                    <p className="text-sm font-medium text-gray-900 truncate">{project.client_name}</p>
                                                 </div>
                                             </div>
                                             <div>
                                                 <p className="text-xs text-gray-500 mb-1">Tim</p>
-                                                <p className="text-sm font-medium text-gray-900">{project.team_name}</p>
+                                                <p className="text-sm font-medium text-gray-900 truncate">{project.team_name}</p>
                                             </div>
                                             <div>
                                                 <p className="text-xs text-gray-500 mb-1">Total Amount</p>
@@ -131,9 +128,9 @@ export default function Index({ projects, filters }) {
                                         </div>
 
                                         {/* Progress Stats */}
-                                        <div className="flex items-center gap-12 p-3 rounded-lg">
+                                        <div className="flex flex-wrap items-center gap-4 sm:gap-8 p-3 rounded-lg">
                                             <div className="flex items-center gap-2">
-                                                <div className="w-8 h-8 rounded-full  flex items-center justify-center">
+                                                <div className="w-8 h-8 rounded-full flex items-center justify-center">
                                                     <TrendingUp className="w-4 h-4 text-blue-600" />
                                                 </div>
                                                 <div>
@@ -152,20 +149,17 @@ export default function Index({ projects, filters }) {
                                                 </div>
                                             </div>
                                             {project.latest_progress && (
-                                                <>
-                                                   
-                                                    <div className="flex items-center gap-2">
-                                                        <div className="w-8 h-8 rounded-full flex items-center justify-center">
-                                                            <span className="text-xs font-bold text-green-600">
-                                                                {project.latest_progress.percentage}%
-                                                            </span>
-                                                        </div>
-                                                        <div>
-                                                            <p className="text-xs text-gray-500">Latest Progress</p>
-                                                            <p className="text-xs font-medium text-gray-900">{project.latest_progress.created_at}</p>
-                                                        </div>
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-8 h-8 rounded-full flex items-center justify-center">
+                                                        <span className="text-xs font-bold text-green-600">
+                                                            {project.latest_progress.percentage}%
+                                                        </span>
                                                     </div>
-                                                </>
+                                                    <div>
+                                                        <p className="text-xs text-gray-500">Latest Progress</p>
+                                                        <p className="text-xs font-medium text-gray-900">{project.latest_progress.created_at}</p>
+                                                    </div>
+                                                </div>
                                             )}
                                         </div>
                                     </div>

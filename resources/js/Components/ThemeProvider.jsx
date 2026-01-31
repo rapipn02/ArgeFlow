@@ -5,7 +5,7 @@ const ThemeContext = createContext({
     setTheme: () => null,
 });
 
-export function ThemeProvider({ children, defaultTheme = 'dark', storageKey = 'ui-theme' }) {
+export function ThemeProvider({ children, defaultTheme = 'light', storageKey = 'ui-theme' }) {
     const [theme, setTheme] = useState(() => {
         if (typeof window !== 'undefined') {
             return localStorage.getItem(storageKey) || defaultTheme;

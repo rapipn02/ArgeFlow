@@ -91,7 +91,8 @@ export default function TransactionsIndex({ transactions, filters }) {
 
                 {/* Transactions Table */}
                 <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                    <div className="overflow-x-auto">
+                    {/* Desktop Table */}
+                    <div className="hidden md:block overflow-x-auto">
                         <table className="min-w-full divide-y mt-6">
                             <thead className="">
                                 <tr>
@@ -177,6 +178,58 @@ export default function TransactionsIndex({ transactions, filters }) {
                                 ))}
                             </tbody>
                         </table>
+                    </div>
+
+                    {/* Mobile Cards */}
+                    <div className="md:hidden divide-y divide-gray-200">
+                        {transactions.data.map((transaction) => (
+                            <div key={transaction.id} className="p-4 hover:bg-gray-50">
+                                <div className="flex justify-between items-start mb-3">
+                                    <div className="flex-1">
+                                        <div className="text-sm font-medium text-gray-900 mb-1">
+                                            {transaction.description}
+                                        </div>
+                                        <div className="text-xs text-gray-500 mb-2">
+                                            Oleh: {transaction.created_by}
+                                        </div>
+                                        <div className="text-xs text-gray-600">
+                                            {transaction.formatted_date}
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={() => handleDelete(transaction.id)}
+                                        className="text-red-600 hover:text-red-900 ml-2"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                    </button>
+                                </div>
+                                <div className="flex justify-between items-center mb-2">
+                                    <span className="text-xs font-semibold text-gray-800">
+                                        {transaction.category}
+                                    </span>
+                                    <span
+                                        className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                            transaction.type === 'income'
+                                                ? 'text-green-800'
+                                                : 'text-red-800'
+                                        }`}
+                                    >
+                                        {transaction.type === 'income' ? 'Pemasukan' : 'Pengeluaran'}
+                                    </span>
+                                </div>
+                                <div className="text-right">
+                                    <span
+                                        className={`text-sm font-semibold ${
+                                            transaction.type === 'income'
+                                                ? 'text-green-600'
+                                                : 'text-red-600'
+                                        }`}
+                                    >
+                                        {transaction.signed_amount}
+                                    </span>
+                                </div>
+                            </div>
+                        ))}
                     </div>
 
                     {/* Pagination */}

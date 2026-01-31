@@ -29,7 +29,7 @@ export default function ServiceSelection({ auth }) {
 
     if (loading) {
         return (
-            <ThemeProvider defaultTheme="dark">
+            <ThemeProvider defaultTheme="light">
                 <div className="min-h-screen bg-background flex items-center justify-center">
                     <Head title="Pilih Layanan" />
                     <div className="text-center">
@@ -91,12 +91,9 @@ export default function ServiceSelection({ auth }) {
 
 function ServiceCard({ service, index }) {
     const formatPrice = (price) => {
-        return new Intl.NumberFormat('id-ID', {
-            style: 'currency',
-            currency: 'IDR',
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-        }).format(price);
+        // Format: Rp 3.000.000 (with dots as thousand separators)
+        const formatted = Math.round(price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        return `Rp ${formatted}`;
     };
 
     // Parse features if it's a JSON string

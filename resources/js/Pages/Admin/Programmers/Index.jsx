@@ -113,7 +113,7 @@ export default function ProgrammersIndex({ programmers, filters }) {
                                     )}
                                     {programmer.profile.hourly_rate && (
                                         <p className="text-xs text-gray-600">
-                                            <span className="font-semibold">Rate:</span> Rp {Number(programmer.profile.hourly_rate).toLocaleString('id-ID')}/jam
+                                            <span className="font-semibold">Rate:</span> Rp {Number(programmer.profile.hourly_rate).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}/jam
                                         </p>
                                     )}
                                     {programmer.profile.portfolio_url && (

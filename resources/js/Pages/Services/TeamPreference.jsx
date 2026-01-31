@@ -20,7 +20,7 @@ export default function TeamPreference({ auth, service }) {
     };
 
     return (
-        <ThemeProvider defaultTheme="dark">
+        <ThemeProvider defaultTheme="light">
             <div className="min-h-screen bg-background">
                 <Head title="Pilih Tim Programmer" />
             

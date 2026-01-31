@@ -12,11 +12,9 @@ export default function Show({ project, progressList, canAddProgress }) {
         file: null,
     });
     const formatCurrency = (amount) => {
-        return new Intl.NumberFormat('id-ID', {
-            style: 'currency',
-            currency: 'IDR',
-            minimumFractionDigits: 0,
-        }).format(amount);
+        // Format: Rp 3.000.000 (with dots as thousand separators)
+        const formatted = Math.round(amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        return `Rp ${formatted}`;
     };
 
     const handleSubmitProgress = (e) => {
@@ -178,6 +176,29 @@ export default function Show({ project, progressList, canAddProgress }) {
                                 <p className="text-sm text-gray-700 whitespace-pre-wrap">
                                     {project.notes}
                                 </p>
+                            </div>
+                        )}
+
+                        {/* Deadline Alert - Show only if not completed and not fully paid */}
+                        {project.deadline_date && project.status !== 'completed' && project.payment_status !== 'fully_paid' && (
+                            <div className="bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200 rounded-xl p-5">
+                                <div className="flex items-start gap-3">
+                                    <div className="p-2 bg-orange-100 rounded-lg flex-shrink-0">
+                                        <Calendar className="w-5 h-5 text-orange-600" />
+                                    </div>
+                                    <div className="flex-1">
+                                        <h3 className="font-semibold text-orange-900 mb-1">
+                                            Deadline Project
+                                        </h3>
+                                        <p className="text-sm text-orange-700 mb-2">
+                                            Project ini harus selesai sebelum <span className="font-bold">{project.deadline_date}</span>
+                                        </p>
+                                        <div className="flex items-center gap-2 text-xs text-orange-600">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-orange-500" />
+                                            <span>Durasi pengerjaan: {project.requested_days} hari</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         )}
 
