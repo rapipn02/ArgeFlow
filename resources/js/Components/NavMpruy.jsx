@@ -1,5 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
-import { User, LogOut, FolderOpen } from 'lucide-react';
+import { User, LogOut, FolderOpen, Shield } from 'lucide-react';
 import { Button } from '@/Components/ui/button';
 import { ThemeToggle } from '@/Components/ThemeToggle';
 
@@ -32,10 +32,17 @@ export default function NavMpruy() {
                                     <p className="text-xs text-muted-foreground">{auth.user.email}</p>
                                 </div>
                                 
-                           
+                                {/* Admin Panel Button - For admin and superadmin */}
+                                {(auth.user.role === 'admin' || auth.user.role === 'superadmin') && (
+                                    <Link href={route('admin.dashboard')}>
+                                        <Button variant="ghost" size="icon" title="Admin Panel">
+                                            <Shield className="w-5 h-5" />
+                                        </Button>
+                                    </Link>
+                                )}
 
                                 <Link href={route('orders.index')}>
-                                    <Button variant="ghost" size="icon">
+                                    <Button variant="ghost" size="icon" title="My Orders">
                                         <FolderOpen className="w-5 h-5" />
                                     </Button>
                                 </Link>
@@ -45,6 +52,7 @@ export default function NavMpruy() {
                                     method="post" 
                                     as="button"
                                     className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+                                    title="Logout"
                                 >
                                     <LogOut className="w-5 h-5" />
                                 </Link>

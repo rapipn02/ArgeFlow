@@ -93,13 +93,13 @@ export default function Dashboard({
 
             <div className="space-y-6">
                 {/* Header */}
-                <div className="border-b border-gray-150 -mx-8">
-                    <div className='flex items-center justify-between pb-2 px-6'>
+                <div className="border-b border-gray-150">
+                    <div className='flex items-center justify-between pb-2'>
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900 mx-5">
+                        <h1 className="text-2xl font-bold text-gray-900">
                             Dashboard Keuangan
                         </h1>   
-                        <p className="text-sm text-gray-500 mt-1 mx-5">
+                        <p className="text-sm text-gray-500 mt-1">
                             Ringkasan dan analisis keuangan ArgeFlow
                         </p>
                     </div>
@@ -449,23 +449,35 @@ export default function Dashboard({
 
                     {/* Financial Report - Pie Chart */}
                     <div className="lg:col-span-2">
-                        <div className="bg-white rounded-xl border border-gray-200 p-4  ">
+                        <div className="bg-white rounded-xl border border-gray-200 p-5  ">
                             <div className="flex items-center justify-between mb-4">
-                                <h2 className="text-lg font-semibold text-gray-900">
+                                <h2 className="text-base font-semibold text-gray-900">
                                     Laporan Keuangan
                                 </h2>
-                                <div className="flex gap-2">
+                                <div className="flex gap-1">
                                     <select
                                         value={selectedYear}
                                         onChange={(e) => setSelectedYear(Number(e.target.value))}
-                                        className="text-xs border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 py-1 px-2"
+                                        className="text-xs border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 py-0.5 pl-2 pr-6 appearance-none bg-white"
+                                        style={{
+                                            backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
+                                            backgroundPosition: 'right 0.25rem center',
+                                            backgroundRepeat: 'no-repeat',
+                                            backgroundSize: '1.25em 1.25em'
+                                        }}
                                     >
                                         <option value={2026}>2026</option>
                                     </select>
                                     <select
                                         value={selectedMonth}
                                         onChange={(e) => setSelectedMonth(e.target.value === 'all' ? 'all' : Number(e.target.value))}
-                                        className="text-xs border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 py-1 px-2"
+                                        className="text-xs border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 py-0.5 pl-1.5 pr-0.5 appearance-none bg-white"
+                                        style={{
+                                            backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
+                                            backgroundPosition: 'right 0.25rem center',
+                                            backgroundRepeat: 'no-repeat',
+                                            backgroundSize: '1.25em 1.25em'
+                                        }}
                                     >
                                         {months.map(month => (
                                             <option key={month.value} value={month.value}>

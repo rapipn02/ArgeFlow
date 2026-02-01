@@ -105,27 +105,11 @@ class Order extends Model
     }
 
     /**
-     * Get the rating for this order (individual rating)
-     */
-    public function rating()
-    {
-        return $this->hasOne(Rating::class);
-    }
-
-    /**
      * Get all progress reports for this order
      */
     public function progress()
     {
         return $this->hasMany(OrderProgress::class);
-    }
-
-    /**
-     * Get all files for this order
-     */
-    public function files()
-    {
-        return $this->hasMany(OrderFile::class);
     }
 
     /**
@@ -135,6 +119,7 @@ class Order extends Model
     {
         return $this->hasMany(Revision::class);
     }
+
 
 
     /**
@@ -177,13 +162,13 @@ class Order extends Model
         // Jika sudah ada team_id (client pilih sendiri), langsung in_progress
         // Jika belum (auto_assign), tetap dp_paid tunggu admin assign team
         $status = $this->team_id ? 'in_progress' : 'dp_paid';
-        
+
         $this->update([
             'payment_status' => 'dp_paid',
             'status' => $status,
             'dp_paid_at' => now(),
         ]);
-        
+
         // Catat transaksi pemasukan DP
         Transaction::create([
             'type' => 'income',
@@ -207,7 +192,7 @@ class Order extends Model
             'status' => 'completed',
             'final_paid_at' => now(),
         ]);
-        
+
         // Catat transaksi pemasukan pelunasan
         Transaction::create([
             'type' => 'income',

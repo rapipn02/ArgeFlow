@@ -10,6 +10,14 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
+    $user = auth()->user();
+
+    if ($user->isAdmin()) {
+        return redirect()->route('admin.dashboard');
+    } elseif ($user->isProgrammer()) {
+        return redirect()->route('programmer.dashboard');
+    }
+
     return redirect()->route('services.index');
 })->middleware(['auth', 'verified'])->name('dashboard');
 

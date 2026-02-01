@@ -1,7 +1,7 @@
 import { Head, router, Link } from '@inertiajs/react';
 import { useState } from 'react';
 import ProgrammerLayout from '@/Layouts/ProgrammerLayout';
-import { Search, Eye } from 'lucide-react';
+import { Search, Eye, AlertCircle } from 'lucide-react';
 
 export default function Index({ projects, filters }) {
     const [search, setSearch] = useState(filters.search || '');
@@ -39,6 +39,8 @@ export default function Index({ projects, filters }) {
         pending: 'text-yellow-800',
         dp_paid: ' text-blue-800',
         in_progress: ' text-purple-800',
+        revision_requested: ' text-red-800',
+        awaiting_review: ' text-indigo-800',
         final_payment: ' text-orange-800',
         completed: ' text-green-800',
         cancelled: ' text-red-800',
@@ -47,6 +49,8 @@ export default function Index({ projects, filters }) {
         pending: 'Pending',
         dp_paid: 'DP Paid',
         in_progress: 'In Progress',
+        revision_requested: 'Revisi Diperlukan',
+        awaiting_review: 'Awaiting Review',
         final_payment: 'Final Payment',
         completed: 'Completed',
         cancelled: 'Cancelled',
@@ -170,9 +174,17 @@ export default function Index({ projects, filters }) {
                                                 )}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusColors[project.status]}`}>
-                                                    {statusLabels[project.status]}
-                                                </span>
+                                                <div className="flex items-center gap-2">
+                                                    <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusColors[project.status]}`}>
+                                                        {statusLabels[project.status]}
+                                                    </span>
+                                                    {project.has_revision && (
+                                                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">
+                                                            <AlertCircle className="w-3 h-3" />
+                                                            Revisi #{project.revision_count}
+                                                        </span>
+                                                    )}
+                                                </div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right">
                                                 <span className="text-sm font-semibold text-gray-900">
@@ -212,9 +224,17 @@ export default function Index({ projects, filters }) {
                                         <span className="text-sm font-mono text-gray-900">
                                             #{project.order_number}
                                         </span>
-                                        <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusColors[project.status]}`}>
-                                            {statusLabels[project.status]}
-                                        </span>
+                                        <div className="flex flex-col gap-1">
+                                            <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusColors[project.status]}`}>
+                                                {statusLabels[project.status]}
+                                            </span>
+                                            {project.has_revision && (
+                                                <span className="inline-flex items-center gap-1 px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">
+                                                    <AlertCircle className="w-3 h-3" />
+                                                    Revisi #{project.revision_count}
+                                                </span>
+                                            )}
+                                        </div>
                                     </div>
                                     <div className="mb-2">
                                         <div className="text-sm font-medium text-gray-900 mb-1">

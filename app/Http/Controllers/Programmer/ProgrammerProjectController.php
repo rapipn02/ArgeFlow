@@ -68,6 +68,8 @@ class ProgrammerProjectController extends Controller
                     'requirements' => $order->requirements,
                     'created_at' => $order->created_at->format('d M Y'),
                     'dp_paid_at' => $order->dp_paid_at ? $order->dp_paid_at->format('d M Y') : null,
+                    'revision_count' => $order->revision_count,
+                    'has_revision' => $order->status === 'revision_requested',
                 ];
             });
 
@@ -91,7 +93,7 @@ class ProgrammerProjectController extends Controller
                 ->with('error', 'Anda tidak memiliki akses ke project ini.');
         }
 
-        $order->load(['service', 'user', 'team.members.user', 'progress.programmer', 'progress.comments.user']);
+        $order->load(['service', 'user', 'team.members.user', 'progress.programmer', 'progress.comments.user', 'revisions.client']);
 
         $projectData = [
             'id' => $order->id,
@@ -127,7 +129,39 @@ class ProgrammerProjectController extends Controller
             'requirements' => $order->requirements,
             'notes' => $order->notes,
             'created_at' => $order->created_at->format('d M Y H:i'),
+            'revision_count' => $order->revision_count,
+            'has_revision' => $order->status === 'revision_requested',
         ];
+
+        // Get latest revision if exists
+        $latestRevision = null;
+        if ($order->status === 'revision_requested') {
+            $revision = $order->revisions()->latest()->first();
+            if ($revision) {
+                $latestRevision = [
+                    'id' => $revision->id,
+                    'description' => $revision->description,
+                    'revision_number' => $revision->revision_number,
+                    'created_at' => $revision->created_at->format('d M Y H:i'),
+                    'client_name' => $revision->client->name ?? 'N/A',
+                ];
+            }
+        }
+
+        // Get all revisions for history
+        $revisionHistory = $order->revisions()
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function ($revision) {
+                return [
+                    'id' => $revision->id,
+                    'description' => $revision->description,
+                    'revision_number' => $revision->revision_number,
+                    'status' => $revision->status,
+                    'created_at' => $revision->created_at->format('d M Y H:i'),
+                    'client_name' => $revision->client->name ?? 'N/A',
+                ];
+            });
 
         // Get progress list
         $progressList = $order->progress()
@@ -156,6 +190,8 @@ class ProgrammerProjectController extends Controller
             'project' => $projectData,
             'progressList' => $progressList,
             'canAddProgress' => $canAddProgress,
+            'latestRevision' => $latestRevision,
+            'revisionHistory' => $revisionHistory,
         ]);
     }
 }

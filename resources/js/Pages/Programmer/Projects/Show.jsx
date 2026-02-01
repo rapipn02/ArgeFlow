@@ -1,9 +1,9 @@
 import { Head, Link, useForm, router } from '@inertiajs/react';
 import ProgrammerLayout from '@/Layouts/ProgrammerLayout';
-import { ArrowLeft, User, Mail, Phone, DollarSign, Calendar, FileText, Users, Plus, TrendingUp, Upload, X, MessageSquare, Download } from 'lucide-react';
+import { ArrowLeft, User, Mail, Phone, DollarSign, Calendar, FileText, Users, Plus, TrendingUp, Upload, X, MessageSquare, Download, AlertCircle, Clock } from 'lucide-react';
 import { useState } from 'react';
 
-export default function Show({ project, progressList, canAddProgress }) {
+export default function Show({ project, progressList, canAddProgress, latestRevision, revisionHistory }) {
     const [showProgressModal, setShowProgressModal] = useState(false);
     
     const progressForm = useForm({
@@ -39,6 +39,8 @@ export default function Show({ project, progressList, canAddProgress }) {
         pending: 'bg-yellow-100 text-yellow-800',
         dp_paid: 'bg-blue-100 text-blue-800',
         in_progress: 'bg-purple-100 text-purple-800',
+        revision_requested: 'bg-red-100 text-red-800',
+        awaiting_review: 'bg-indigo-100 text-indigo-800',
         final_payment: 'bg-orange-100 text-orange-800',
         completed: 'bg-green-100 text-green-800',
         cancelled: 'bg-red-100 text-red-800',
@@ -48,6 +50,8 @@ export default function Show({ project, progressList, canAddProgress }) {
         pending: 'Pending',
         dp_paid: 'DP Paid - Ready to Start',
         in_progress: 'In Progress',
+        revision_requested: 'Revisi Diperlukan',
+        awaiting_review: 'Awaiting Review',
         final_payment: 'Awaiting Final Payment',
         completed: 'Completed',
         cancelled: 'Cancelled',
@@ -118,6 +122,42 @@ export default function Show({ project, progressList, canAddProgress }) {
                                         <p className="text-sm text-yellow-700">
                                             Project ini belum bisa dikerjakan. Fitur pengiriman progress akan aktif setelah client melakukan pembayaran DP.
                                         </p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Revision Alert */}
+                        {project.has_revision && latestRevision && (
+                            <div className="bg-red-50 border-2 border-red-200 rounded-xl p-6">
+                                <div className="flex items-start gap-4">
+                                    <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
+                                        <AlertCircle className="w-6 h-6 text-red-600" />
+                                    </div>
+                                    <div className="flex-1">
+                                        <h3 className="font-bold text-red-900 text-lg mb-2">
+                                            Revisi Diperlukan - Revisi ke-{latestRevision.revision_number}
+                                        </h3>
+                                        <div className="space-y-2">
+                                            <div className="flex items-center gap-2 text-sm text-red-700">
+                                                <User className="w-4 h-4" />
+                                                <span>Diminta oleh: <strong>{latestRevision.client_name}</strong></span>
+                                            </div>
+                                            <div className="flex items-center gap-2 text-sm text-red-700">
+                                                <Clock className="w-4 h-4" />
+                                                <span>{latestRevision.created_at}</span>
+                                            </div>
+                                        </div>
+                                        <div className="mt-3 p-4 bg-white rounded-lg border border-red-200">
+                                            <p className="text-sm font-medium text-gray-700 mb-1">Catatan Revisi:</p>
+                                            <p className="text-sm text-gray-900 whitespace-pre-wrap">
+                                                {latestRevision.description}
+                                            </p>
+                                        </div>
+                                        <div className="mt-3 flex items-center gap-2 text-xs text-red-600">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-red-500" />
+                                            <span>Silakan perbaiki sesuai catatan di atas dan kirim progress terbaru</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -228,6 +268,42 @@ export default function Show({ project, progressList, canAddProgress }) {
                                 ))}
                             </div>
                         </div>
+
+                        {/* Revision History */}
+                        {revisionHistory && revisionHistory.length > 0 && (
+                            <div className="bg-white rounded-xl border border-gray-200 p-6">
+                                <div className="flex items-center gap-2 mb-4">
+                                    <AlertCircle className="w-5 h-5 text-red-600" />
+                                    <h2 className="text-lg font-semibold text-gray-900">
+                                        Riwayat Revisi ({revisionHistory.length})
+                                    </h2>
+                                </div>
+                                <div className="space-y-3">
+                                    {revisionHistory.map((revision, index) => (
+                                        <div key={revision.id} className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                            <div className="flex items-start justify-between mb-2">
+                                                <div className="flex items-center gap-2">
+                                                    <span className="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-semibold">
+                                                        Revisi #{revision.revision_number}
+                                                    </span>
+                                                    <span className="text-xs text-gray-500">
+                                                        {revision.created_at}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <p className="text-sm text-gray-700 mb-2">
+                                                <strong>Diminta oleh:</strong> {revision.client_name}
+                                            </p>
+                                            <div className="p-3 bg-white rounded border border-gray-200">
+                                                <p className="text-sm text-gray-900 whitespace-pre-wrap">
+                                                    {revision.description}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
 
                         {/* Progress History */}
                         {canAddProgress && (

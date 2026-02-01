@@ -32,22 +32,4 @@ class ProgrammerProfile extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-    /**
-     * Get the skills for the programmer
-     */
-    public function skills()
-    {
-        return $this->belongsToMany(Skill::class, 'programmer_skills')
-            ->withPivot('level', 'years_experience')
-            ->withTimestamps();
-    }
-
-    /**
-     * Get the programmer skills
-     */
-    public function programmerSkills()
-    {
-        return $this->hasMany(ProgrammerSkill::class);
-    }
 }

@@ -30,15 +30,15 @@ export default function Hero() {
                         </div>
 
                         {/* Description */}
-                        <p className="text-lg text-muted-foreground max-w-xl leading-relaxed">
+                        <p className="text-lg text-muted-foreground max-w-xl leading-relaxed font-semibold text-black">
                             Kami membantu Anda tampil lebih profesional, dipercaya, dan menjangkau lebih banyak pelanggan melalui website modern yang dirancang untuk hasil nyata
                         </p>
 
                         {/* CTA Button */}
                         <div>
-                            <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white group px-8 py-6 text-base text-center">
+                            <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white group px-8 py-6 text-base text-center ">
                                 Mulai Sekarang
-                                <div className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform " />
+                                <div className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform -mx-6" />
                             </Button>
                         </div>
                     </motion.div>
