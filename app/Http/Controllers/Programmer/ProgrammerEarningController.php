@@ -12,8 +12,6 @@ class ProgrammerEarningController extends Controller
     public function index()
     {
         $user = auth()->user();
-
-        // Calculate earnings statistics
         $stats = [
             'total_earnings' => ProgrammerEarning::where('programmer_id', $user->id)
                 ->where('status', 'paid')

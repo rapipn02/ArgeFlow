@@ -27,12 +27,6 @@ class ProgrammerDashboardController extends Controller
 
         // Calculate statistics
         $stats = [
-            'total_earnings' => ProgrammerEarning::where('programmer_id', $user->id)
-                ->where('status', 'paid')
-                ->sum('net_amount'),
-            'pending_earnings' => ProgrammerEarning::where('programmer_id', $user->id)
-                ->where('status', 'pending')
-                ->sum('net_amount'),
             'active_projects' => $allOrders->whereIn('status', ['dp_paid', 'in_progress', 'final_payment'])->count(),
             'completed_projects' => $allOrders->where('status', 'completed')->count(),
             'total_projects' => $allOrders->count(),

@@ -156,18 +156,7 @@ const handleReaction = async (progressId, type) => {
                                 </div>
                             </div>
 
-                            {/* Add Progress Button - Hidden only when awaiting review, final payment, or completed */}
-                            {canAddProgress && !['awaiting_review', 'final_payment', 'completed'].includes(order.status) && (
-                                <motion.button
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    onClick={() => setShowAddModal(true)}
-                                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-600 text-white rounded-xl hover:shadow-lg transition-all"
-                                >
-                                    <Plus className="w-5 h-5" />
-                                    <span className="font-medium">Tambah Progress</span>
-                                </motion.button>
-                            )}
+                         
                             
                             {/* Info when programmer can't add progress */}
                             {!canAddProgress && auth?.user?.role === 'programmer' && (

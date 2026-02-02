@@ -1,4 +1,5 @@
 import { Head, Link, useForm, router } from '@inertiajs/react';
+import { createPortal } from 'react-dom';
 import ProgrammerLayout from '@/Layouts/ProgrammerLayout';
 import { ArrowLeft, User, Mail, Phone, DollarSign, Calendar, FileText, Users, Plus, TrendingUp, Upload, X, MessageSquare, Download, AlertCircle, Clock } from 'lucide-react';
 import { useState } from 'react';
@@ -85,13 +86,7 @@ export default function Show({ project, progressList, canAddProgress, latestRevi
                             <span className={`px-3 py-1 rounded-full text-sm font-medium ${statusColors[project.status]}`}>
                                 {statusLabels[project.status]}
                             </span>
-                            <Link
-                                href={route('orders.progress', project.id)}
-                                className="flex items-center px-2 py-2  "
-                            >
-                                <div className="" />
-                                <span className="font-medium text-black hover:text-green-700  transition-colors">Lihat Progress</span>
-                            </Link>
+
                             {canAddProgress && (
                                 <button
                                     onClick={() => setShowProgressModal(true)}
@@ -129,7 +124,7 @@ export default function Show({ project, progressList, canAddProgress, latestRevi
 
                         {/* Revision Alert */}
                         {project.has_revision && latestRevision && (
-                            <div className="bg-red-50 border-2 border-red-200 rounded-xl p-6">
+                            <div className="bg-white/80 border border-gray-300 rounded-xl p-6">
                                 <div className="flex items-start gap-4">
                                     <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
                                         <AlertCircle className="w-6 h-6 text-red-600" />
@@ -148,15 +143,15 @@ export default function Show({ project, progressList, canAddProgress, latestRevi
                                                 <span>{latestRevision.created_at}</span>
                                             </div>
                                         </div>
-                                        <div className="mt-3 p-4 bg-white rounded-lg border border-red-200">
-                                            <p className="text-sm font-medium text-gray-700 mb-1">Catatan Revisi:</p>
+                                        <div className="mt-3 p-3 rounded-xl bg-red-50  border border-red-200">
+                                            <p className="text-sm font-medium text-red-700 mb-1">Catatan Revisi:</p>
                                             <p className="text-sm text-gray-900 whitespace-pre-wrap">
                                                 {latestRevision.description}
                                             </p>
                                         </div>
                                         <div className="mt-3 flex items-center gap-2 text-xs text-red-600">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-red-500" />
-                                            <span>Silakan perbaiki sesuai catatan di atas dan kirim progress terbaru</span>
+                                            <div className=" rounded-full bg-red-500" />
+                                            <span>Silahkan perbaiki sesuai catatan di atas dan kirim progress terbaru</span>
                                         </div>
                                     </div>
                                 </div>
@@ -221,7 +216,7 @@ export default function Show({ project, progressList, canAddProgress, latestRevi
 
                         {/* Deadline Alert - Show only if not completed and not fully paid */}
                         {project.deadline_date && project.status !== 'completed' && project.payment_status !== 'fully_paid' && (
-                            <div className="bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200 rounded-xl p-5">
+                            <div className="bg-white border border-orange-200 rounded-xl p-5">
                                 <div className="flex items-start gap-3">
                                     <div className="p-2 bg-orange-100 rounded-lg flex-shrink-0">
                                         <Calendar className="w-5 h-5 text-orange-600" />
@@ -234,7 +229,6 @@ export default function Show({ project, progressList, canAddProgress, latestRevi
                                             Project ini harus selesai sebelum <span className="font-bold">{project.deadline_date}</span>
                                         </p>
                                         <div className="flex items-center gap-2 text-xs text-orange-600">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-orange-500" />
                                             <span>Durasi pengerjaan: {project.requested_days} hari</span>
                                         </div>
                                     </div>
@@ -421,17 +415,7 @@ export default function Show({ project, progressList, canAddProgress, latestRevi
                                         </p>
                                     </div>
                                 </div>
-                                {project.client.phone && (
-                                    <div className="flex items-start gap-3">
-                                        <Phone className="w-5 h-5 text-gray-400 mt-0.5" />
-                                        <div>
-                                            <p className="text-xs text-gray-500">Phone</p>
-                                            <p className="font-medium text-gray-900 text-sm">
-                                                {project.client.phone}
-                                            </p>
-                                        </div>
-                                    </div>
-                                )}
+
                             </div>
                         </div>
 
@@ -500,9 +484,9 @@ export default function Show({ project, progressList, canAddProgress, latestRevi
                 </div>
 
                 {/* Progress Modal */}
-                {showProgressModal && (
+                {showProgressModal && createPortal(
                     <div 
-                        className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+                        className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100] p-5"
                         onClick={() => setShowProgressModal(false)}
                     >
                         <div 
@@ -515,7 +499,7 @@ export default function Show({ project, progressList, canAddProgress, latestRevi
                                 </h2>
                                 <button
                                     onClick={() => setShowProgressModal(false)}
-                                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                                    className="p-3 hover:bg-gray-100 rounded-lg transition-colors"
                                 >
                                     <X className="w-5 h-5" />
                                 </button>
@@ -600,7 +584,8 @@ export default function Show({ project, progressList, canAddProgress, latestRevi
                                 </div>
                             </form>
                         </div>
-                    </div>
+                    </div>,
+                    document.body
                 )}
             </div>
         </ProgrammerLayout>

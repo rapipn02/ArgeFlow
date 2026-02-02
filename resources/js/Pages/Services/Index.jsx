@@ -138,7 +138,7 @@ function ServiceCard({ service, index }) {
                     </div>
 
                     {/* Standard Days Info */}
-                    <div className="mb-4 flex items-center gap-2 text-sm bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 px-3 py-2 rounded-lg">
+                    <div className="mb-4 flex items-center gap-2 text-sm dark:bg-blue-950/30 text-blue-600 dark:text-blue-400  py-2 rounded-lg">
                         <Clock className="w-4 h-4" />
                         <span>Estimasi: {service.standard_days || 10} hari</span>
                     </div>
@@ -152,9 +152,6 @@ function ServiceCard({ service, index }) {
                         </div>
                         <p className="text-xs text-muted-foreground mt-2">
                             DP 40% • Final 60%
-                        </p>
-                        <p className="text-xs text-orange-600 dark:text-orange-400 mt-1">
-                            + Rp 50k/hari untuk pengerjaan lebih cepat
                         </p>
                     </div>
 

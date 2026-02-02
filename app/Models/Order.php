@@ -204,6 +204,11 @@ class Order extends Model
             'transaction_date' => now(),
             'created_by' => 1, // System/Admin ID
         ]);
+
+        // Increment team completed projects
+        if ($this->team) {
+            $this->team->incrementCompletedProjects();
+        }
     }
 
     /**

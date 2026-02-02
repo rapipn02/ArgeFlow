@@ -126,7 +126,7 @@ class PaymentController extends Controller
                 // Extract payment type from order_id
                 $parts = explode('-', $order->midtrans_order_id);
                 $paymentType = $parts[2] ?? 'dp';
-                
+
                 \Log::info('Checking payment status', [
                     'order_id' => $order->id,
                     'midtrans_order_id' => $order->midtrans_order_id,
@@ -134,7 +134,7 @@ class PaymentController extends Controller
                     'transaction_status' => $status->transaction_status,
                     'current_payment_status' => $order->payment_status
                 ]);
-                
+
                 if ($paymentType === 'dp' && $order->payment_status === 'pending') {
                     $order->markDpAsPaid();
                 } elseif ($paymentType === 'final' && $order->payment_status === 'dp_paid') {
@@ -170,12 +170,12 @@ class PaymentController extends Controller
                 if ($order->midtrans_order_id) {
                     try {
                         $status = $this->midtransService->checkTransactionStatus($order->midtrans_order_id);
-                        
+
                         if (in_array($status->transaction_status, ['capture', 'settlement'])) {
                             // Extract payment type from order_id
                             $orderIdParts = explode('-', $order->midtrans_order_id);
                             $paymentType = isset($orderIdParts[2]) ? $orderIdParts[2] : 'dp';
-                            
+
                             if ($paymentType === 'dp' && $order->payment_status === 'pending') {
                                 $order->markDpAsPaid();
                             } elseif ($paymentType === 'final' && $order->payment_status === 'dp_paid') {
@@ -188,7 +188,7 @@ class PaymentController extends Controller
                     }
                 }
 
-                $order->load(['service', 'team']);
+                $order->load(['service', 'team', 'teamRating']);
 
                 return Inertia::render('Payment/Success', [
                     'order' => $order,

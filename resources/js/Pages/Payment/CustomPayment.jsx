@@ -204,13 +204,13 @@ const handlePayment = async () => {
                                 </div>
 
                                 {/* Security Info */}
-                                <div className="mt-6 p-4 dark:bg-green-900/20 rounded-xl border border-green-200 dark:border-green-800">
-                                    <div className="flex items-start gap-1">
+                                <div className="-
+                                mt-1 p-4 dark:bg-green-900/20 rounded-xlborder-green-200 dark:border-green-800 -mx-7">
+                                    <div className="flex items-start gap-0">
                                         <div className="w-5 h-5 text-green-600 mt-0.5" />
                                         <div className="text-sm text-green-800 dark:text-green-300">
-                                            <div className="font-semibold mb-1">Pembayaran Aman</div>
                                             <div className="text-xs">
-                                                Transaksi Anda dilindungi dengan enkripsi SSL dan diproses oleh Midtrans
+                                                *Transaksi Anda dilindungi dengan enkripsi SSL dan diproses oleh Midtrans
                                             </div>
                                         </div>
                                     </div>
@@ -222,7 +222,7 @@ const handlePayment = async () => {
                                     whileTap={{ scale: 0.98 }}
                                     onClick={handlePayment}
                                     disabled={isProcessing}
-                                    className={`w-full mt-6 py-4 rounded-xl font-semibold text-white transition-all ${
+                                    className={`w-full mt-1 py-4 rounded-xl font-semibold text-white transition-all ${
                                         isProcessing
                                             ? 'bg-gray-400 cursor-not-allowed'
                                             : 'bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-xl'

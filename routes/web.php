@@ -31,12 +31,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/api/services/{id}', [\App\Http\Controllers\ServiceController::class, 'show'])->name('api.services.show');
     Route::post('/api/services/calculate-price', [\App\Http\Controllers\ServiceController::class, 'calculatePrice'])->name('api.services.calculate-price');
 
-    // Service Selection
+    // Service Selection (user routes)
     Route::get('/services', function () {
         return Inertia::render('Services/Index');
     })->name('services.index');
 
-    // Team Preference
+    // Team Preference (user routes)
     Route::get('/services/{id}/team-preference', function ($id) {
         $service = \App\Models\Service::findOrFail($id);
 
@@ -52,11 +52,11 @@ Route::middleware('auth')->group(function () {
         ]);
     })->name('services.team-preference');
 
-    // Team Selection
+    // Team Selection (user routes)
     Route::get('/services/{serviceId}/teams', [\App\Http\Controllers\TeamController::class, 'index'])->name('teams.index');
     Route::get('/teams/{id}', [\App\Http\Controllers\TeamController::class, 'show'])->name('teams.show');
 
-    // Orders
+    // Orders (user routes)
     Route::get('/orders', [\App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/create', [\App\Http\Controllers\OrderController::class, 'create'])->name('orders.create');
     Route::post('/orders', [\App\Http\Controllers\OrderController::class, 'store'])->name('orders.store');
@@ -68,23 +68,23 @@ Route::middleware('auth')->group(function () {
     Route::post('/orders/{order}/progress/{progress}/comments', [\App\Http\Controllers\ProgressController::class, 'addComment'])->name('orders.progress.comments.store');
     Route::delete('/orders/{order}/progress/{progress}/comments/{comment}', [\App\Http\Controllers\ProgressController::class, 'deleteComment'])->name('orders.progress.comments.destroy');
 
-    // Progress Reactions (Client can like/dislike progress)
+    // Progress Reactions (Client can like/dislike progress) (user routes)
     Route::post('/progress/{progress}/reaction', [\App\Http\Controllers\ProgressReactionController::class, 'toggle'])->name('progress.reaction.toggle');
-    // Revision & Completion (Client Actions)
+    // Revision & Completion (Client Actions)(user routes)
     Route::post('/orders/{order}/revisions', [\App\Http\Controllers\RevisionController::class, 'store'])->name('orders.revisions.store');
     Route::post('/orders/{order}/accept-completion', [\App\Http\Controllers\RevisionController::class, 'acceptCompletion'])->name('orders.accept-completion');
 
-    // Team Rating (Client can rate team after order completion)
+    // Team Rating (Client can rate team after order completion) (user routes)
     Route::post('/orders/{order}/team-rating', [\App\Http\Controllers\TeamRatingController::class, 'store'])->name('team-ratings.store');
 
-    // Payments
+    // Payments (user routes)
     Route::get('/payment/success', [\App\Http\Controllers\PaymentController::class, 'success'])->name('payment.success');
     Route::get('/payment/failed', [\App\Http\Controllers\PaymentController::class, 'failed'])->name('payment.failed');
     Route::get('/payment/{order}', [\App\Http\Controllers\PaymentController::class, 'show'])->name('payment.show');
     Route::post('/payment/{order}/token', [\App\Http\Controllers\PaymentController::class, 'createToken'])->name('payment.token');
     Route::get('/payment/{order}/status', [\App\Http\Controllers\PaymentController::class, 'checkStatus'])->name('payment.status');
 
-    // Invoices
+    // Invoices (user routes)
     Route::get('/invoice/{order}', [\App\Http\Controllers\InvoiceController::class, 'show'])->name('invoice.show');
     Route::get('/invoice/{order}/download', [\App\Http\Controllers\InvoiceController::class, 'download'])->name('invoice.download');
 
@@ -116,7 +116,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/teams', [\App\Http\Controllers\Programmer\ProgrammerTeamController::class, 'index'])->name('teams.index');
     });
 
-    // Admin Routes (Superadmin only)
+    // Admin Routes (admin only)
     Route::middleware('superadmin')->prefix('admin')->name('admin.')->group(function () {
         // Dashboard
         Route::get('/dashboard', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('dashboard');

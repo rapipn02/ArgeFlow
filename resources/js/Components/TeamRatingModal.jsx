@@ -48,26 +48,26 @@ export default function TeamRatingModal({ order, show, onClose }) {
                     className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden"
                 >
                     {/* Header */}
-                    <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-6 relative">
+                    <div className="p-6 relative">
                         <button
                             onClick={onClose}
                             className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors"
                         >
                             <X className="w-6 h-6" />
                         </button>
-                        <h2 className="text-2xl font-bold text-white mb-2">
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                             Beri Rating Tim Programmer
                         </h2>
-                        <p className="text-blue-100 text-sm">
+                        <p className="text-gray-600 dark:text-gray-400 text-sm">
                             Order #{order.order_number}
                         </p>
                     </div>
 
                     {/* Body */}
-                    <form onSubmit={handleSubmit} className="p-6 space-y-6">
+                    <form onSubmit={handleSubmit} className="p-6 space-y-6 -mt-4 border-t">
                         {/* Team Info */}
                         {order.team && (
-                            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl p-4 border border-blue-200 dark:border-blue-800">
+                            <div className="dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl p-4 border border-blue-200 dark:border-blue-800">
                                 <div className="flex items-center gap-3">
                                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center">
                                         <span className="text-white font-bold text-lg">
@@ -75,7 +75,7 @@ export default function TeamRatingModal({ order, show, onClose }) {
                                         </span>
                                     </div>
                                     <div>
-                                        <div className="font-semibold text-gray-900 dark:text-white">
+                                        <div className="font-semibold text-gray-900 dark:text-white mx-2">
                                             {order.team.name}
                                         </div>
                                         <div className="text-sm text-gray-600 dark:text-gray-400">

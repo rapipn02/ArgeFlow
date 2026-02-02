@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, usePage } from '@inertiajs/react';
+import GlobalNotifications from '@/Components/GlobalNotifications';
 import { 
     LayoutDashboard, 
     FolderKanban, 
@@ -19,7 +20,6 @@ export default function ProgrammerLayout({ children }) {
         { name: 'Dashboard', href: route('programmer.dashboard'), icon: LayoutDashboard },
         { name: 'Projects', href: route('programmer.projects.index'), icon: FolderKanban },
         { name: 'Teams', href: route('programmer.teams.index'), icon: Users },
-        { name: 'Profile', href: route('programmer.profile.edit'), icon: User },
     ];
 
     const isActive = (href) => {
@@ -28,6 +28,7 @@ export default function ProgrammerLayout({ children }) {
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+            <GlobalNotifications />
             {/* Mobile sidebar backdrop */}
             {sidebarOpen && (
                 <div 

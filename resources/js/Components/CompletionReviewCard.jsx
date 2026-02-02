@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Swal from 'sweetalert2';
 import { router } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -11,7 +12,8 @@ import {
     Sparkles,
     ThumbsUp,
     RotateCcw,
-    FileText
+    FileText,
+    SquareCheckBig
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Button } from '@/Components/ui/button';
@@ -25,12 +27,23 @@ export default function CompletionReviewCard({ order }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleAcceptCompletion = () => {
-        if (confirm('Apakah Anda yakin ingin menerima hasil pekerjaan ini? Setelah diterima, Anda akan dialihkan ke pembayaran pelunasan.')) {
-            router.post(route('orders.accept-completion', order.id), {}, {
-                onStart: () => setIsSubmitting(true),
-                onFinish: () => setIsSubmitting(false),
-            });
-        }
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Anda akan menerima hasil pekerjaan ini. Setelah diterima, Anda akan dialihkan ke pembayaran pelunasan.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#16a34a',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Terima Hasil',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.post(route('orders.accept-completion', order.id), {}, {
+                    onStart: () => setIsSubmitting(true),
+                    onFinish: () => setIsSubmitting(false),
+                });
+            }
+        });
     };
 
     const handleRequestRevision = (e) => {
@@ -57,16 +70,16 @@ export default function CompletionReviewCard({ order }) {
 
     return (
         <>
-            <Card className="border-2 border-green-200 dark:border-green-800 bg-gradient-to-br from-green-50/50 to-blue-50/30 dark:from-green-950/20 dark:to-blue-950/20">
+            <Card className="border-x1 border-gray-300 dark:border-green-800  dark:from-green-950/20 dark:to-blue-950/20">
                 <CardHeader className="space-y-1">
                     <div className="flex items-center gap-3">
-                        <div className="p-3 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 text-white">
-                            <Sparkles className="w-6 h-6" />
+                        <div className="p-3 rounded-full bg-gradient-to-br from-green-700 to-green-600 text-white">
+                            <SquareCheckBig  className="w-6 h-6" />
                         </div>
                         <div className="flex-1">
                             <CardTitle className="text-2xl flex items-center gap-2">
                                 Proyek Selesai!
-                                <CheckCircle2 className="w-6 h-6 text-green-600 dark:text-green-400" />
+                               
                             </CardTitle>
                             <CardDescription className="text-base mt-1">
                                 Programmer telah menyelesaikan 100% pekerjaan
@@ -78,8 +91,8 @@ export default function CompletionReviewCard({ order }) {
                 <CardContent className="space-y-6">
                     {/* Status Info */}
                     <div className="p-4 rounded-xl bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-gray-200 dark:border-gray-700">
-                        <div className="flex items-start gap-3">
-                            <AlertCircle className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" />
+                        <div className="flex items-start gap-1">
+                            <div className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" />
                             <div className="flex-1">
                                 <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
                                     Silakan Review Hasil Pekerjaan
@@ -89,12 +102,12 @@ export default function CompletionReviewCard({ order }) {
                                 </p>
                                 <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                                     <li className="flex items-start gap-2">
-                                        <ThumbsUp className="w-4 h-4 text-green-600 mt-0.5" />
-                                        <span><strong className="text-gray-900 dark:text-white">Terima Hasil</strong> - Lanjut ke pembayaran pelunasan</span>
+                                       
+                                        <span><strong className="text-green-800 dark:text-white">Terima Hasil</strong> - Lanjut ke pembayaran pelunasan</span>
                                     </li>
                                     <li className="flex items-start gap-2">
-                                        <RotateCcw className="w-4 h-4 text-orange-600 mt-0.5" />
-                                        <span><strong className="text-gray-900 dark:text-white">Minta Revisi</strong> - Programmer akan memperbaiki sesuai permintaan Anda ({revisionsLeft}x kesempatan tersisa)</span>
+                                       
+                                        <span><strong className="text-orange-700 dark:text-white">Minta Revisi</strong> - Programmer akan memperbaiki sesuai permintaan Anda ({revisionsLeft}x kesempatan tersisa)</span>
                                     </li>
                                 </ul>
                             </div>
@@ -103,15 +116,15 @@ export default function CompletionReviewCard({ order }) {
 
                     {/* Revision Counter */}
                     <div className="grid grid-cols-2 gap-4">
-                        <div className="p-4 rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30 border border-blue-200 dark:border-blue-800">
-                            <div className="text-sm text-blue-700 dark:text-blue-400 mb-1">Revisi Digunakan</div>
-                            <div className="text-2xl font-bold text-blue-900 dark:text-blue-300">
+                        <div className="p-4 rounded-xl  bg-gray-50 dark:from-blue-950/30 dark:to-cyan-950/30 border border-gray-300 dark:border-blue-800">
+                            <div className="text-sm text-black dark:text-blue-400 flex justify-center mb-1">Revisi Digunakan</div>
+                            <div className="text-2xl font-bold text-black dark:text-blue-300 flex justify-center">
                                 {order.revision_count} / 2
                             </div>
                         </div>
-                        <div className="p-4 rounded-xl bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 border border-green-200 dark:border-green-800">
-                            <div className="text-sm text-green-700 dark:text-green-400 mb-1">Revisi Tersisa</div>
-                            <div className="text-2xl font-bold text-green-900 dark:text-green-300">
+                        <div className="p-4 rounded-xl dark:from-green-950/30 dark:to-emerald-950/30 border border-gray-200 dark:border-gray-800 bg-gray-50">
+                            <div className="text-sm text-black dark:text-green-400 flex justify-center mb-1">Revisi Tersisa</div>
+                            <div className="text-2xl font-bold text-black dark:text-green-300 flex justify-center">
                                 {revisionsLeft}x
                             </div>
                         </div>
@@ -124,9 +137,8 @@ export default function CompletionReviewCard({ order }) {
                             onClick={handleAcceptCompletion}
                             disabled={isSubmitting}
                             size="lg"
-                            className="w-full h-14 text-base font-semibold bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all"
+                            className="w-full h-14 text-base font-semibold bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all"
                         >
-                            <CheckCircle2 className="w-5 h-5" />
                             Terima & Lanjut Pembayaran
                         </Button>
 
@@ -137,16 +149,15 @@ export default function CompletionReviewCard({ order }) {
                                 disabled={isSubmitting}
                                 variant="outline"
                                 size="lg"
-                                className="w-full h-14 text-base font-semibold border-2 border-orange-300 dark:border-orange-700 hover:bg-orange-50 dark:hover:bg-orange-950/30 text-orange-700 dark:text-orange-400"
+                                className="w-full h-14 text-base font-semibold border-2 border-orange-600 dark:border-orange-700 hover:bg-orange-50 dark:hover:bg-orange-950/30 text-orange-700 dark:text-orange-400"
                             >
-                                <RotateCcw className="w-5 h-5" />
+
                                 Minta Revisi ({revisionsLeft}x)
                             </Button>
                         ) : (
-                            <div className="p-4 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 flex items-center justify-center">
+                            <div className="p-4 rounded bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 flex items-center justify-center">
                                 <div className="text-center">
-                                    <XCircle className="w-6 h-6 text-red-600 dark:text-red-400 mx-auto mb-2" />
-                                    <p className="text-sm text-red-700 dark:text-red-400 font-medium">
+                                    <p className="text-red-700 dark:text-red-400 font-medium">
                                         Batas revisi telah habis
                                     </p>
                                 </div>

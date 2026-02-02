@@ -119,7 +119,7 @@ export default function RevisionList({ revisions = [] }) {
                 </div>
 
                 {/* Info Footer */}
-                <div className="mt-4 p-3 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800">
+                <div className="mt-4 p-3 rounded-lg border">
                     <p className="text-sm text-blue-700 dark:text-blue-400 flex items-start gap-2">
                         <AlertCircle className="w-4 h-4 mt-0.5" />
                         <span>Programmer akan menyelesaikan revisi dan mengirimkan progress 100% yang baru</span>

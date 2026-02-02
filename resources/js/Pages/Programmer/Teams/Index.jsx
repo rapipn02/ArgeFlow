@@ -26,22 +26,22 @@ export default function Index({ teams }) {
                 {teams.length > 0 ? (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         {teams.map((team) => (
-                            <div key={team.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                            <div key={team.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden ">
                                 {/* Team Header */}
-                                <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-6 text-white">
+                                <div className=" p-6 text-blue-600 -mt-2">
                                     <div className="flex items-start gap-4">
-                                        <div className="w-14 h-14 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center text-xl font-bold">
+                                        <div className="w-14 h-14 rounded-lg bg-blue-100 backdrop-blur-sm flex items-center justify-center text-xl font-bold">
                                             {team.name.charAt(0)}
                                         </div>
                                         <div className="flex-1">
                                             <h3 className="text-xl font-bold mb-1">{team.name}</h3>
-                                            <p className="text-blue-100 text-sm capitalize">{team.specialization}</p>
-                                            <div className="flex items-center gap-2 mt-2">
-                                                <span className="px-2 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-medium capitalize">
+                                            <p className="text-blue-600 text-sm capitalize">{team.specialization}</p>
+                                            <div className="flex items-center -mx-2">
+                                                <span className="px-2 py-1  backdrop-blur-sm rounded-full text-xs font-medium capitalize text-blue-600">
                                                     {team.my_role}
                                                 </span>
                                                 {team.is_available && (
-                                                    <span className="px-2 py-1 bg-green-500/30 backdrop-blur-sm rounded-full text-xs font-medium">
+                                                    <span className="px-2 py-1 backdrop-blur-sm rounded-full text-xs font-medium text-green-700">
                                                         Available
                                                     </span>
                                                 )}
@@ -51,7 +51,7 @@ export default function Index({ teams }) {
                                 </div>
 
                                 {/* Team Stats */}
-                                <div className="p-6">
+                                <div className="p-6 border-t -mt-5">
                                     <div className="grid grid-cols-3 gap-4 mb-6">
                                         <div className="text-center">
                                             <div className="flex items-center justify-center gap-1 mb-1">

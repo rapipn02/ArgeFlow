@@ -1,4 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
+import { useState } from 'react';
+import TeamRatingModal from '@/Components/TeamRatingModal';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { motion } from 'framer-motion';
 import { Star, Users, CheckCircle2, ArrowRight, User, LogOut, Briefcase, Award, CheckCircle, CircleCheckBig } from 'lucide-react';
@@ -18,7 +20,10 @@ import {
     Download,
     Home
 } from 'lucide-react';
-export default function Success({ auth,order }) {
+export default function Success({ auth, order }) {
+    const isFullPayment = order?.payment_status === 'fully_paid';
+    const [showRatingModal, setShowRatingModal] = useState(false);
+
     return (
         <AuthenticatedLayout>
             <Head title="Pembayaran Berhasil" />
@@ -30,7 +35,7 @@ export default function Success({ auth,order }) {
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.5 }}
-                        className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-8 md:p-12 shadow-2xl border border-gray-200/50 dark:border-gray-700/50 text-center"
+                        className="bg-slate-50 dark:bg-gray-800/80 backdrop-blur-xl rounded-xl p-8 md:p-12 shadow-2xl border border-gray-200/50 dark:border-gray-700/50 text-center"
                     >
                         {/* Success Icon */}
                         <motion.div
@@ -49,7 +54,7 @@ export default function Success({ auth,order }) {
                             transition={{ delay: 0.3 }}
                             className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4"
                         >
-                            Pembayaran Berhasil!
+                            {isFullPayment ? 'Pelunasan Berhasil!' : 'Pembayaran Berhasil!'}
                         </motion.h1>
 
                         {/* Description */}
@@ -59,7 +64,10 @@ export default function Success({ auth,order }) {
                             transition={{ delay: 0.4 }}
                             className="text-lg text-gray-600 dark:text-gray-400 mb-8"
                         >
-                            Terima kasih! Pembayaran Anda telah berhasil diproses.
+                            {isFullPayment 
+                                ? 'Terima kasih! Pembayaran pelunasan Anda telah berhasil diproses. Project Anda sekarang sepenuhnya lunas.'
+                                : 'Terima kasih! Pembayaran Anda telah berhasil diproses.'
+                            }
                             {order && (
                                 <span className="block mt-2 font-semibold text-gray-900 dark:text-white">
                                     Order #{order.order_number}
@@ -106,21 +114,36 @@ export default function Success({ auth,order }) {
                             className="bg-slate-50 dark:bg-blue-900/20 rounded-xl p-6 mb-8 border border-gray-300 dark:border-blue-800"
                         >
                             <h3 className="font-semibold text-gray-900 dark:text-white mb-3 text-left">
-                                Langkah Selanjutnya:
+                                {isFullPayment ? 'Informasi Project:' : 'Langkah Selanjutnya:'}
                             </h3>
                             <ul className="text-left space-y-2 text-gray-700 dark:text-gray-300">
-                                <li className="flex items-start gap-2">
-                                    <CheckCircle2 className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                                    <span>Tim kami akan segera menghubungi Anda untuk konfirmasi</span>
-                                </li>
-                                <li className="flex items-start gap-2">
-                                    <CheckCircle2 className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                                    <span>Anda akan menerima email konfirmasi pembayaran</span>
-                                </li>
-                                <li className="flex items-start gap-2">
-                                    <CheckCircle2 className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                                    <span>Pantau progress order Anda di dashboard</span>
-                                </li>
+                                {isFullPayment ? (
+                                    <>
+                                        <li className="flex items-start gap-2">
+                                            <CheckCircle2 className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                                            <span>Cek Hasil Project Anda di Halaman Detail Order</span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                            <CheckCircle2 className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                                            <span>Terima kasih telah mempercayakan project Anda kepada kami</span>
+                                        </li>
+                                    </>
+                                ) : (
+                                    <>
+                                        <li className="flex items-start gap-2">
+                                            <CheckCircle2 className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                                            <span>Tim kami akan segera menghubungi Anda untuk konfirmasi</span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                            <CheckCircle2 className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                                            <span>Anda akan menerima email konfirmasi pembayaran</span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                            <CheckCircle2 className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                                            <span>Pantau progress order Anda di dashboard</span>
+                                        </li>
+                                    </>
+                                )}
                             </ul>
                         </motion.div>
 
@@ -149,14 +172,30 @@ export default function Success({ auth,order }) {
                                 </Link>
                             )}
                             
-                            <Link
-                                href={route('dashboard')}
-                                className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-xl font-semibold transition-all border-2 border-gray-200 dark:border-gray-600"
-                            >
-                                <Home className="w-5 h-5" />
-                                <span>Kembali ke Dashboard</span>
-                            </Link>
+                            {!order?.team_rating ? (
+                                <button
+                                    onClick={() => setShowRatingModal(true)}
+                                    className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-xl font-semibold transition-all border-2 border-gray-200 dark:border-gray-600"
+                                >
+                                    <Star className="w-5 h-5" />
+                                    <span className="text-black">Beri Tim Kami Rating</span>
+                                </button>
+                            ) : (
+                                <div className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-green-50 dark:bg-green-900/20 border-2 border-green-200 dark:border-green-800 rounded-xl font-semibold text-green-700 dark:text-green-400">
+                                    <CheckCircle className="w-5 h-5" />
+                                    <span>Terima kasih atas rating Anda!</span>
+                                </div>
+                            )}
                         </motion.div>
+
+                        {/* Rating Modal */}
+                        {order && (
+                            <TeamRatingModal
+                                order={order}
+                                show={showRatingModal}
+                                onClose={() => setShowRatingModal(false)}
+                            />
+                        )}
                     </motion.div>
                 </div>
             </div>
@@ -236,7 +275,7 @@ function OptionCard({ icon: Icon, title, description, features, buttonText, onCl
             }`}>
                 <CardHeader className="text-center pb-4">
                     {/* Icon */}
-                    <div className="mx-auto mb-4 w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                    <div className="mx-auto mb-4 w-16 h-16 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
                         <Icon className="w-8 h-8 text-white" />
                     </div>
                     
