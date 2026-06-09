@@ -3,9 +3,9 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { motion } from 'framer-motion';
 import { Package, ArrowLeft, CreditCard, FileText, AlertCircle, Calendar, Clock } from 'lucide-react';
 import { Users, Sparkles, ArrowRight, CheckCircle2, User, LogOut } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { ThemeToggle } from '@/components/ThemeToggle';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/Components/ui/card';
+import { Button } from '@/Components/ui/button';
+import { ThemeToggle } from '@/Components/ThemeToggle';
 import Navbar from '@/Components/NavMpruy';
 import { useState, useEffect } from 'react';
 
