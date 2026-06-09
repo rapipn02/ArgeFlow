@@ -12,20 +12,15 @@ use Inertia\Inertia;
 
 class ProgressController extends Controller
 {
-    /**
-     * Display progress for a specific order
-     */
+  
     public function index(Order $order)
     {
-        // Check if user has access (client or team member)
         $user = auth()->user();
         $hasAccess = false;
 
         if ($user->id === $order->user_id) {
-            // Client owns the order
             $hasAccess = true;
         } elseif ($user->role === 'programmer' && $order->team) {
-            // Check if programmer is in the team
             $hasAccess = $order->team->members()->where('user_id', $user->id)->exists();
         }
 

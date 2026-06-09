@@ -4,9 +4,11 @@ import { DollarSign, FolderKanban, CheckCircle, Users, ArrowUpRight, WalletCards
 
 export default function Dashboard({ stats, recentProjects, teams }) {
     const formatCurrency = (amount) => {
-        // Format: Rp 3.000.000 (with dots as thousand separators)
-        const formatted = Math.round(amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-        return `Rp ${formatted}`;
+        return new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0,
+        }).format(amount);
     };
 
     const statusColors = {
@@ -86,15 +88,13 @@ export default function Dashboard({ stats, recentProjects, teams }) {
                                 Dashboard Programmer
                             </h1>
                             <p className="text-sm text-gray-500 mt-1">
-                                Ringkasan project dan earnings Anda
+                                Ringkasan project Anda
                             </p>
                         </div>
                     </div>
                 </div>
 
-                {/* Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 gap-y-5">
-
+                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-3 gap-y-5">
                     <StatCard
                         icon={FolderKanban}
                         title="Active Projects"

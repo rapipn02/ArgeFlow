@@ -34,7 +34,9 @@ class DeleteExpiredPendingOrders extends Command
 
         try {
             // Ambil order yang pending dan dibuat lebih dari 5 jam yang lalu
-            $expiredOrders = Order::where('payment_status', 'pending')
+            $expiredOrders = Order::whereHas('payment', function ($q) {
+                    $q->where('payment_status', 'pending');
+                })
                 ->where('created_at', '<=', Carbon::now()->subHours(5))
                 ->get();
 

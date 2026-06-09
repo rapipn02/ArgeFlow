@@ -54,8 +54,8 @@ class MidtransService
         try {
             $snapToken = Snap::getSnapToken($params);
 
-            // Update order with Midtrans details
-            $order->update([
+            // Update order payment with Midtrans details
+            $order->payment->update([
                 'midtrans_order_id' => $orderId,
                 'midtrans_snap_token' => $snapToken,
             ]);
@@ -103,7 +103,7 @@ class MidtransService
                 'fraud_status' => $fraudStatus
             ]);
 
-            $order = Order::where('order_number', $orderNumber)->first();
+            $order = Order::with('payment')->where('order_number', $orderNumber)->first();
 
             if (!$order) {
                 \Log::error('Order not found: ' . $orderNumber);
@@ -168,8 +168,10 @@ class MidtransService
             }
         } elseif ($status === 'failed') {
             $order->update([
-                'payment_status' => 'failed',
                 'status' => 'cancelled',
+            ]);
+            $order->payment->update([
+                'payment_status' => 'failed',
             ]);
         }
         // For pending, we don't update anything yet

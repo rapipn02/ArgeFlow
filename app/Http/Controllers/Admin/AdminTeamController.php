@@ -202,6 +202,7 @@ class AdminTeamController extends Controller
         ]);
 
         $order = Order::findOrFail($orderId);
+        $order->load('payment');
 
         // Validasi order sudah bayar DP
         if ($order->payment_status !== 'dp_paid') {

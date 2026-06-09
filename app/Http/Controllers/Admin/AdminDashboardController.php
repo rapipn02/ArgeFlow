@@ -171,12 +171,17 @@ class AdminDashboardController extends Controller
         ];
 
         // Orders yang perlu assign team (sudah bayar DP tapi belum ada team)
-        $pendingTeamAssignment = Order::with(['service', 'user'])
+        $pendingTeamAssignment = Order::with(['service', 'user', 'payment'])
             ->where('team_preference', 'auto_assign')
-            ->where('payment_status', 'dp_paid')
+            ->whereHas('payment', function ($q) {
+                $q->where('payment_status', 'dp_paid');
+            })
             ->whereNull('team_id')
-            ->orderBy('dp_paid_at', 'asc')
             ->get()
+            ->sortBy(function ($order) {
+                return $order->payment?->dp_paid_at;
+            })
+            ->values()
             ->map(function ($order) {
                 return [
                     'id' => $order->id,

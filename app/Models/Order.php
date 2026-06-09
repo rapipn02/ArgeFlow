@@ -21,12 +21,6 @@ class Order extends Model
         'dp_amount',
         'final_amount',
         'status',
-        'payment_status',
-        'payment_method',
-        'midtrans_order_id',
-        'midtrans_snap_token',
-        'dp_paid_at',
-        'final_paid_at',
         'notes',
         'requirements',
         'requested_days',
@@ -42,8 +36,6 @@ class Order extends Model
         'dp_amount' => 'decimal:2',
         'final_amount' => 'decimal:2',
         'rush_fee' => 'decimal:2',
-        'dp_paid_at' => 'datetime',
-        'final_paid_at' => 'datetime',
         'deadline_date' => 'date',
         'completion_submitted_at' => 'datetime',
         'accepted_at' => 'datetime',
@@ -52,8 +44,18 @@ class Order extends Model
     ];
 
     /**
-     * Boot the model
+     * Atribut yang selalu di-append saat serialisasi (agar frontend tetap menerima data payment)
      */
+    protected $appends = [
+        'payment_status',
+        'payment_method',
+        'midtrans_order_id',
+        'midtrans_snap_token',
+        'dp_paid_at',
+        'final_paid_at',
+    ];
+
+   
     protected static function boot()
     {
         parent::boot();
@@ -63,13 +65,24 @@ class Order extends Model
                 $order->order_number = 'ORD-' . strtoupper(Str::random(10));
             }
 
-            // Calculate DP and Final amounts (40% DP, 60% Final)
+         
             if ($order->total_amount) {
                 $order->dp_amount = $order->total_amount * 0.4;
                 $order->final_amount = $order->total_amount * 0.6;
             }
         });
+
+        static::created(function ($order) {
+            OrderPayment::create([
+                'order_id' => $order->id,
+                'payment_status' => 'pending',
+            ]);
+        });
     }
+
+    // =============================================
+    // RELASI
+    // =============================================
 
     /**
      * Get the user that owns the order
@@ -95,6 +108,13 @@ class Order extends Model
         return $this->belongsTo(Team::class);
     }
 
+    /**
+     * Get the payment data for this order (1:1)
+     */
+    public function payment()
+    {
+        return $this->hasOne(OrderPayment::class);
+    }
 
     /**
      * Get the rating for this order (team rating)
@@ -120,7 +140,43 @@ class Order extends Model
         return $this->hasMany(Revision::class);
     }
 
+    // =============================================
+    // ACCESSOR (backward compatibility — agar $order->payment_status dll tetap bisa diakses)
+    // =============================================
 
+    public function getPaymentStatusAttribute()
+    {
+        return $this->payment?->payment_status;
+    }
+
+    public function getPaymentMethodAttribute()
+    {
+        return $this->payment?->payment_method;
+    }
+
+    public function getMidtransOrderIdAttribute()
+    {
+        return $this->payment?->midtrans_order_id;
+    }
+
+    public function getMidtransSnapTokenAttribute()
+    {
+        return $this->payment?->midtrans_snap_token;
+    }
+
+    public function getDpPaidAtAttribute()
+    {
+        return $this->payment?->dp_paid_at;
+    }
+
+    public function getFinalPaidAtAttribute()
+    {
+        return $this->payment?->final_paid_at;
+    }
+
+    // =============================================
+    // SCOPE
+    // =============================================
 
     /**
      * Scope to get orders by status
@@ -131,19 +187,25 @@ class Order extends Model
     }
 
     /**
-     * Scope to get orders by payment status
+     * Scope to get orders by payment status (query melalui relasi)
      */
     public function scopeByPaymentStatus($query, $paymentStatus)
     {
-        return $query->where('payment_status', $paymentStatus);
+        return $query->whereHas('payment', function ($q) use ($paymentStatus) {
+            $q->where('payment_status', $paymentStatus);
+        });
     }
+
+    // =============================================
+    // BUSINESS LOGIC
+    // =============================================
 
     /**
      * Check if order is paid (DP)
      */
     public function isDpPaid()
     {
-        return in_array($this->payment_status, ['dp_paid', 'fully_paid']);
+        return in_array($this->payment?->payment_status, ['dp_paid', 'fully_paid']);
     }
 
     /**
@@ -151,7 +213,7 @@ class Order extends Model
      */
     public function isFullyPaid()
     {
-        return $this->payment_status === 'fully_paid';
+        return $this->payment?->payment_status === 'fully_paid';
     }
 
     /**
@@ -164,8 +226,11 @@ class Order extends Model
         $status = $this->team_id ? 'in_progress' : 'dp_paid';
 
         $this->update([
-            'payment_status' => 'dp_paid',
             'status' => $status,
+        ]);
+
+        $this->payment->update([
+            'payment_status' => 'dp_paid',
             'dp_paid_at' => now(),
         ]);
 
@@ -188,8 +253,11 @@ class Order extends Model
     public function markAsFullyPaid()
     {
         $this->update([
-            'payment_status' => 'fully_paid',
             'status' => 'completed',
+        ]);
+
+        $this->payment->update([
+            'payment_status' => 'fully_paid',
             'final_paid_at' => now(),
         ]);
 
@@ -224,7 +292,7 @@ class Order extends Model
      */
     public function canBePaid()
     {
-        return in_array($this->payment_status, ['pending', 'failed']);
+        return in_array($this->payment?->payment_status, ['pending', 'failed']);
     }
 
     /**
@@ -232,7 +300,7 @@ class Order extends Model
      */
     public function isPending()
     {
-        return $this->payment_status === 'pending';
+        return $this->payment?->payment_status === 'pending';
     }
 
     /**

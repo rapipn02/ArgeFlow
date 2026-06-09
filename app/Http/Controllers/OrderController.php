@@ -10,17 +10,13 @@ use Inertia\Inertia;
 
 class OrderController extends Controller
 {
-    /**
-     * Display a listing of user's orders
-     */
+  
     public function index(Request $request)
     {
-        // Build query for user's orders
         $query = Order::with(['service', 'team', 'progress'])
             ->where('user_id', $request->user()->id)
             ->orderBy('created_at', 'desc');
 
-        // Search functionality
         if ($request->has('search') && $request->search) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -31,12 +27,10 @@ class OrderController extends Controller
             });
         }
 
-        // Filter by status
         if ($request->has('status') && $request->status) {
             $query->where('status', $request->status);
         }
 
-        // Paginate results
         $projects = $query->paginate(15)->through(function ($order) {
             $progressCount = $order->progress()->count();
             $commentsCount = $order->progress()->withCount('comments')->get()->sum('comments_count');
@@ -144,7 +138,6 @@ class OrderController extends Controller
             'rush_fee' => $rushFee,
             'deadline_date' => $validated['deadline_date'],
             'status' => 'pending',
-            'payment_status' => 'pending',
             'notes' => $validated['notes'] ?? null,
             'requirements' => $validated['requirements'] ?? null,
         ]);
@@ -187,6 +180,9 @@ class OrderController extends Controller
 
         $order->update([
             'status' => 'cancelled',
+        ]);
+
+        $order->payment->update([
             'payment_status' => 'failed',
         ]);
 

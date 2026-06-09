@@ -149,7 +149,7 @@ const handlePayment = async () => {
                                 <div className="border-t border-gray-200 dark:border-gray-700 pt-4 space-y-3">
                                     <div className="flex justify-between text-gray-600 dark:text-gray-400">
                                         <span>Harga Layanan</span>
-                                        <span>Rp {Math.round(order.total_amount - (order.rush_fee || 0)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</span>
+                                        <span>Rp {(order.total_amount - (order.rush_fee || 0)).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</span>
                                     </div>
                                     
                                     {order.rush_fee > 0 && (
@@ -158,22 +158,22 @@ const handlePayment = async () => {
                                                 <Clock className="w-4 h-4" />
                                                 Biaya Rush
                                             </span>
-                                            <span>+ Rp {Math.round(order.rush_fee).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</span>
+                                            <span>+ Rp {order.rush_fee.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</span>
                                         </div>
                                     )}
                                     
                                     <div className="flex justify-between font-semibold text-gray-900 dark:text-white border-t border-gray-200 dark:border-gray-700 pt-3">
                                         <span>Total Harga</span>
-                                        <span>Rp {Math.round(order.total_amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</span>
+                                        <span>Rp {order.total_amount.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</span>
                                     </div>
                                     
                                     <div className="flex justify-between text-gray-600 dark:text-gray-400 text-sm">
                                         <span>DP (40%)</span>
-                                        <span>Rp {Math.round(order.dp_amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</span>
+                                        <span>Rp {order.dp_amount.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</span>
                                     </div>
                                     <div className="flex justify-between text-gray-600 dark:text-gray-400 text-sm">
                                         <span>Pelunasan (60%)</span>
-                                        <span>Rp {Math.round(order.final_amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</span>
+                                        <span>Rp {order.final_amount.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</span>
                                     </div>
                                     
                                     {order.requested_days && (
@@ -198,19 +198,19 @@ const handlePayment = async () => {
                                             Total Bayar
                                         </span>
                                         <span className="text-2xl font-bold text-blue-600">
-                                            Rp {Math.round(amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
+                                            Rp {amount.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                                         </span>
                                     </div>
                                 </div>
 
                                 {/* Security Info */}
-                                <div className="-
-                                mt-1 p-4 dark:bg-green-900/20 rounded-xlborder-green-200 dark:border-green-800 -mx-7">
-                                    <div className="flex items-start gap-0">
+                                <div className="mt-6 p-4 dark:bg-green-900/20 rounded-xl border border-green-200 dark:border-green-800">
+                                    <div className="flex items-start gap-1">
                                         <div className="w-5 h-5 text-green-600 mt-0.5" />
                                         <div className="text-sm text-green-800 dark:text-green-300">
+                                            <div className="font-semibold mb-1">Pembayaran Aman</div>
                                             <div className="text-xs">
-                                                *Transaksi Anda dilindungi dengan enkripsi SSL dan diproses oleh Midtrans
+                                                Transaksi Anda dilindungi dengan enkripsi SSL dan diproses oleh Midtrans
                                             </div>
                                         </div>
                                     </div>
@@ -222,7 +222,7 @@ const handlePayment = async () => {
                                     whileTap={{ scale: 0.98 }}
                                     onClick={handlePayment}
                                     disabled={isProcessing}
-                                    className={`w-full mt-1 py-4 rounded-xl font-semibold text-white transition-all ${
+                                    className={`w-full mt-6 py-4 rounded-xl font-semibold text-white transition-all ${
                                         isProcessing
                                             ? 'bg-gray-400 cursor-not-allowed'
                                             : 'bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-xl'

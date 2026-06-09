@@ -39,9 +39,11 @@ export default function Index({ projects, filters, auth }) {
     };
 
     const formatCurrency = (amount) => {
-        // Format: Rp 3.000.000 (with dots as thousand separators)
-        const formatted = Math.round(amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-        return `Rp ${formatted}`;
+        return new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0,
+        }).format(amount);
     };
 
     // Safely get projects data
